@@ -22,10 +22,31 @@ El proyecto incluye un Dockerfile multi-stage que:
 - **Etapa 1 (Builder)**: Construye la aplicación Astro
 - **Etapa 2 (Producción)**: Sirve los archivos estáticos con Nginx
 
+### captain-definition
+Archivo requerido por CapRover que especifica la configuración de despliegue:
+
+```json
+{
+  "schemaVersion": 2,
+  "dockerfilePath": "./Dockerfile"
+}
+```
+
+### nginx.conf.template
+Archivo de configuración de Nginx que se utiliza en el contenedor de producción. Este archivo contiene:
+- Configuración para Single Page Application (SPA)
+- Headers de seguridad (CSP, X-Frame-Options, etc.)
+- Configuración de cache para assets estáticos
+- Compresión gzip
+- Endpoints de health check (`/health` y `/status`)
+
+**Nota:** Este archivo se creó para resolver problemas de compatibilidad con versiones de Docker que no soportan heredoc (<<EOF) en comandos COPY.
+
 ### Archivos de Configuración Incluidos
 - `Dockerfile`: Configuración de contenedor optimizada
 - `.dockerignore`: Excluye archivos innecesarios del contexto
 - `captain-definition`: Configuración para CapRover
+- `nginx.conf.template`: Configuración de Nginx para producción
 - `docker-compose.yml`: Para testing local
 
 ## Despliegue Local con Docker
