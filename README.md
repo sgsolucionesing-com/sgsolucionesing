@@ -69,10 +69,18 @@ docker-compose up -d
 ```
 
 ### CapRover
-El proyecto está configurado para despliegue automático con CapRover:
-- Archivo `captain-definition` incluido
-- Dockerfile optimizado para producción
-- Health checks configurados
+El proyecto está optimizado para despliegue con CapRover:
+- `captain-definition` configurado
+- Dockerfile con Nginx avanzado y seguridad mejorada
+- Health checks (`/health`) y monitoreo (`/status`)
+- Script de despliegue automatizado (`deploy-caprover.sh`)
+- Configuración de variables de entorno (`.caprover`)
+- Compresión gzip y headers de seguridad
+
+```bash
+# Despliegue automatizado
+./deploy-caprover.sh
+```
 
 Consulta la [guía de despliegue](docs/despliegue-docker-caprover.md) para instrucciones detalladas.
 
