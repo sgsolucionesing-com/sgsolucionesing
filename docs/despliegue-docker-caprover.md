@@ -1,0 +1,184 @@
+# Guía de Despliegue con Docker y CapRover
+
+## Descripción
+
+Esta guía explica cómo desplegar la landing page de S&G Soluciones de Ingeniería utilizando Docker y CapRover para un despliegue automatizado y escalable.
+
+## Requisitos Previos
+
+### Para Docker Local
+- Docker Desktop instalado
+- Docker Compose (incluido con Docker Desktop)
+
+### Para CapRover
+- Servidor con CapRover instalado
+- Acceso al panel de administración de CapRover
+- Dominio configurado (opcional)
+
+## Archivos de Configuración
+
+### Dockerfile
+El proyecto incluye un Dockerfile multi-stage que:
+- **Etapa 1 (Builder)**: Construye la aplicación Astro
+- **Etapa 2 (Producción)**: Sirve los archivos estáticos con Nginx
+
+### Archivos de Configuración Incluidos
+- `Dockerfile`: Configuración de contenedor optimizada
+- `.dockerignore`: Excluye archivos innecesarios del contexto
+- `captain-definition`: Configuración para CapRover
+- `docker-compose.yml`: Para testing local
+
+## Despliegue Local con Docker
+
+### 1. Construcción de la Imagen
+```bash
+# Construir la imagen
+docker build -t sgsolucionesing .
+
+# Ejecutar el contenedor
+docker run -p 8080:80 sgsolucionesing
+```
+
+### 2. Usando Docker Compose
+```bash
+# Iniciar el servicio
+docker-compose up -d
+
+# Ver logs
+docker-compose logs -f
+
+# Detener el servicio
+docker-compose down
+```
+
+La aplicación estará disponible en: `http://localhost:8080`
+
+## Despliegue con CapRover
+
+### 1. Preparación del Repositorio
+Asegúrate de que el repositorio contenga:
+- `captain-definition` en la raíz del proyecto
+- `Dockerfile` configurado correctamente
+
+### 2. Configuración en CapRover
+
+#### Opción A: Despliegue desde Git
+1. Accede al panel de CapRover
+2. Crea una nueva aplicación
+3. Configura el repositorio Git
+4. CapRover detectará automáticamente el `captain-definition`
+5. Inicia el despliegue
+
+#### Opción B: Despliegue Manual
+1. Comprime el proyecto (excluyendo `node_modules` y `dist`)
+2. Sube el archivo comprimido a CapRover
+3. CapRover construirá y desplegará automáticamente
+
+### 3. Configuración Post-Despliegue
+
+#### Variables de Entorno (si es necesario)
+```bash
+NODE_ENV=production
+```
+
+#### Configuración de Dominio
+1. En el panel de CapRover, ve a la aplicación
+2. Configura el dominio personalizado
+3. Habilita HTTPS automático
+
+## Monitoreo y Mantenimiento
+
+### Health Checks
+El contenedor incluye un endpoint de health check:
+- URL: `/health`
+- Respuesta: `healthy` (HTTP 200)
+
+### Logs
+```bash
+# Docker local
+docker logs sgsolucionesing-web
+
+# Docker Compose
+docker-compose logs -f
+
+# CapRover
+# Disponible en el panel web de CapRover
+```
+
+### Actualización de la Aplicación
+
+#### Con CapRover (Git)
+1. Realiza push al repositorio
+2. CapRover detectará los cambios automáticamente
+3. Se iniciará un nuevo despliegue
+
+#### Manual
+1. Construye nueva imagen
+2. Sube a CapRover
+3. CapRover realizará el rolling update
+
+## Optimizaciones de Producción
+
+### Nginx
+- Compresión gzip habilitada
+- Cache de archivos estáticos (1 año)
+- Headers de seguridad configurados
+
+### Docker
+- Imagen multi-stage para reducir tamaño
+- Imagen basada en Alpine Linux
+- Health checks configurados
+
+## Solución de Problemas
+
+### Problemas Comunes
+
+#### Error de construcción
+```bash
+# Verificar logs de construcción
+docker build --no-cache -t sgsolucionesing .
+```
+
+#### Problemas de permisos
+```bash
+# Verificar permisos de archivos
+ls -la
+```
+
+#### Contenedor no inicia
+```bash
+# Verificar logs del contenedor
+docker logs <container_id>
+```
+
+### Verificación de Configuración
+
+#### Test del Health Check
+```bash
+# Dentro del contenedor
+curl -f http://localhost/health
+
+# Desde el host
+curl -f http://localhost:8080/health
+```
+
+## Seguridad
+
+### Headers de Seguridad Configurados
+- `X-Frame-Options: SAMEORIGIN`
+- `X-Content-Type-Options: nosniff`
+- `X-XSS-Protection: 1; mode=block`
+- `Referrer-Policy: strict-origin-when-cross-origin`
+
+### Recomendaciones
+- Mantener Docker y CapRover actualizados
+- Usar HTTPS en producción
+- Configurar firewall apropiadamente
+- Monitorear logs regularmente
+
+## Contacto y Soporte
+
+Para problemas relacionados con el despliegue, consulta:
+- Documentación de CapRover: https://caprover.com/docs/
+- Documentación de Docker: https://docs.docker.com/
+- Repositorio del proyecto para issues específicos
