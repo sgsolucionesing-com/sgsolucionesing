@@ -33,10 +33,17 @@ FROM nginx:alpine AS production
 # Instalar curl para health checks
 RUN apk add --no-cache curl
 
-# Copiar configuración personalizada de nginx
-COPY <<EOF /etc/nginx/conf.d/default.conf
+# Variables de entorno para CapRover
+ENV NODE_ENV=production
+ENV PORT=80
+
+# Crear directorio para configuración personalizada
+RUN mkdir -p /etc/nginx/templates
+
+# Configuración de Nginx optimizada para CapRover
+COPY <<EOF /etc/nginx/templates/default.conf.template
 server {
-    listen 80;
+    listen \${PORT};
     server_name _;
     root /usr/share/nginx/html;
     index index.html;
@@ -50,19 +57,36 @@ server {
     location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)\$ {
         expires 1y;
         add_header Cache-Control "public, immutable";
+        add_header Vary "Accept-Encoding";
     }
     
-    # Configuración de seguridad
+    # Configuración de seguridad mejorada
     add_header X-Frame-Options "SAMEORIGIN" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header X-XSS-Protection "1; mode=block" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://kit.fontawesome.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://ka-f.fontawesome.com; font-src 'self' https://fonts.gstatic.com https://ka-f.fontawesome.com; img-src 'self' data: https:; connect-src 'self';" always;
     
-    # Health check endpoint
+    # Compresión gzip
+    gzip on;
+    gzip_vary on;
+    gzip_min_length 1024;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_types text/plain text/css text/xml text/javascript application/javascript application/xml+rss application/json;
+    
+    # Health check endpoint para CapRover
     location /health {
         access_log off;
         return 200 "healthy\n";
         add_header Content-Type text/plain;
+    }
+    
+    # Endpoint de status para monitoreo
+    location /status {
+        access_log off;
+        return 200 '{"status":"ok","service":"sgsolucionesing","timestamp":"\$time_iso8601"}';
+        add_header Content-Type application/json;
     }
 }
 EOF

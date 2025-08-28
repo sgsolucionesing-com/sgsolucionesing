@@ -56,9 +56,12 @@ La aplicación estará disponible en: `http://localhost:8080`
 ## Despliegue con CapRover
 
 ### 1. Preparación del Repositorio
-Asegúrate de que el repositorio contenga:
+El proyecto incluye configuración optimizada para CapRover:
 - `captain-definition` en la raíz del proyecto
-- `Dockerfile` configurado correctamente
+- `Dockerfile` optimizado con configuración de Nginx mejorada
+- `.dockerignore` para contexto de build eficiente
+- `.caprover` con configuraciones recomendadas
+- `deploy-caprover.sh` script de despliegue automatizado
 
 ### 2. Configuración en CapRover
 
@@ -74,6 +77,23 @@ Asegúrate de que el repositorio contenga:
 2. Sube el archivo comprimido a CapRover
 3. CapRover construirá y desplegará automáticamente
 
+#### Opción C: Script Automatizado
+Utiliza el script incluido para un despliegue simplificado:
+```bash
+# Hacer el script ejecutable (solo la primera vez)
+chmod +x deploy-caprover.sh
+
+# Ejecutar el script de despliegue
+./deploy-caprover.sh
+```
+
+El script automatizado:
+- Verifica dependencias y configuración
+- Ejecuta tests si están disponibles
+- Construye y prueba la imagen Docker localmente
+- Crea un archivo tar optimizado para CapRover
+- Proporciona instrucciones paso a paso
+
 ### 3. Configuración Post-Despliegue
 
 #### Variables de Entorno (si es necesario)
@@ -88,10 +108,19 @@ NODE_ENV=production
 
 ## Monitoreo y Mantenimiento
 
-### Health Checks
-El contenedor incluye un endpoint de health check:
+### Health Checks y Monitoreo
+El contenedor incluye endpoints optimizados para CapRover:
+
+#### Health Check
 - URL: `/health`
 - Respuesta: `healthy` (HTTP 200)
+- Usado por CapRover para verificar el estado de la aplicación
+
+#### Status Endpoint
+- URL: `/status`
+- Respuesta: JSON con información del servicio
+- Incluye timestamp para monitoreo avanzado
+- Formato: `{"status":"ok","service":"sgsolucionesing","timestamp":"2024-01-01T12:00:00Z"}`
 
 ### Logs
 ```bash
