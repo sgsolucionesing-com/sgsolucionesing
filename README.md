@@ -54,6 +54,27 @@ Este proyecto incluye documentación detallada en la carpeta `docs/`:
 - **[Guía de Contribución](docs/contribucion.md)**: Instrucciones para contribuir al proyecto
 - **[Optimización SEO](docs/seo-optimizacion.md)**: Prácticas de SEO implementadas
 - **[Guía de Desarrollo](docs/guia-desarrollo.md)**: Directrices técnicas para el desarrollo
+- **[Despliegue Docker y CapRover](docs/despliegue-docker-caprover.md)**: Guía completa de despliegue
+
+## 🐳 Despliegue
+
+### Docker Local
+```bash
+# Construcción y ejecución
+docker build -t sgsolucionesing .
+docker run -p 8080:80 sgsolucionesing
+
+# O usando Docker Compose
+docker-compose up -d
+```
+
+### CapRover
+El proyecto está configurado para despliegue automático con CapRover:
+- Archivo `captain-definition` incluido
+- Dockerfile optimizado para producción
+- Health checks configurados
+
+Consulta la [guía de despliegue](docs/despliegue-docker-caprover.md) para instrucciones detalladas.
 
 ## 🌐 Páginas del Sitio
 

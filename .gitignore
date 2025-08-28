@@ -22,3 +22,37 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Docker
+.dockerignore
+docker-compose*.yml
+docker-compose.override.yml
+
+# CapRover
+captain-definition
+
+# Logs adicionales
+logs/
+*.log
+
+# Archivos temporales
+.tmp/
+.temp/
+
+# Coverage reports
+coverage/
+.nyc_output/
+
+# Cache
+.cache/
+.parcel-cache/
+
+# Backup files
+*.bak
+*.backup
+
+# VS Code
+.vscode/
+
+# Sistema operativo
+Thumbs.db
