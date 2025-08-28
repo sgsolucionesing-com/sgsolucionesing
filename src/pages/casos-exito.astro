@@ -1,0 +1,122 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// SEO metadata específico para esta página
+const title = "Casos de Éxito | S&G Soluciones de Ingeniería";
+const description = "Descubre nuestros proyectos exitosos en automatización industrial, procesos industriales y desarrollo de software en la costa norte de Colombia.";
+const keywords = "casos de éxito, proyectos, automatización industrial, ingeniería, procesos industriales, IoT, industria 4.0, desarrollo de software";
+---
+
+<Layout title={title} description={description} keywords={keywords}>
+	<main>
+		<!-- Header Section -->
+		<div class="hero-animated-bg py-20 text-white">
+			<div class="container mx-auto px-4">
+				<h1 class="text-4xl md:text-5xl font-bold text-center mb-6">Casos de Éxito</h1>
+				<div class="section-divider"></div>
+				<p class="text-lg text-center max-w-3xl mx-auto mt-6">
+					Conoce cómo hemos ayudado a nuestros clientes a optimizar sus procesos y alcanzar sus objetivos a través de soluciones innovadoras de ingeniería.
+				</p>
+			</div>
+		</div>
+		
+		<div class="container mx-auto px-4 py-16">
+		
+		<!-- Esta sección se completará con casos reales de la empresa -->
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+			<!-- Caso de éxito 1 (ejemplo) -->
+			<article class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+				<div class="h-48 bg-gradient-to-r from-primary/20 to-secondary/20 flex items-center justify-center">
+					<div class="service-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+						</svg>
+					</div>
+				</div>
+				<div class="p-6">
+					<h3 class="text-xl font-bold mb-2">Automatización de Planta Procesadora</h3>
+					<p class="text-gray-600 mb-4">Sector: Agroindustria</p>
+					<p class="mb-4">Implementación de un sistema de automatización completo para una planta procesadora de alimentos, mejorando la eficiencia en un 40%.</p>
+					<a href="#" class="text-primary font-medium hover:underline">Ver detalles →</a>
+				</div>
+			</article>
+			
+			<!-- Caso de éxito 2 (ejemplo) -->
+			<article class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+				<div class="h-48 bg-gradient-to-r from-primary/20 to-secondary/20 flex items-center justify-center">
+					<div class="service-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+						</svg>
+					</div>
+				</div>
+				<div class="p-6">
+					<h3 class="text-xl font-bold mb-2">Sistema IoT para Monitoreo Industrial</h3>
+					<p class="text-gray-600 mb-4">Sector: Manufactura</p>
+					<p class="mb-4">Desarrollo e implementación de un sistema IoT para monitoreo en tiempo real de equipos industriales, reduciendo tiempos de inactividad en un 25%.</p>
+					<a href="#" class="text-primary font-medium hover:underline">Ver detalles →</a>
+				</div>
+			</article>
+			
+			<!-- Caso de éxito 3 (ejemplo) -->
+			<article class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+				<div class="h-48 bg-gradient-to-r from-primary/20 to-secondary/20 flex items-center justify-center">
+					<div class="service-icon">
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+						</svg>
+					</div>
+				</div>
+				<div class="p-6">
+					<h3 class="text-xl font-bold mb-2">Software de Gestión de Procesos</h3>
+					<p class="text-gray-600 mb-4">Sector: Servicios</p>
+					<p class="mb-4">Desarrollo de una plataforma personalizada para la gestión integral de procesos empresariales, optimizando la operación y mejorando la toma de decisiones.</p>
+					<a href="#" class="text-primary font-medium hover:underline">Ver detalles →</a>
+				</div>
+			</article>
+		</div>
+		
+		<!-- Sección de testimonios -->
+		<section class="mt-20">
+			<h2 class="text-3xl font-bold text-center mb-4">Lo que dicen nuestros clientes</h2>
+			<div class="section-divider"></div>
+			
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-10">
+				<!-- Testimonio 1 -->
+				<div class="bg-light-gray p-6 rounded-lg shadow-md card-hover">
+					<p class="italic mb-4 text-gray-600">"El equipo de S&G Soluciones de Ingeniería entendió perfectamente nuestras necesidades y entregó una solución que superó nuestras expectativas. La automatización implementada nos ha permitido aumentar significativamente nuestra productividad."</p>
+					<div class="flex items-center">
+						<div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full mr-3 flex items-center justify-center text-white font-bold">CR</div>
+						<div>
+							<p class="font-bold">Carlos Rodríguez</p>
+							<p class="text-sm text-gray-600">Director de Operaciones, Empresa ABC</p>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Testimonio 2 -->
+				<div class="bg-light-gray p-6 rounded-lg shadow-md card-hover">
+					<p class="italic mb-4 text-gray-600">"La implementación del sistema IoT desarrollado por S&G ha transformado nuestra capacidad de monitoreo y respuesta. Ahora podemos prevenir problemas antes de que ocurran, lo que ha resultado en ahorros significativos."</p>
+					<div class="flex items-center">
+						<div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full mr-3 flex items-center justify-center text-white font-bold">LM</div>
+						<div>
+							<p class="font-bold">Laura Martínez</p>
+							<p class="text-sm text-gray-600">Gerente de Tecnología, Empresa XYZ</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		
+		<!-- Call to Action -->
+		<div class="gradient-bg text-white text-center py-16 mt-20">
+			<div class="container mx-auto px-4">
+				<h2 class="text-3xl font-bold mb-4">¿Listo para transformar tu negocio?</h2>
+				<p class="mb-8 max-w-2xl mx-auto text-blue-100">Contáctanos hoy mismo para discutir cómo podemos ayudarte a optimizar tus procesos y alcanzar tus objetivos de negocio.</p>
+				<a href="/contacto" class="btn-primary">Contáctanos</a>
+			</div>
+		</div>
+	</div>
+	</main>
+</Layout>

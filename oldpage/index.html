@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S&G Soluciones Integrales de Ingeniería - Automatización y Proyectos</title>
+    <meta name="description" content="S&G Soluciones de Ingeniería ofrece servicios integrales 360° en automatización industrial, ejecución de proyectos eléctricos y metalmecánicos, y transformación digital para optimizar procesos empresariales.">
+    
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #2DD4BF;
+            --secondary-color: #1E3A8A;
+            --dark-blue: #0F172A;
+            --light-gray: #F8FAFC;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-gray);
+        }
+        
+        .bg-primary { background-color: var(--primary-color); }
+        .bg-secondary { background-color: var(--secondary-color); }
+        .bg-dark-blue { background-color: var(--dark-blue); }
+        .text-primary { color: var(--primary-color); }
+        .text-secondary { color: var(--secondary-color); }
+        .border-primary { border-color: var(--primary-color); }
+        
+        .hover-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--dark-blue) 100%);
+        }
+
+        /* --- NUEVO FONDO ANIMADO PARA EL HERO --- */
+        .hero-animated-bg {
+            position: relative;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color), var(--dark-blue), #1e293b);
+            background-size: 400% 400%;
+            animation: animated-gradient 15s ease infinite;
+        }
+
+        @keyframes animated-gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* --- NUEVAS ANIMACIONES DE SCROLL --- */
+        .fade-in-element {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .fade-in-element.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stats-counter {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(45, 212, 191, 0.3), 0 4px 6px -2px rgba(45, 212, 191, 0.2);
+        }
+        
+        .section-divider {
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            margin: 2rem auto;
+        }
+
+        .logo-hero {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .logo-hero:hover {
+            transform: scale(1.03);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+    </style>
+</head>
+<body class="bg-white">
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center py-4">
+          <a href="#inicio">
+            <img src="LOGO CUADRADO.png" alt="S&G Soluciones de Ingeniería" class="h-20 w-auto">
+          </a>
+          <div class="hidden md:flex items-center space-x-6">
+            <a href="#inicio" class="text-gray-700 hover:text-primary font-medium">Inicio</a>
+            <a href="#servicios" class="text-gray-700 hover:text-primary font-medium">Servicios</a>
+            <a href="#nosotros" class="text-gray-700 hover:text-primary font-medium">Nosotros</a>
+            <a href="#contacto" class="text-gray-700 hover:text-primary font-medium">Contacto</a>
+            <a href="#servicios" class="bg-primary text-white px-4 py-2 rounded-lg font-semibold hover:bg-opacity-90 transition-transform transform hover:scale-105">
+              Conoce Nuestros Servicios
+            </a>
+            <a href="https://api.whatsapp.com/send?phone=573243025107&text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20S%26G%20Soluciones%20de%20Ingenier%C3%ADa"
+               target="_blank"
+               class="border-2 border-primary text-primary px-4 py-2 rounded-lg font-semibold hover:bg-primary hover:text-white transition-transform transform hover:scale-105">
+              Contactar Ahora
+            </a>
+          </div>
+          <div class="md:hidden">
+            <button id="mobile-menu-btn" class="text-gray-700 hover:text-primary">
+              <i class="fas fa-bars text-xl"></i>
+            </button>
+          </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden pb-4">
+          <div class="flex flex-col space-y-2">
+            <a href="#inicio" class="block px-4 py-2 text-gray-700 hover:text-primary font-medium">Inicio</a>
+            <a href="#servicios" class="block px-4 py-2 text-gray-700 hover:text-primary font-medium">Servicios</a>
+            <a href="#nosotros" class="block px-4 py-2 text-gray-700 hover:text-primary font-medium">Nosotros</a>
+            <a href="#contacto" class="block px-4 py-2 text-gray-700 hover:text-primary font-medium">Contacto</a>
+            <hr class="border-gray-200 my-2">
+            <a href="#servicios" class="block px-4 py-2 bg-primary text-white rounded-lg font-semibold text-center">
+              Conoce Nuestros Servicios
+            </a>
+            <a href="https://api.whatsapp.com/send?phone=573243025107&text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20S%26G%20Soluciones%20de%20Ingenier%C3%ADa"
+               target="_blank"
+               class="block px-4 py-2 border-2 border-primary text-primary rounded-lg font-semibold text-center mt-1">
+              Contactar Ahora
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <section id="inicio" class="hero-animated-bg relative overflow-hidden py-20 lg:py-32 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="fade-in-element">
+                    <h1 class="text-4xl lg:text-6xl font-bold mb-6">
+                        Soluciones de Ingeniería <span class="text-primary">Integrales 360°</span>
+                    </h1>
+                    <p class="text-xl text-blue-100 mb-8 leading-relaxed">
+                        Especialistas en automatización y soluciones tecnológicas, transformamos oportunidades en resultados estratégicos mediante una gestión integral de proyectos. Nos adaptamos con precisión a sus necesidades, abordando con confianza cualquier desafío que su visión demande.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#servicios" class="bg-primary text-white px-8 py-4 rounded-lg font-semibold hover:bg-opacity-90 transition-all transform hover:scale-105 text-center">
+                            Explorar Soluciones
+                        </a>
+                        <a href="https://api.whatsapp.com/send?phone=573243025107&text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20las%20soluciones%20integrales." target="_blank" class="bg-white bg-opacity-10 border-2 border-primary text-white px-8 py-4 rounded-lg font-semibold hover:bg-primary transition-all text-center">
+                            Contactar por WhatsApp
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="flex justify-center items-center fade-in-element" style="transition-delay: 150ms;">
+                    <img src="Logo SyG.png" alt="Logo S&G Soluciones de Ingeniería" class="max-w-md w-full h-auto logo-hero rounded-2xl shadow-2xl">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="bg-white rounded-lg p-8 shadow-lg card-hover fade-in-element">
+                    <div class="stats-counter">100+</div>
+                    <h3 class="text-xl font-semibold text-gray-900 mt-2">Proyectos Exitosos</h3>
+                    <p class="text-gray-600 mt-2">Casos de éxito en múltiples industrias.</p>
+                </div>
+                <div class="bg-white rounded-lg p-8 shadow-lg card-hover fade-in-element" style="transition-delay: 150ms;">
+                    <div class="stats-counter">15+</div>
+                    <h3 class="text-xl font-semibold text-gray-900 mt-2">Años de Experiencia</h3>
+                    <p class="text-gray-600 mt-2">Trayectoria consolidada en el sector.</p>
+                </div>
+                <div class="bg-white rounded-lg p-8 shadow-lg card-hover fade-in-element" style="transition-delay: 300ms;">
+                    <div class="stats-counter">24/7</div>
+                    <h3 class="text-xl font-semibold text-gray-900 mt-2">Soporte Técnico</h3>
+                    <p class="text-gray-600 mt-2">Soporte remoto a tiempo para garantizar tu operación.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="servicios" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in-element">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Nuestras Unidades de Negocio</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Contamos con un equipo multidisciplinario para ofrecer soluciones especializadas y a la medida de cada desafío.
+                </p>
+                <div class="section-divider max-w-xs"></div>
+            </div>
+            
+            <div class="mb-16 fade-in-element">
+                <h3 class="text-3xl font-bold text-secondary mb-2 text-center">Automatización y Transformación Digital</h3>
+                <p class="text-lg text-gray-600 text-center mb-8 max-w-2xl mx-auto">Impulsamos la eficiencia y la productividad a través de tecnología de vanguardia.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-white rounded-xl shadow-lg p-8 card-hover fade-in-element">
+                        <div class="service-icon"><i class="fas fa-robot"></i></div>
+                        <h4 class="text-xl font-semibold text-gray-900 mb-4 text-center">Automatización Industrial</h4>
+                        <p class="text-gray-600 text-center mb-6">Implementación de sistemas automatizados para optimizar procesos y aumentar la productividad.</p>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Sistemas Autónomos (PLC)</li>
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Control de procesos</li>
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Integración de sistemas</li>
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Control PID</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-8 card-hover fade-in-element" style="transition-delay: 150ms;">
+                        <div class="service-icon"><i class="fas fa-cloud"></i></div>
+                        <h4 class="text-xl font-semibold text-gray-900 mb-4 text-center">Soluciones Web y Cloud</h4>
+                        <p class="text-gray-600 text-center mb-6">Servicios web para acceso multiplataforma a datos y control de procesos en tiempo real.</p>
+                         <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Dashboards interactivos</li>
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Acceso multiplataforma</li>
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Monitoreo en tiempo real</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-8 card-hover fade-in-element" style="transition-delay: 300ms;">
+                        <div class="service-icon"><i class="fas fa-chart-line"></i></div>
+                        <h4 class="text-xl font-semibold text-gray-900 mb-4 text-center">Analítica de Datos</h4>
+                        <p class="text-gray-600 text-center mb-6">Transformación de datos en insights accionables para la toma de decisiones estratégicas.</p>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Reportes personalizados</li>
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Análisis predictivo</li>
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Optimización de KPIs</li>
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Desarrollos a la medida</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-16 fade-in-element">
+                <h3 class="text-3xl font-bold text-secondary mb-2 text-center">Ejecución de Proyectos</h3>
+                <p class="text-lg text-gray-600 text-center mb-8 max-w-2xl mx-auto">Diseño, construcción y montaje de soluciones eléctricas, metalmecánicas y solares.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div class="bg-white rounded-xl shadow-lg p-8 card-hover fade-in-element">
+                        <div class="service-icon"><i class="fas fa-bolt"></i></div>
+                        <h4 class="text-xl font-semibold text-gray-900 mb-4 text-center">Ingeniería Eléctrica</h4>
+                        <p class="text-gray-600 text-center mb-6">Diseño e implementación de sistemas eléctricos eficientes y seguros para aplicaciones industriales.</p>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Diseño de tableros</li>
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Instalaciones eléctricas</li>
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Montajes industriales</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-8 card-hover fade-in-element" style="transition-delay: 150ms;">
+                        <div class="service-icon"><i class="fas fa-cogs"></i></div>
+                        <h4 class="text-xl font-semibold text-gray-900 mb-4 text-center">Proyectos Metalmecánicos y Solares</h4>
+                        <p class="text-gray-600 text-center mb-6">Ejecución de obra civil y montajes para una solución completa y sostenible.</p>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Estructuras y montajes</li>
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Ingeniería de detalle</li>
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Instalación de sistemas solares</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fade-in-element">
+                <h3 class="text-3xl font-bold text-secondary mb-2 text-center">Soporte, Mantenimiento y Consultoría</h3>
+                <p class="text-lg text-gray-600 text-center mb-8 max-w-2xl mx-auto">Aseguramos la continuidad operativa y el máximo rendimiento de tus activos.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-xl shadow-lg p-8 card-hover fade-in-element">
+                        <div class="service-icon"><i class="fas fa-tools"></i></div>
+                        <h4 class="text-xl font-semibold text-gray-900 mb-4 text-center">Mantenimiento y Soporte</h4>
+                        <p class="text-gray-600 text-center mb-6">Programas de mantenimiento y soporte técnico para garantizar la continuidad operacional.</p>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Mantenimiento preventivo</li>
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Soporte técnico 24/7</li>
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Tickets de soporte remoto</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-8 card-hover fade-in-element" style="transition-delay: 150ms;">
+                        <div class="service-icon"><i class="fas fa-users"></i></div>
+                        <h4 class="text-xl font-semibold text-gray-900 mb-4 text-center">Consultoría Especializada</h4>
+                        <p class="text-gray-600 text-center mb-6">Asesoramiento experto para optimizar procesos y mejorar la eficiencia operacional.</p>
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Auditorías técnicas</li>
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Planes de mejora continua</li>
+                            <li class="flex items-center"><i class="fas fa-check text-primary mr-2"></i>Gestión de proyectos</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-gray-50 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 fade-in-element">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Acceso Multiplataforma</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Nuestras soluciones web garantizan que tus datos y controles estén disponibles donde los necesites, cuando los necesites.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="text-center fade-in-element">
+                    <div class="bg-white rounded-xl p-6 shadow-lg card-hover">
+                        <i class="fas fa-desktop text-4xl text-primary mb-4"></i>
+                        <h3 class="font-semibold text-gray-900">Computador</h3>
+                    </div>
+                </div>
+                <div class="text-center fade-in-element" style="transition-delay: 100ms;">
+                    <div class="bg-white rounded-xl p-6 shadow-lg card-hover">
+                        <i class="fas fa-tablet-alt text-4xl text-primary mb-4"></i>
+                        <h3 class="font-semibold text-gray-900">Tablet</h3>
+                    </div>
+                </div>
+                <div class="text-center fade-in-element" style="transition-delay: 200ms;">
+                    <div class="bg-white rounded-xl p-6 shadow-lg card-hover">
+                        <i class="fab fa-apple text-4xl text-primary mb-4"></i>
+                        <h3 class="font-semibold text-gray-900">iPad</h3>
+                    </div>
+                </div>
+                <div class="text-center fade-in-element" style="transition-delay: 300ms;">
+                    <div class="bg-white rounded-xl p-6 shadow-lg card-hover">
+                        <i class="fas fa-mobile-alt text-4xl text-primary mb-4"></i>
+                        <h3 class="font-semibold text-gray-900">Smartphone</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="nosotros" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="fade-in-element">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-6">Quiénes Somos</h2>
+                    <div class="section-divider w-20 ml-0"></div>
+                    <h3 class="text-2xl font-semibold text-primary mb-4">Su Aliado Estratégico en Ingeniería</h3>
+                    <p class="text-gray-600 mb-6 text-lg leading-relaxed">
+                        Especialistas en automatización y soluciones tecnológicas, transformamos oportunidades en resultados estratégicos mediante una gestión integral de proyectos. Nos adaptamos con precisión a sus necesidades, abordando con confianza cualquier desafío que su visión demande.
+                    </p>
+                    <div class="bg-blue-50 border-l-4 border-primary p-6 rounded-r-lg">
+                        <p class="text-gray-800 font-medium text-lg">
+                            "Nuestra experiencia se demuestra en más de 100 casos de éxito y proyectos de ingeniería."
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 fade-in-element" style="transition-delay: 150ms;">
+                    <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                        <div class="text-center">
+                            <i class="fas fa-award text-4xl text-primary mb-4"></i>
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">Experiencia</h3>
+                            <p class="text-gray-600">Más de 15 años en el mercado industrial.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                        <div class="text-center">
+                            <i class="fas fa-handshake text-4xl text-primary mb-4"></i>
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">Confianza</h3>
+                            <p class="text-gray-600">Líderes de la industria confían en nosotros.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                        <div class="text-center">
+                            <i class="fas fa-lightbulb text-4xl text-primary mb-4"></i>
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">Innovación</h3>
+                            <p class="text-gray-600">Tecnologías de vanguardia aplicadas.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                        <div class="text-center">
+                            <i class="fas fa-chart-line text-4xl text-primary mb-4"></i>
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">Resultados</h3>
+                            <p class="text-gray-600">Optimización comprobada de procesos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="gradient-bg py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in-element">
+                <h2 class="text-4xl font-bold text-white mb-4">Sectores de Aplicación</h2>
+                <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+                    Nuestra experiencia abarca una amplia gama de industrias, adaptando nuestras soluciones a los desafíos específicos de cada sector.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6 text-center card-hover fade-in-element">
+                    <i class="fas fa-industry text-4xl text-white mb-4"></i>
+                    <h3 class="text-lg font-semibold text-white mb-2">Manufactura</h3>
+                    <p class="text-blue-100">Automatización de líneas de producción.</p>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6 text-center card-hover fade-in-element" style="transition-delay: 100ms;">
+                    <i class="fas fa-oil-can text-4xl text-white mb-4"></i>
+                    <h3 class="text-lg font-semibold text-white mb-2">Petroquímica</h3>
+                    <p class="text-blue-100">Control de procesos especializados.</p>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6 text-center card-hover fade-in-element" style="transition-delay: 200ms;">
+                    <i class="fas fa-utensils text-4xl text-white mb-4"></i>
+                    <h3 class="text-lg font-semibold text-white mb-2">Alimentos y Bebidas</h3>
+                    <p class="text-blue-100">Sistemas de calidad y trazabilidad.</p>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6 text-center card-hover fade-in-element" style="transition-delay: 300ms;">
+                    <i class="fas fa-prescription-bottle text-4xl text-white mb-4"></i>
+                    <h3 class="text-lg font-semibold text-white mb-2">Farmacéutica</h3>
+                    <p class="text-blue-100">Validación y control de procesos.</p>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6 text-center card-hover fade-in-element" style="transition-delay: 400ms;">
+                    <i class="fas fa-car text-4xl text-white mb-4"></i>
+                    <h3 class="text-lg font-semibold text-white mb-2">Automotriz</h3>
+                    <p class="text-blue-100">Automatización de ensamblaje.</p>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6 text-center card-hover fade-in-element" style="transition-delay: 500ms;">
+                    <i class="fas fa-tint text-4xl text-white mb-4"></i>
+                    <h3 class="text-lg font-semibold text-white mb-2">Tratamiento de Agua</h3>
+                    <p class="text-blue-100">Sistemas de monitoreo y control.</p>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6 text-center card-hover fade-in-element" style="transition-delay: 600ms;">
+                    <i class="fas fa-solar-panel text-4xl text-white mb-4"></i>
+                    <h3 class="text-lg font-semibold text-white mb-2">Energías Renovables</h3>
+                    <p class="text-blue-100">Proyectos de energía solar.</p>
+                </div>
+                <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-6 text-center card-hover fade-in-element" style="transition-delay: 700ms;">
+                    <i class="fas fa-building text-4xl text-white mb-4"></i>
+                    <h3 class="text-lg font-semibold text-white mb-2">Construcción</h3>
+                    <p class="text-blue-100">Automatización y control eléctrico.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="biblioteca" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center fade-in-element">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Biblioteca de Proyectos</h2>
+            <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+            Accede a nuestro dosier completo de casos de éxito, fichas técnicas y proyectos realizados para conocer a fondo nuestro trabajo.
+            </p>
+            <a href="#" id="biblioteca-link" class="inline-block bg-secondary text-white px-8 py-4 rounded-lg font-semibold transition-all transform hover:scale-105" target="_blank">
+            Ver Biblioteca de Proyectos
+            </a>
+        </div>
+    </section>
+
+    <section id="testimonios" class="bg-gray-50 py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 fade-in-element">
+                <h2 class="text-4xl font-bold text-gray-900">Lo que dicen nuestros clientes</h2>
+                <p class="text-xl text-gray-600 mt-2">Testimonios de jefes de mantenimiento, producción y gerencia.</p>
+                <div class="section-divider max-w-xs"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover fade-in-element">
+                    <p class="text-gray-600 mb-4 italic">“Gracias a S&G optimizamos nuestra línea de envasado un 30% en un mes.”</p>
+                    <h4 class="font-semibold text-gray-900">Ing. Andrés Rodríguez</h4>
+                    <p class="text-primary text-sm">Sector Alimentos y Bebidas</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover fade-in-element" style="transition-delay: 100ms;">
+                    <p class="text-gray-600 mb-4 italic">“Profesionalismo total: entregaron todo a tiempo y sin sobrecostos.”</p>
+                    <h4 class="font-semibold text-gray-900">Sra. Diana Castro</h4>
+                    <p class="text-primary text-sm">Sector Construcción y Cemento</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover fade-in-element" style="transition-delay: 200ms;">
+                    <p class="text-gray-600 mb-4 italic">“Su soporte 24/7 nos sacó de apuros en días críticos de producción.”</p>
+                    <h4 class="font-semibold text-gray-900">Ing. Luis Martínez</h4>
+                    <p class="text-primary text-sm">Sector Construcción y Cemento</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover fade-in-element" style="transition-delay: 300ms;">
+                    <p class="text-gray-600 mb-4 italic">“Muy recomendados: su solución web nos permitió monitorear todo en tiempo real.”</p>
+                    <h4 class="font-semibold text-gray-900">Sra. Laura Gómez</h4>
+                    <p class="text-primary text-sm">Sector Plásticos y Empaques</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover fade-in-element" style="transition-delay: 400ms;">
+                    <p class="text-gray-600 mb-4 italic">“Equipo altamente calificado y comprometido con la mejora continua.”</p>
+                    <h4 class="font-semibold text-gray-900">Ing. Fernando Pérez</h4>
+                    <p class="text-primary text-sm">Sector Alimentos y Bebidas</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover fade-in-element" style="transition-delay: 500ms;">
+                    <p class="text-gray-600 mb-4 italic">“La implementación del nuevo tablero de control fue impecable y segura.”</p>
+                    <h4 class="font-semibold text-gray-900">Sr. Carlos Vargas</h4>
+                    <p class="text-primary text-sm">Sector Manufactura</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contacto" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in-element">
+                <h2 class="text-4xl font-bold text-gray-900 mb-4">Contacta con Nosotros</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    ¿Listo para optimizar tus procesos? Contáctanos y descubre cómo podemos ayudarte a alcanzar tus objetivos de manera más eficiente.
+                </p>
+                <div class="section-divider max-w-xs"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="bg-white rounded-xl shadow-lg p-8 fade-in-element">
+                    <h3 class="text-2xl font-semibold text-gray-900 mb-6">Información de Contacto</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-center">
+                            <div class="bg-primary bg-opacity-20 rounded-full p-3 mr-4 w-12 h-12 flex items-center justify-center"><i class="fas fa-map-marker-alt text-primary text-xl"></i></div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900">Dirección</h4>
+                                <p class="text-gray-600">Carrera 44 #69-80, Barranquilla, Colombia</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="bg-primary bg-opacity-20 rounded-full p-3 mr-4 w-12 h-12 flex items-center justify-center"><i class="fab fa-whatsapp text-primary text-xl"></i></div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900">Teléfono / WhatsApp</h4>
+                                <a href="https://api.whatsapp.com/send?phone=573243025107&text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n." class="text-gray-600 hover:text-primary" target="_blank">+57 324 3025107</a>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="bg-primary bg-opacity-20 rounded-full p-3 mr-4 w-12 h-12 flex items-center justify-center"><i class="fas fa-envelope text-primary text-xl"></i></div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900">Email</h4>
+                                <a href="mailto:informacion@sgsolucionesing.com" class="text-gray-600 hover:text-primary">informacion@sgsolucionesing.com</a>
+                            </div>
+                        </div>
+                         <div class="flex items-center">
+                            <div class="bg-primary bg-opacity-20 rounded-full p-3 mr-4 w-12 h-12 flex items-center justify-center"><i class="fas fa-clock text-primary text-xl"></i></div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900">Horario de Atención</h4>
+                                <p class="text-gray-600">Lunes a Viernes: 8:00 AM - 5:00 PM</p>
+                                <p class="text-gray-600">Sábados: 8:00 AM - 12:00 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fade-in-element" style="transition-delay: 150ms;">
+                    <div class="bg-white rounded-xl shadow-lg p-8">
+                        <h3 class="text-2xl font-semibold text-gray-900 mb-6">Envíanos un Mensaje</h3>
+                        <form action="mailto:informacion@sgsolucionesing.com" method="post" enctype="text/plain" class="space-y-6">
+                            <div>
+                                <label for="name" class="font-semibold text-gray-700">Nombre Completo</label>
+                                <input type="text" id="name" name="name" required class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="email" class="font-semibold text-gray-700">Correo Electrónico</label>
+                                <input type="email" id="email" name="email" required class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="subject" class="font-semibold text-gray-700">Asunto</label>
+                                <input type="text" id="subject" name="subject" required class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div>
+                                <label for="message" class="font-semibold text-gray-700">Mensaje</label>
+                                <textarea id="message" name="message" rows="5" required class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"></textarea>
+                            </div>
+                            <div>
+                                <button type="submit" class="w-full bg-primary text-white px-8 py-4 rounded-lg font-semibold hover:bg-opacity-90 transition-all transform hover:scale-105">
+                                    Enviar Mensaje
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-dark-blue text-white">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="md:col-span-1">
+                    <img src="LOGO CUADRADO.png" alt="S&G Soluciones de Ingeniería" class="h-20 w-auto bg-white p-2 rounded-lg mb-4">
+                    <p class="text-gray-400">Soluciones de ingeniería integrales para la industria moderna.</p>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-4">Navegación</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#inicio" class="text-gray-400 hover:text-white">Inicio</a></li>
+                        <li><a href="#servicios" class="text-gray-400 hover:text-white">Servicios</a></li>
+                        <li><a href="#nosotros" class="text-gray-400 hover:text-white">Nosotros</a></li>
+                        <li><a href="#contacto" class="text-gray-400 hover:text-white">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-4">Contacto</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start"><i class="fas fa-map-marker-alt mt-1 mr-2"></i>Carrera 44 #69-80, Barranquilla</li>
+                        <li class="flex items-start"><i class="fas fa-phone mt-1 mr-2"></i>+57 324 3025107</li>
+                        <li class="flex items-start"><i class="fas fa-envelope mt-1 mr-2"></i>informacion@sgsolucionesing.com</li>
+                         <li class="flex items-start"><i class="fas fa-clock mt-1 mr-2"></i>Lun-Vie: 8am-5pm, Sáb: 8am-12pm</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-4">Síguenos</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin-in text-2xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram text-2xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 border-t border-gray-700 pt-6 text-center text-gray-500">
+                <p>&copy; 2024 S&G Soluciones de Ingeniería S.A.S. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile Menu Toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // --- NUEVA ANIMACIÓN DE SCROLL ---
+            const observer = new IntersectionObserver((entries, observerInstance) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observerInstance.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1 
+            });
+
+            const elementsToAnimate = document.querySelectorAll('.fade-in-element');
+            elementsToAnimate.forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>

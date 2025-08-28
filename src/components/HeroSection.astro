@@ -1,0 +1,87 @@
+---
+// Componente para la sección hero
+---
+
+<section id="inicio" class="hero-animated-bg relative overflow-hidden py-20 lg:py-32 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="fade-in-element">
+                <h1 class="text-4xl lg:text-6xl font-bold mb-6">
+                    Soluciones de Ingeniería <span class="text-primary">Integrales 360°</span>
+                </h1>
+                <p class="text-xl text-blue-100 mb-8 leading-relaxed">
+                    Especialistas en automatización y soluciones tecnológicas, transformamos oportunidades en resultados estratégicos mediante una gestión integral de proyectos. Nos adaptamos con precisión a sus necesidades, abordando con confianza cualquier desafío que su visión demande.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="#servicios" class="bg-primary text-white px-8 py-4 rounded-lg font-semibold hover:bg-opacity-90 transition-all transform hover:scale-105 text-center">
+                        Explorar Soluciones
+                    </a>
+                    <a href="https://api.whatsapp.com/send?phone=573243025107&text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20las%20soluciones%20integrales." target="_blank" class="bg-white bg-opacity-10 border-2 border-primary text-white px-8 py-4 rounded-lg font-semibold hover:bg-primary transition-all text-center">
+                        Contactar por WhatsApp
+                    </a>
+                </div>
+            </div>
+            
+            <div class="flex justify-center items-center fade-in-element" style="transition-delay: 150ms;">
+                <img src="/images/logo.svg" alt="Logo S&G Soluciones de Ingeniería" class="max-w-md w-full h-auto logo-hero rounded-2xl shadow-2xl" />
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* --- NUEVO FONDO ANIMADO PARA EL HERO --- */
+    .hero-animated-bg {
+        position: relative;
+        background: linear-gradient(135deg, var(--secondary-color), var(--primary-color), var(--dark-blue), #1e293b);
+        background-size: 400% 400%;
+        animation: animated-gradient 15s ease infinite;
+    }
+
+    @keyframes animated-gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    /* --- ANIMACIONES DE SCROLL --- */
+    .fade-in-element {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-in-element.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .logo-hero {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .logo-hero:hover {
+        transform: scale(1.03);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+</style>
+
+<script>
+    // --- ANIMACIÓN DE SCROLL ---
+    document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries, observerInstance) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observerInstance.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1 
+        });
+
+        const elementsToAnimate = document.querySelectorAll('.fade-in-element');
+        elementsToAnimate.forEach(el => {
+            observer.observe(el);
+        });
+    });
+</script>

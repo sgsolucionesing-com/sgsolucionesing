@@ -1,0 +1,75 @@
+---
+// Componente para la sección de estadísticas
+---
+
+<section class="bg-gray-50 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div class="bg-white rounded-lg p-8 shadow-lg card-hover fade-in-element">
+                <div class="stats-counter">100+</div>
+                <h3 class="text-xl font-semibold text-gray-900 mt-2">Proyectos Exitosos</h3>
+                <p class="text-gray-600 mt-2">Casos de éxito en múltiples industrias.</p>
+            </div>
+            <div class="bg-white rounded-lg p-8 shadow-lg card-hover fade-in-element" style="transition-delay: 150ms;">
+                <div class="stats-counter">15+</div>
+                <h3 class="text-xl font-semibold text-gray-900 mt-2">Años de Experiencia</h3>
+                <p class="text-gray-600 mt-2">Trayectoria consolidada en el sector.</p>
+            </div>
+            <div class="bg-white rounded-lg p-8 shadow-lg card-hover fade-in-element" style="transition-delay: 300ms;">
+                <div class="stats-counter">24/7</div>
+                <h3 class="text-xl font-semibold text-gray-900 mt-2">Soporte Técnico</h3>
+                <p class="text-gray-600 mt-2">Soporte remoto a tiempo para garantizar tu operación.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .stats-counter {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    /* --- ANIMACIONES DE SCROLL --- */
+    .fade-in-element {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .fade-in-element.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+
+<script>
+    // --- ANIMACIÓN DE SCROLL ---
+    document.addEventListener('DOMContentLoaded', () => {
+        const observer = new IntersectionObserver((entries, observerInstance) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observerInstance.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1 
+        });
+
+        const elementsToAnimate = document.querySelectorAll('.fade-in-element');
+        elementsToAnimate.forEach(el => {
+            observer.observe(el);
+        });
+    });
+</script>
