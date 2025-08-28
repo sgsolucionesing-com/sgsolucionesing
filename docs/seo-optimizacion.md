@@ -2,6 +2,34 @@
 
 Este documento detalla las prácticas de optimización para motores de búsqueda (SEO) implementadas en el sitio web de S&G Soluciones de Ingeniería, así como recomendaciones para mantener y mejorar el posicionamiento en buscadores.
 
+## Nuevas Implementaciones (Última actualización)
+
+### Sitemap Automático
+- **Integración**: `@astrojs/sitemap` v3.5.1
+- **Configuración**: Sitemap generado automáticamente durante el build
+- **Archivos generados**: 
+  - `sitemap-index.xml`: Índice principal del sitemap
+  - `sitemap-0.xml`: URLs de todas las páginas del sitio
+- **URL configurada**: https://sgsolucionesing.com
+- **Referencia en HTML**: `<link rel="sitemap" type="application/xml" href="/sitemap-index.xml">`
+
+### Datos Estructurados (JSON-LD)
+- **Tipo**: Organization Schema
+- **Información incluida**:
+  - Datos de la empresa (nombre, URL, logo, descripción)
+  - Información de contacto y ubicación
+  - Catálogo de servicios (Automatización Industrial, Desarrollo de Software, Soluciones IoT)
+  - Área de servicio (Costa Norte de Colombia)
+
+### Robots.txt
+- **Ubicación**: `/public/robots.txt`
+- **Configuración**: Permite acceso a todos los crawlers
+- **Referencia al sitemap**: `Sitemap: https://sgsolucionesing.com/sitemap-index.xml`
+
+### URL Canónica
+- **Implementación**: `<link rel="canonical" href="{canonicalURL}">`
+- **Configuración automática**: Basada en la URL del sitio y la ruta actual
+
 ## Metadatos Implementados
 
 Cada página del sitio incluye los siguientes metadatos para optimización SEO:

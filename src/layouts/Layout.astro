@@ -14,6 +14,10 @@ const {
 	description = "Empresa especializada en soluciones de ingeniería, automatización industrial, procesos industriales y desarrollo de software en la costa norte de Colombia.",
 	keywords = "automatización industrial, ingeniería, procesos industriales, IoT, industria 4.0, desarrollo de software, costa norte, Colombia"
 } = Astro.props;
+
+// URL canónica
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImage = "/assets/icono.png";
 ---
 
 <!doctype html>
@@ -28,17 +32,25 @@ const {
 		<title>{title}</title>
 		<meta name="description" content={description} />
 		<meta name="keywords" content={keywords} />
+		<link rel="canonical" href={canonicalURL} />
+		
+		<!-- Sitemap -->
+		<link rel="sitemap" href="/sitemap-index.xml" />
 		
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:image" content={ogImage} />
 		<meta property="og:site_name" content="S&G Soluciones de Ingeniería" />
+		<meta property="og:locale" content="es_CO" />
 		
 		<!-- Twitter -->
 		<meta property="twitter:card" content="summary_large_image" />
 		<meta property="twitter:title" content={title} />
 		<meta property="twitter:description" content={description} />
+		<meta property="twitter:image" content={ogImage} />
 		
 		<!-- Fonts -->
 		<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -47,6 +59,65 @@ const {
 		
 		<!-- Font Awesome -->
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+		
+		<!-- Datos Estructurados JSON-LD -->
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "Organization",
+			"name": "S&G Soluciones de Ingeniería",
+			"url": "https://sgsolucionesing.com",
+			"logo": "https://sgsolucionesing.com/assets/icono.png",
+			"description": "Empresa especializada en soluciones de ingeniería, automatización industrial, procesos industriales y desarrollo de software en la costa norte de Colombia.",
+			"address": {
+				"@type": "PostalAddress",
+				"addressRegion": "Costa Norte",
+				"addressCountry": "Colombia"
+			},
+			"contactPoint": {
+				"@type": "ContactPoint",
+				"contactType": "customer service",
+				"availableLanguage": "Spanish"
+			},
+			"sameAs": [
+				"https://sgsolucionesing.com"
+			],
+			"serviceArea": {
+				"@type": "Place",
+				"name": "Costa Norte de Colombia"
+			},
+			"hasOfferCatalog": {
+				"@type": "OfferCatalog",
+				"name": "Servicios de Ingeniería",
+				"itemListElement": [
+					{
+						"@type": "Offer",
+						"itemOffered": {
+							"@type": "Service",
+							"name": "Automatización Industrial",
+							"description": "Soluciones de automatización para procesos industriales"
+						}
+					},
+					{
+						"@type": "Offer",
+						"itemOffered": {
+							"@type": "Service",
+							"name": "Desarrollo de Software",
+							"description": "Desarrollo de software industrial y aplicaciones personalizadas"
+						}
+					},
+					{
+						"@type": "Offer",
+						"itemOffered": {
+							"@type": "Service",
+							"name": "Soluciones IoT",
+							"description": "Internet de las cosas para industria 4.0"
+						}
+					}
+				]
+			}
+		}
+		</script>
 	</head>
 	<body class="flex flex-col min-h-screen">
 		<Navigation />

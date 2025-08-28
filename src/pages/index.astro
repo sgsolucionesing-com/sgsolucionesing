@@ -2,10 +2,12 @@
 import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// SEO metadata específico para la página principal
+const title = "S&G Soluciones de Ingeniería | Automatización Industrial y Desarrollo de Software";
+const description = "Empresa líder en soluciones de ingeniería, automatización industrial, procesos industriales y desarrollo de software en la costa norte de Colombia. Optimizamos tus procesos con tecnología de vanguardia.";
+const keywords = "automatización industrial, ingeniería, procesos industriales, IoT, industria 4.0, desarrollo de software, costa norte, Colombia, soluciones tecnológicas, optimización de procesos";
 ---
 
-<Layout>
+<Layout title={title} description={description} keywords={keywords}>
 	<Welcome />
 </Layout>
