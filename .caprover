@@ -1,0 +1,26 @@
+# Configuración para CapRover
+# Este archivo contiene configuraciones específicas para el despliegue
+
+# Variables de entorno recomendadas
+NODE_ENV=production
+PORT=80
+
+# Configuraciones de la aplicación
+APP_NAME=sgsolucionesing
+APP_VERSION=1.0.0
+
+# Configuraciones de salud
+HEALTH_CHECK_PATH=/health
+STATUS_CHECK_PATH=/status
+
+# Configuraciones de dominio (ajustar según necesidades)
+# DOMAIN=sgsolucionesing.com
+# ENABLE_HTTPS=true
+
+# Configuraciones de recursos
+# MEMORY_LIMIT=512m
+# CPU_LIMIT=0.5
+
+# Configuraciones de escalado
+# MIN_REPLICAS=1
+# MAX_REPLICAS=3
