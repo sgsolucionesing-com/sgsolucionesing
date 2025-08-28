@@ -29,7 +29,7 @@ docker-compose*.yml
 docker-compose.override.yml
 
 # CapRover
-captain-definition
+# captain-definition - Necesario para despliegue en CapRover
 
 # Logs adicionales
 logs/
