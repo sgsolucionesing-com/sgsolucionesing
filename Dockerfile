@@ -17,8 +17,8 @@ COPY tailwind.config.* ./
 COPY tsconfig.json ./
 COPY postcss.config.js ./
 
-# Instalar dependencias
-RUN npm ci --only=production
+# Instalar todas las dependencias (incluyendo devDependencies para el build)
+RUN npm ci
 
 # Copiar código fuente
 COPY src/ ./src/
