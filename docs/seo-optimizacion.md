@@ -21,14 +21,33 @@ Este documento detalla las prácticas de optimización para motores de búsqueda
   - Catálogo de servicios (Automatización Industrial, Desarrollo de Software, Soluciones IoT)
   - Área de servicio (Costa Norte de Colombia)
 
-### Robots.txt
-- **Ubicación**: `/public/robots.txt`
+### Robots.txt Dinámico
+- **Ubicación**: `/src/pages/robots.txt.ts` (API Route)
+- **Generación**: Dinámico durante el build usando `import.meta.env.SITE`
 - **Configuración**: Permite acceso a todos los crawlers
-- **Referencia al sitemap**: `Sitemap: https://sgsolucionesing.com/sitemap-index.xml`
+- **Referencia al sitemap**: Generada automáticamente con la URL del sitio
+- **Ventajas**: Se actualiza automáticamente si cambia la URL del sitio
 
 ### URL Canónica
 - **Implementación**: `<link rel="canonical" href="{canonicalURL}">`
 - **Configuración automática**: Basada en la URL del sitio y la ruta actual
+
+## Validación según Documentación Oficial
+
+Nuestra implementación sigue las mejores prácticas recomendadas por la documentación oficial de Astro:
+
+### ✅ Cumplimiento de Estándares
+- **Sitemap automático**: Implementado con `@astrojs/sitemap` v3.5.1
+- **Configuración de site**: URL configurada en `astro.config.mjs`
+- **Robots.txt dinámico**: Implementado como API Route según recomendaciones
+- **Referencias en HTML**: Sitemap referenciado en el `<head>` del sitio
+- **Generación automática**: Tanto sitemap como robots.txt se generan dinámicamente
+
+### 🔄 Beneficios de la Implementación Dinámica
+- **Mantenimiento automático**: No requiere actualización manual
+- **Consistencia**: URLs siempre sincronizadas con la configuración del sitio
+- **Escalabilidad**: Se adapta automáticamente a nuevas páginas
+- **Mejores prácticas**: Sigue las recomendaciones oficiales de Astro
 
 ## Metadatos Implementados
 
