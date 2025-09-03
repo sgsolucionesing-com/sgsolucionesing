@@ -1,132 +1,100 @@
 ---
-// Componente para la sección de proyectos
+// ProjectsSection.astro (Con filtro de datos mejorado)
+import { Icon } from 'astro-icon/components';
+import { slides } from '../data/casos-exito.js';
+
+// CAMBIO CLAVE: Usamos un filtro más robusto e inteligente.
+// 1. Quitamos la slide de "Contacto" (isContact).
+// 2. Quitamos la slide de "Portada Principal" (la que tiene subtitle).
+// 3. Tomamos los primeros 3 resultados de lo que queda.
+const featuredProjects = slides.filter(slide =>
+  !slide.isContact &&
+  !slide.subtitle &&
+  slide.images &&
+  slide.images.length > 0
+).slice(0, 3);
 ---
 
-<section id="proyectos" class="py-20 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-16 fade-in-element">
-            <h2 class="text-4xl font-bold text-gray-900 mb-4">Biblioteca de Proyectos</h2>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                Explore nuestra colección de proyectos exitosos que demuestran nuestra capacidad para entregar soluciones de ingeniería de alta calidad.
-            </p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Proyecto 1 -->
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden project-card fade-in-element">
-                <div class="relative h-64 overflow-hidden">
-                    <img src="/favicon.svg" alt="Proyecto de Automatización Industrial" class="w-full h-full object-contain p-4 transition-transform duration-500 ease-in-out transform hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
-                    <div class="absolute bottom-0 left-0 p-6">
-                        <span class="bg-primary text-white text-sm font-medium px-3 py-1 rounded-full">Automatización</span>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Sistema SCADA para Planta de Producción</h3>
-                    <p class="text-gray-600 mb-4">Implementación de sistema de supervisión y control para línea de producción automatizada.</p>
-                    <a href="#" class="text-primary font-medium hover:text-secondary transition-colors duration-300 flex items-center">
-                        Ver detalles
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Proyecto 2 -->
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden project-card fade-in-element" style="transition-delay: 100ms;">
-                <div class="relative h-64 overflow-hidden">
-                    <img src="/favicon.svg" alt="Proyecto de Energía Renovable" class="w-full h-full object-contain p-4 transition-transform duration-500 ease-in-out transform hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
-                    <div class="absolute bottom-0 left-0 p-6">
-                        <span class="bg-primary text-white text-sm font-medium px-3 py-1 rounded-full">Energía</span>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Sistema de Monitoreo para Planta Solar</h3>
-                    <p class="text-gray-600 mb-4">Desarrollo e implementación de sistema de monitoreo para planta de energía solar.</p>
-                    <a href="#" class="text-primary font-medium hover:text-secondary transition-colors duration-300 flex items-center">
-                        Ver detalles
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Proyecto 3 -->
-            <div class="bg-white rounded-xl shadow-lg overflow-hidden project-card fade-in-element" style="transition-delay: 200ms;">
-                <div class="relative h-64 overflow-hidden">
-                    <img src="/favicon.svg" alt="Proyecto de Integración de Sistemas" class="w-full h-full object-contain p-4 transition-transform duration-500 ease-in-out transform hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
-                    <div class="absolute bottom-0 left-0 p-6">
-                        <span class="bg-primary text-white text-sm font-medium px-3 py-1 rounded-full">Integración</span>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Integración MES con ERP Empresarial</h3>
-                    <p class="text-gray-600 mb-4">Integración de sistemas de ejecución de manufactura con planificación de recursos empresariales.</p>
-                    <a href="#" class="text-primary font-medium hover:text-secondary transition-colors duration-300 flex items-center">
-                        Ver detalles
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="text-center mt-12 fade-in-element">
-            <a href="#" class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-secondary transition-colors duration-300 shadow-lg hover:shadow-xl">
-                Ver todos los proyectos
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-            </a>
-        </div>
+<section id="proyectos" class="py-20 lg:py-24 bg-gray-50 section-with-pattern overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16 fade-in-element">
+      <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Proyectos Destacados</h2>
+      <p class="text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto">Explora una selección de nuestros casos de éxito más recientes.</p>
     </div>
+  </div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 fade-in-element">
+    <section class="splide project-splide">
+      <div class="splide__track">
+        <ul class="splide__list">
+          {featuredProjects.map((project, index) => (
+            <li class="splide__slide">
+              <div class="bg-white rounded-xl shadow-lg overflow-hidden project-card group flex flex-col h-full cursor-pointer open-modal-card" data-slide-index={index}>
+                <div class="relative h-64 overflow-hidden">
+                  <img src={project.images[0].src} alt={project.title} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                  <div class="absolute bottom-0 left-0 p-4">
+                    <span class="bg-primary text-white text-sm font-medium px-3 py-1 rounded-full">{project.title}</span>
+                  </div>
+                </div>
+                <div class="p-6 flex flex-col flex-grow">
+                  <h3 class="text-xl font-bold text-gray-900 mb-2">{project.description.substring(0, 80)}...</h3>
+                  <p class="mt-auto text-primary font-medium flex items-center">
+                    Ver galería interactiva <Icon name="mdi:arrow-right" class="h-5 w-5 ml-1" />
+                  </p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  </div>
+  <div class="text-center mt-12 fade-in-element">
+    <a href="/casos-exito" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-secondary transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+      Ver Todos los Proyectos
+    </a>
+  </div>
 </section>
 
-<style>
-    .project-card {
-        transition: all 0.3s ease;
-    }
-    
-    .project-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    }
-    
-    /* --- ANIMACIONES DE SCROLL --- */
-    .fade-in-element {
-        opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    }
-
-    .fade-in-element.is-visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
-</style>
-
 <script>
-    // --- ANIMACIÓN DE SCROLL ---
-    document.addEventListener('DOMContentLoaded', () => {
-        const observer = new IntersectionObserver((entries, observerInstance) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    observerInstance.unobserve(entry.target);
-                }
-            });
-        }, {
-            threshold: 0.1 
-        });
+  import Splide from '@splidejs/splide';
+  import type { Splide as SplideInstance } from '@splidejs/splide';
+  import '@splidejs/splide/css/core';
 
-        const elementsToAnimate = document.querySelectorAll('.fade-in-element');
-        elementsToAnimate.forEach(el => {
-            observer.observe(el);
-        });
-    });
+  interface SplideElement extends HTMLElement {
+    splide?: SplideInstance;
+  }
+
+  function initProjectSplide() {
+    const splideElement = document.querySelector<SplideElement>('.project-splide');
+    if (!splideElement || splideElement.splide) return;
+    new Splide(splideElement, {
+      type: 'loop',
+      perPage: 3,
+      perMove: 1,
+      gap: '2rem',
+      pagination: false,
+      breakpoints: {
+        1024: { perPage: 2 },
+        768: { perPage: 1 },
+      }
+    }).mount();
+  }
+  document.addEventListener('astro:page-load', initProjectSplide);
+  document.addEventListener('astro:before-swap', () => {
+    const splideElement = document.querySelector<SplideElement>('.project-splide');
+    if (splideElement && splideElement.splide) {
+      splideElement.splide.destroy();
+    }
+  });
 </script>
+
+<style is:global>
+ .splide__arrow { background-color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+ .splide__arrow svg { fill: var(--primary-color); }
+ .section-with-pattern {background-image: radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0); background-size: 20px 20px;}
+ .project-card { transition: all 0.3s ease; }
+ .project-card:hover { transform: translateY(-10px); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2); }
+ .fade-in-element { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+ .fade-in-element.is-visible { opacity: 1; transform: translateY(0); }
+</style>
