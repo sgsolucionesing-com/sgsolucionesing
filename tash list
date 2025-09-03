@@ -1,0 +1,16 @@
+* [33m7d4fae6[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mDev[m[33m, [m[1;31morigin/Dev[m[33m)[m chore: marca de revisión (sin cambios de código)
+[31m|[m * [33m0b5bb55[m[33m ([m[1;32mreview/ajustes-2025-09-03[m[33m)[m chore: preparación para revisión
+[31m|[m[31m/[m  
+[31m|[m * [33m8e81693[m[33m ([m[1;31morigin/feature/sitemap-seo-optimization[m[33m)[m feat: implementar robots.txt dinámico según mejores prácticas de Astro
+[31m|[m * [33m319b2db[m feat: implementar optimización SEO completa con sitemap automático y datos estructurados
+[31m|[m[31m/[m  
+*   [33m24915da[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m Merge: Resolver conflictos y aplicar corrección CSP para Font Awesome
+[34m|[m[35m\[m  
+[34m|[m *   [33m8699f5d[m Merge pull request #3 from marioser/feature/caprover-optimization
+[34m|[m [36m|[m[1;31m\[m  
+[34m|[m [36m|[m * [33mc15a3ff[m[33m ([m[1;31morigin/feature/caprover-optimization[m[33m)[m fix: Corregir problema de compatibilidad Docker con heredoc en CapRover
+[34m|[m * [1;31m|[m [33m6fc645c[m Merge pull request #2 from marioser/feature/caprover-optimization
+[34m|[m [1;32m|[m[1;31m\[m[1;31m|[m 
+[34m|[m [1;32m|[m * [33ma50ecbe[m docs: Actualizar README con información de optimizaciones de CapRover
+[34m|[m [1;32m|[m * [33m8718fb7[m feat: Optimización completa para despliegue con CapRover
+[34m|[m [1;32m|[m[1;32m/[m  
