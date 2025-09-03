@@ -2,6 +2,53 @@
 
 Este documento detalla las prácticas de optimización para motores de búsqueda (SEO) implementadas en el sitio web de S&G Soluciones de Ingeniería, así como recomendaciones para mantener y mejorar el posicionamiento en buscadores.
 
+## Nuevas Implementaciones (Última actualización)
+
+### Sitemap Automático
+- **Integración**: `@astrojs/sitemap` v3.5.1
+- **Configuración**: Sitemap generado automáticamente durante el build
+- **Archivos generados**: 
+  - `sitemap-index.xml`: Índice principal del sitemap
+  - `sitemap-0.xml`: URLs de todas las páginas del sitio
+- **URL configurada**: https://sgsolucionesing.com
+- **Referencia en HTML**: `<link rel="sitemap" type="application/xml" href="/sitemap-index.xml">`
+
+### Datos Estructurados (JSON-LD)
+- **Tipo**: Organization Schema
+- **Información incluida**:
+  - Datos de la empresa (nombre, URL, logo, descripción)
+  - Información de contacto y ubicación
+  - Catálogo de servicios (Automatización Industrial, Desarrollo de Software, Soluciones IoT)
+  - Área de servicio (Costa Norte de Colombia)
+
+### Robots.txt Dinámico
+- **Ubicación**: `/src/pages/robots.txt.ts` (API Route)
+- **Generación**: Dinámico durante el build usando `import.meta.env.SITE`
+- **Configuración**: Permite acceso a todos los crawlers
+- **Referencia al sitemap**: Generada automáticamente con la URL del sitio
+- **Ventajas**: Se actualiza automáticamente si cambia la URL del sitio
+
+### URL Canónica
+- **Implementación**: `<link rel="canonical" href="{canonicalURL}">`
+- **Configuración automática**: Basada en la URL del sitio y la ruta actual
+
+## Validación según Documentación Oficial
+
+Nuestra implementación sigue las mejores prácticas recomendadas por la documentación oficial de Astro:
+
+### ✅ Cumplimiento de Estándares
+- **Sitemap automático**: Implementado con `@astrojs/sitemap` v3.5.1
+- **Configuración de site**: URL configurada en `astro.config.mjs`
+- **Robots.txt dinámico**: Implementado como API Route según recomendaciones
+- **Referencias en HTML**: Sitemap referenciado en el `<head>` del sitio
+- **Generación automática**: Tanto sitemap como robots.txt se generan dinámicamente
+
+### 🔄 Beneficios de la Implementación Dinámica
+- **Mantenimiento automático**: No requiere actualización manual
+- **Consistencia**: URLs siempre sincronizadas con la configuración del sitio
+- **Escalabilidad**: Se adapta automáticamente a nuevas páginas
+- **Mejores prácticas**: Sigue las recomendaciones oficiales de Astro
+
 ## Metadatos Implementados
 
 Cada página del sitio incluye los siguientes metadatos para optimización SEO:
