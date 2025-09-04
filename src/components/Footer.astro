@@ -1,6 +1,7 @@
 ---
-// Footer apuntando a /logo.svg
+// Footer con logo optimizado desde assets
 import { Icon } from 'astro-icon/components';
+import logoOsc from '../assets/branding/logo_osc.svg';
 
 const contactInfo = {
   address: "Barranquilla, Atlántico, Colombia",
@@ -22,7 +23,7 @@ const socialLinks = {
       <div>
         <a href="/" class="block mb-4">
           <img 
-            src="/logo.svg" 
+            src={logoOsc.src} 
             alt="Logo de S&G Soluciones de Ingeniería" 
             class="h-12 w-auto"
             width="150"
@@ -39,7 +40,7 @@ const socialLinks = {
         <ul class="space-y-3">
           <li><a href="/" class="text-gray-400 hover:text-white transition-colors duration-300">Inicio</a></li>
           <li><a href="/#servicios" class="text-gray-400 hover:text-white transition-colors duration-300">Servicios</a></li>
-          <li><a href="/casos-exito" class="text-gray-400 hover:text-white transition-colors duration-300">Casos de Éxito</a></li>
+          <li><a href="/proyectos" class="text-gray-400 hover:text-white transition-colors duration-300">Proyectos</a></li>
           <li><a href="/contacto" class="text-gray-400 hover:text-white transition-colors duration-300">Contacto</a></li>
         </ul>
       </div>

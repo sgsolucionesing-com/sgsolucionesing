@@ -1,0 +1,199 @@
+---
+// src/pages/proyectos/[slug].astro - Página de detalle de proyecto individual
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, getEntryBySlug } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+
+// Esta función es necesaria para generar las rutas estáticas
+export async function getStaticPaths() {
+  const proyectos = await getCollection('proyectos');
+  return proyectos.map((proyecto) => ({
+    params: { slug: proyecto.slug || proyecto.id.split('/').pop()?.replace(/\.mdx?$/, '') },
+    props: { proyecto },
+  }));
+}
+
+const { proyecto } = Astro.props;
+const { Content } = await proyecto.render();
+const data = proyecto.data;
+
+// Meta información para SEO
+const pageTitle = `${data.title} | Caso de Éxito - S&G Soluciones de Ingeniería`;
+const pageDescription = data.resumen;
+const pageKeywords = `${data.sector}, ${data.tecnologias.join(', ')}, automatización industrial, S&G Soluciones`;
+---
+
+<Layout 
+  title={pageTitle} 
+  description={pageDescription}
+  keywords={pageKeywords}
+>
+  <!-- Structured Data para SEO -->
+  <script type="application/ld+json" slot="head">
+    {JSON.stringify({
+      '@context':'https://schema.org',
+      '@type':'CaseStudy',
+      name: data.title,
+      industry: data.sector,
+      location: data.ubicacion,
+      datePublished: data.fecha,
+      description: data.resumen,
+      provider: { 
+        '@type':'Organization', 
+        name:'S&G Soluciones de Ingeniería',
+        url: 'https://sgsolucionesing.com'
+      }
+    })}
+  </script>
+  <main class="min-h-screen bg-gray-50">
+    <!-- Navegación de breadcrumbs -->
+    <nav class="bg-white border-b border-gray-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex items-center space-x-2 text-sm">
+          <a href="/" class="text-gray-500 hover:text-primary transition-colors">Inicio</a>
+          <Icon name="mdi:chevron-right" class="h-4 w-4 text-gray-400" />
+          <a href="/proyectos" class="text-gray-500 hover:text-primary transition-colors">Proyectos</a>
+          <Icon name="mdi:chevron-right" class="h-4 w-4 text-gray-400" />
+          <span class="text-gray-900">{data.title}</span>
+        </div>
+      </div>
+    </nav>
+
+    <article class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <!-- Header del proyecto -->
+      <header class="mb-10">
+        <div class="flex flex-wrap items-center gap-3 mb-4">
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary/10 text-primary">
+            <Icon name="mdi:factory" class="w-4 h-4 mr-2" />
+            {data.sector}
+          </span>
+          {data.destacado && (
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-amber-100 text-amber-800">
+              <Icon name="mdi:star" class="w-4 h-4 mr-2" />
+              Destacado
+            </span>
+          )}
+        </div>
+        
+        <h1 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">{data.title}</h1>
+        <p class="text-xl text-gray-600 mb-6 leading-relaxed">{data.resumen}</p>
+        
+        <!-- Metadatos del proyecto -->
+        <div class="flex flex-wrap gap-6 text-sm text-gray-500 mb-8">
+          {data.cliente && (
+            <div class="flex items-center">
+              <Icon name="mdi:domain" class="w-4 h-4 mr-2" />
+              <span>Cliente: <strong class="text-gray-700">{data.cliente}</strong></span>
+            </div>
+          )}
+          {data.ubicacion && (
+            <div class="flex items-center">
+              <Icon name="mdi:map-marker" class="w-4 h-4 mr-2" />
+              <span>Ubicación: {data.ubicacion}</span>
+            </div>
+          )}
+          {data.fecha && (
+            <div class="flex items-center">
+              <Icon name="mdi:calendar" class="w-4 h-4 mr-2" />
+              <span>Año: {data.fecha}</span>
+            </div>
+          )}
+        </div>
+        
+        <!-- Imagen principal -->
+        <div class="relative rounded-2xl overflow-hidden shadow-xl mb-10">
+          <img 
+            src={data.coverImage} 
+            alt={data.title} 
+            class="w-full h-80 lg:h-96 object-cover"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+        </div>
+      </header>
+
+      <!-- KPIs destacados -->
+      {data.kpis?.length > 0 && (
+        <section class="mb-12">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Resultados Clave</h2>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {data.kpis.map((kpi) => (
+              <div class="bg-white rounded-xl shadow-md p-6 border border-gray-100 hover:shadow-lg transition-shadow">
+                <div class="text-sm font-medium text-gray-500 mb-2">{kpi.label}</div>
+                <div class="text-3xl font-bold text-primary">{kpi.value}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- Contenido principal MDX -->
+      <section class="mb-12">
+        <div class="prose prose-slate prose-lg max-w-none">
+          <Content />
+        </div>
+      </section>
+
+      <!-- Tecnologías utilizadas -->
+      {data.tecnologias?.length > 0 && (
+        <section class="mb-12">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Tecnologías Utilizadas</h2>
+          <div class="flex flex-wrap gap-3">
+            {data.tecnologias.map((tech) => (
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors">
+                <Icon name="mdi:code-tags" class="w-4 h-4 mr-2" />
+                {tech}
+              </span>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- Galería de imágenes -->
+      {data.gallery?.length > 0 && (
+        <section class="mb-12">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Galería del Proyecto</h2>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {data.gallery.map((image, index) => (
+              <div class="group relative rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
+                <img 
+                  src={image} 
+                  alt={`${data.title} - Imagen ${index + 1}`} 
+                  class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- CTA y navegación -->
+      <footer class="border-t border-gray-200 pt-10">
+        <div class="flex flex-col sm:flex-row gap-6 items-center justify-between">
+          <div class="text-center sm:text-left">
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">¿Interesado en un proyecto similar?</h3>
+            <p class="text-gray-600">Contáctanos para discutir tu proyecto de automatización industrial</p>
+          </div>
+          
+          <div class="flex gap-4">
+            <a 
+              href="/proyectos" 
+              class="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 bg-white rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <Icon name="mdi:arrow-left" class="w-4 h-4 mr-2" />
+              Ver más proyectos
+            </a>
+            <a 
+              href="/contacto" 
+              class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-primary to-secondary text-white rounded-lg hover:shadow-lg transition-all duration-300"
+            >
+              <Icon name="mdi:message" class="w-4 h-4 mr-2" />
+              Solicitar propuesta
+            </a>
+          </div>
+        </div>
+      </footer>
+    </article>
+  </main>
+</Layout>

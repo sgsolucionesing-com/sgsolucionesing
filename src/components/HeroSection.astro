@@ -1,5 +1,6 @@
 ---
 // Componente Hero con fondo de video, diseño centrado y logo más grande
+import logoSvg from '../assets/branding/logo.svg';
 ---
 
 <section id="inicio" class="relative h-screen flex items-center justify-center text-white overflow-hidden" style="perspective: 1000px;">
@@ -10,7 +11,7 @@
     muted 
     playsinline 
     class="absolute z-[-1] w-full h-full object-cover parallax-background"
-    poster="/herologo.png" >
+    poster={logoSvg.src}>
     <source src="/herevideo.webm" type="video/webm">
     <source src="/herovideo.mp4" type="video/mp4">
     Tu navegador no soporta videos HTML5.
@@ -36,7 +37,7 @@
 
     <div class="mt-12" style="transform-style: preserve-3d;"> 
       <img 
-        src="/herologo.png" 
+        src={logoSvg.src} 
         alt="Logo S&G Soluciones de Ingeniería" 
         class="h-32 sm:h-40 w-auto mx-auto opacity-80 hover:opacity-100 transition-all duration-300 hero-logo-3d" 
       />
