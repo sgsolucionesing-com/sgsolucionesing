@@ -46,9 +46,11 @@ import SuccessCasesModal from '../components/SuccessCasesModal.astro';
 
     openCards.forEach(card => {
       card.addEventListener('click', () => {
-        // FIX: El '!' le asegura a TypeScript que 'slideIndex' no será nulo
-        const slideIndex = parseInt(card.dataset.slideIndex!, 10);
-        openModal(slideIndex);
+        // Verificar que sea HTMLElement y tenga dataset
+        if (card instanceof HTMLElement && card.dataset.slideIndex) {
+          const slideIndex = parseInt(card.dataset.slideIndex, 10);
+          openModal(slideIndex);
+        }
       });
     });
 
