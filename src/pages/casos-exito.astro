@@ -1,46 +1,761 @@
 ---
-// Ruta: src/pages/casos-exito.astro (Versión Final Verificada)
+// src/pages/casos-exito.astro - Página de casos de éxito con diseño moderno
 import Layout from '../layouts/Layout.astro';
 import { slides } from '../data/casos-exito.js';
 import { Icon } from 'astro-icon/components';
 
 const pageTitle = "Casos de Éxito | S&G Soluciones de Ingeniería";
+const pageDescription = "Descubre nuestros proyectos de automatización industrial, IoT e Industria 4.0 en la costa norte de Colombia";
+
+// Helper function para obtener la URL de la imagen
+function getImageSrc(imageSrc: any): string {
+  if (typeof imageSrc === 'string') {
+    return imageSrc;
+  }
+  if (imageSrc && typeof imageSrc === 'object' && imageSrc.src) {
+    return imageSrc.src;
+  }
+  return '';
+}
+
+// Filtrar slides válidos
+const validSlides = slides.filter(slide => 
+  slide.images && 
+  slide.images.length > 0 && 
+  !slide.isContact
+);
 ---
-<Layout title={pageTitle}>
-  <div class="carousel-container">
-    <img src="/casos_logo.svg" alt="SyG Logo Watermark" class="watermark-logo" loading="lazy">
-    <div class="splide success-cases-splide h-full">
-      <div class="splide__track h-full">
-        <ul class="splide__list h-full">
-          {slides.map(slide => (
+<Layout title={pageTitle} description={pageDescription}>
+  <!-- Contenedor principal del carrusel -->
+  <main class="success-cases-main">
+    
+    <!-- Logo watermark -->
+    <div class="watermark-container">
+      <img src="/favicon.svg" alt="S&G Logo" class="watermark-logo" loading="lazy">
+    </div>
+
+    <!-- Carrusel principal -->
+    <div class="splide success-cases-carousel" id="success-cases-carousel">
+      <div class="splide__track">
+        <ul class="splide__list">
+          {validSlides.map((slide, slideIndex) => (
             <li class="splide__slide">
-              <div class="inner">
-                {/* ... Contenido del slide ... */}
-              </div>
+              <section class="slide-section" data-slide={slideIndex}>
+                
+                <!-- Header de la sección -->
+                <div class="slide-header">
+                  {slide.subtitle ? (
+                    <div class="hero-content">
+                      <h1 class="hero-title">{slide.title}</h1>
+                      <h2 class="hero-subtitle">{slide.subtitle}</h2>
+                      <p class="hero-description">{slide.description}</p>
+                    </div>
+                  ) : (
+                    <div class="section-header">
+                      <span class="section-badge">Proyecto #{slideIndex}</span>
+                      <h2 class="section-title">{slide.title}</h2>
+                      <p class="section-description">{slide.description}</p>
+                    </div>
+                  )}
+                </div>
+
+                <!-- Grid de imágenes -->
+                <div class="images-grid">
+                  {slide.images.map((image, imageIndex) => (
+                    <div class={`image-card ${image.type || 'horizontal'}`}>
+                      <div class="image-container">
+                        <img 
+                          src={getImageSrc(image.src)} 
+                          alt={`${slide.title} - Imagen ${imageIndex + 1}`}
+                          loading="lazy"
+                          class="project-image"
+                        />
+                        <div class="image-overlay">
+                          <button class="zoom-btn" data-image={imageIndex}>
+                            <Icon name="mdi:magnify-plus" class="w-6 h-6" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <!-- Información adicional si existe -->
+                {slide.additionalInfo && (
+                  <div class="additional-info">
+                    <div class="info-card">
+                      <h3 class="info-title">Detalles del Proyecto</h3>
+                      <p class="info-text">{slide.additionalInfo}</p>
+                    </div>
+                  </div>
+                )}
+
+              </section>
             </li>
           ))}
         </ul>
       </div>
-    </div>
-  </div>
-</Layout>
-<script>
-  import Splide from '@splidejs/splide';
-  import '@splidejs/splide/css/core';
 
-  const splideElement = document.querySelector('.success-cases-splide');
-  if (splideElement) {
-    new Splide(splideElement, {
-      type: 'loop',
-      autoplay: true,
-      interval: 8000,
-      pauseOnHover: true,
-      keyboard: 'global',
-      arrows: true,
-      pagination: true,
-    }).mount();
+      <!-- Controles de navegación personalizados -->
+      <div class="carousel-controls">
+        <button class="carousel-btn carousel-prev" aria-label="Proyecto anterior">
+          <Icon name="mdi:chevron-left" class="w-8 h-8" />
+        </button>
+        <button class="carousel-btn carousel-next" aria-label="Siguiente proyecto">
+          <Icon name="mdi:chevron-right" class="w-8 h-8" />
+        </button>
+      </div>
+
+      <!-- Indicadores personalizados -->
+      <div class="carousel-indicators">
+        {validSlides.map((_, index) => (
+          <button 
+            class="indicator-dot" 
+            data-slide={index}
+            aria-label={`Ir al proyecto ${index + 1}`}
+          ></button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Navegación inferior -->
+    <nav class="bottom-nav">
+      <a href="/" class="nav-link">
+        <Icon name="mdi:home" class="w-5 h-5" />
+        <span>Inicio</span>
+      </a>
+      <div class="nav-divider"></div>
+      <a href="/contacto" class="nav-link">
+        <Icon name="mdi:message" class="w-5 h-5" />
+        <span>Contacto</span>
+      </a>
+    </nav>
+
+  </main>
+</Layout>
+
+<!-- Cargar Splide desde CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+
+<script is:inline>
+  function initSuccessCasesCarousel() {
+    // Esperar a que Splide esté disponible
+    if (typeof Splide === 'undefined') {
+      setTimeout(initSuccessCasesCarousel, 100);
+      return;
+    }
+    
+    const carouselElement = document.querySelector('#success-cases-carousel');
+    if (!carouselElement) return;
+    
+    // Verificar si ya está inicializado
+    if (carouselElement.classList.contains('is-initialized')) return;
+    
+    try {
+      const carousel = new Splide(carouselElement, {
+        type: 'loop',
+        perPage: 1,
+        perMove: 1,
+        gap: 0,
+        pagination: false, // Usamos indicadores personalizados
+        arrows: false,     // Usamos controles personalizados
+        autoplay: true,
+        interval: 12000,   // 12 segundos como en la referencia
+        pauseOnHover: true,
+        resetProgress: false,
+        keyboard: 'global',
+        speed: 800,
+        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        direction: 'ltr',
+        height: '100vh',
+        fixedHeight: '100vh'
+      });
+      
+      carousel.mount();
+      carouselElement.classList.add('is-initialized');
+      
+      // Controles personalizados
+      const prevBtn = document.querySelector('.carousel-prev');
+      const nextBtn = document.querySelector('.carousel-next');
+      const indicators = document.querySelectorAll('.indicator-dot');
+      
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => carousel.go('<'));
+      }
+      
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => carousel.go('>'));
+      }
+      
+      // Indicadores personalizados
+      indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+          carousel.go(index);
+        });
+      });
+      
+      // Actualizar indicador activo
+      carousel.on('active', (slide) => {
+        indicators.forEach((indicator, index) => {
+          indicator.classList.toggle('active', index === slide.index);
+        });
+      });
+      
+      // Configurar primer indicador como activo
+      if (indicators.length > 0) {
+        indicators[0].classList.add('active');
+      }
+      
+      // Funcionalidad de zoom para imágenes
+      const zoomBtns = document.querySelectorAll('.zoom-btn');
+      zoomBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const img = btn.closest('.image-container').querySelector('.project-image');
+          if (img) {
+            // Crear modal de zoom (implementación simple)
+            createImageModal(img.src, img.alt);
+          }
+        });
+      });
+      
+    } catch (error) {
+      console.error('Error inicializando carrusel de casos de éxito:', error);
+    }
+  }
+  
+  // Función para crear modal de imagen
+  function createImageModal(src, alt) {
+    const modal = document.createElement('div');
+    modal.className = 'image-modal';
+    modal.innerHTML = `
+      <div class="modal-backdrop">
+        <div class="modal-content">
+          <img src="${src}" alt="${alt}" class="modal-image">
+          <button class="modal-close" aria-label="Cerrar">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Eventos de cierre
+    const closeBtn = modal.querySelector('.modal-close');
+    const backdrop = modal.querySelector('.modal-backdrop');
+    
+    closeBtn.addEventListener('click', () => {
+      document.body.removeChild(modal);
+    });
+    
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) {
+        document.body.removeChild(modal);
+      }
+    });
+    
+    // Cerrar con Escape
+    document.addEventListener('keydown', function escapeHandler(e) {
+      if (e.key === 'Escape') {
+        document.body.removeChild(modal);
+        document.removeEventListener('keydown', escapeHandler);
+      }
+    });
+  }
+  
+  // Inicializar cuando todo esté listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(initSuccessCasesCarousel, 500);
+    });
+  } else {
+    setTimeout(initSuccessCasesCarousel, 500);
   }
 </script>
+
 <style is:global>
-  /* ... Tu CSS completo va aquí ... */
+/* Reset y configuración base */
+.success-cases-main {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Logo watermark */
+.watermark-container {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 10;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.watermark-logo {
+  width: 120px;
+  height: auto;
+  filter: brightness(0) invert(1);
+}
+
+/* Carrusel principal */
+#success-cases-carousel {
+  height: 100vh;
+  width: 100%;
+}
+
+#success-cases-carousel .splide__track,
+#success-cases-carousel .splide__list {
+  height: 100vh;
+}
+
+.splide__slide {
+  height: 100vh;
+  overflow-y: auto;
+  padding: 0;
+}
+
+/* Secciones de slides */
+.slide-section {
+  min-height: 100vh;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  position: relative;
+}
+
+/* Headers de sección */
+.slide-header {
+  text-align: center;
+  max-width: 800px;
+  margin-bottom: 2rem;
+}
+
+.hero-content .hero-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(45deg, #00ffff, #0071bc);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+}
+
+.hero-content .hero-subtitle {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #00ffff;
+  margin-bottom: 1.5rem;
+}
+
+.hero-content .hero-description {
+  font-size: 1.2rem;
+  color: #a0a0a0;
+  line-height: 1.6;
+}
+
+.section-header .section-badge {
+  display: inline-block;
+  background: rgba(0, 255, 255, 0.1);
+  color: #00ffff;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.section-header .section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.section-header .section-description {
+  font-size: 1.1rem;
+  color: #c0c0c0;
+  line-height: 1.6;
+}
+
+/* Grid de imágenes */
+.images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.image-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.image-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border-color: rgba(0, 255, 255, 0.3);
+}
+
+.image-card.vertical {
+  grid-row: span 2;
+}
+
+.image-card.featured {
+  grid-column: span 2;
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+}
+
+.image-card.vertical .image-container {
+  height: 400px;
+}
+
+.project-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.image-card:hover .project-image {
+  transform: scale(1.05);
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 255, 255, 0.1) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-card:hover .image-overlay {
+  opacity: 1;
+}
+
+.zoom-btn {
+  background: rgba(0, 255, 255, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.zoom-btn:hover {
+  background: rgba(0, 255, 255, 1);
+  transform: scale(1.1);
+}
+
+/* Información adicional */
+.additional-info {
+  width: 100%;
+  max-width: 800px;
+}
+
+.info-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.info-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #00ffff;
+  margin-bottom: 1rem;
+}
+
+.info-text {
+  color: #c0c0c0;
+  line-height: 1.6;
+}
+
+/* Controles del carrusel */
+.carousel-controls {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2rem;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.carousel-btn {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  pointer-events: all;
+}
+
+.carousel-btn:hover {
+  background: rgba(0, 255, 255, 0.2);
+  border-color: rgba(0, 255, 255, 0.5);
+  transform: scale(1.1);
+}
+
+/* Indicadores del carrusel */
+.carousel-indicators {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1rem;
+  z-index: 100;
+}
+
+.indicator-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.indicator-dot.active {
+  background: #00ffff;
+  transform: scale(1.3);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+.indicator-dot:hover {
+  background: rgba(0, 255, 255, 0.7);
+}
+
+/* Navegación inferior */
+.bottom-nav {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 100;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 25px;
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  background: rgba(0, 255, 255, 0.1);
+  border-color: rgba(0, 255, 255, 0.3);
+  color: #00ffff;
+}
+
+.nav-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Modal de imagen */
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+
+.modal-backdrop {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.modal-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-image {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-close {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  background: rgba(255, 0, 0, 0.2);
+  border-color: rgba(255, 0, 0, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .slide-section {
+    padding: 1rem;
+    gap: 2rem;
+  }
+
+  .hero-content .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-content .hero-subtitle {
+    font-size: 1.5rem;
+  }
+
+  .section-header .section-title {
+    font-size: 2rem;
+  }
+
+  .images-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .image-card.vertical,
+  .image-card.featured {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+
+  .image-container,
+  .image-card.vertical .image-container {
+    height: 200px;
+  }
+
+  .carousel-controls {
+    display: none;
+  }
+
+  .watermark-container {
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .watermark-logo {
+    width: 80px;
+  }
+
+  .bottom-nav {
+    top: 1rem;
+    left: 1rem;
+  }
+
+  .nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-content .hero-subtitle {
+    font-size: 1.25rem;
+  }
+
+  .section-header .section-title {
+    font-size: 1.75rem;
+  }
+
+  .carousel-indicators {
+    bottom: 1rem;
+    gap: 0.75rem;
+  }
+
+  .indicator-dot {
+    width: 10px;
+    height: 10px;
+  }
+}
 </style>

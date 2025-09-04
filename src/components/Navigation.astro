@@ -1,6 +1,7 @@
 ---
 // Componente de navegación con el logo actualizado y mejoras
 import { Icon } from 'astro-icon/components';
+import iconSvg from '../assets/branding/icon.svg';
 
 // Centralizamos el enlace de WhatsApp para que sea fácil de editar
 const whatsappLink = "https://api.whatsapp.com/send?phone=573243025107&text=Hola%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20S%26G%20Soluciones%20de%20Ingenier%C3%ADa";
@@ -10,12 +11,12 @@ const whatsappLink = "https://api.whatsapp.com/send?phone=573243025107&text=Hola
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center py-4">
       <a href="/">
-        <img src="/icon.svg" alt="S&G Soluciones de Ingeniería" class="h-14 w-auto object-contain">
+        <img src={iconSvg.src} alt="S&G Soluciones de Ingeniería" class="h-14 w-auto object-contain">
       </a>
       <div class="hidden md:flex items-center space-x-6">
         <a href="/" class="text-gray-700 hover:text-primary font-medium">Inicio</a>
         <a href="/#servicios" class="text-gray-700 hover:text-primary font-medium">Servicios</a>
-        <a href="/casos-exito" class="text-gray-700 hover:text-primary font-medium">Casos de Éxito</a>
+        <a href="/proyectos" class="text-gray-700 hover:text-primary font-medium">Proyectos</a>
         <a href="/contacto" class="text-gray-700 hover:text-primary font-medium">Contacto</a>
         <a href="/#servicios" class="bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-lg font-semibold hover:opacity-90 transition-all shadow-md transform hover:scale-105">
           Conoce Nuestros Servicios
@@ -37,7 +38,7 @@ const whatsappLink = "https://api.whatsapp.com/send?phone=573243025107&text=Hola
       <div class="flex flex-col space-y-2">
         <a href="/" class="block px-4 py-2 text-gray-700 hover:text-primary font-medium">Inicio</a>
         <a href="/#servicios" class="block px-4 py-2 text-gray-700 hover:text-primary font-medium">Servicios</a>
-        <a href="/casos-exito" class="block px-4 py-2 text-gray-700 hover:text-primary font-medium">Casos de Éxito</a>
+        <a href="/proyectos" class="block px-4 py-2 text-gray-700 hover:text-primary font-medium">Proyectos</a>
         <a href="/contacto" class="block px-4 py-2 text-gray-700 hover:text-primary font-medium">Contacto</a>
         <hr class="border-gray-200 my-2">
         <a href="/#servicios" class="block px-4 py-2 bg-gradient-to-r from-primary to-secondary text-white rounded-lg font-semibold text-center">

@@ -1,27 +1,24 @@
 ---
-// ProjectsSection.astro - Carrusel de tarjetas de proyectos
+// ProjectsSection.astro - Carrusel de tarjetas de proyectos dinámicas
 import { Icon } from 'astro-icon/components';
-import { slides } from '../data/casos-exito.js';
+import { getCollection } from 'astro:content';
 
-// Helper function para obtener la URL de la imagen
-function getImageSrc(imageSrc: any): string {
-  if (typeof imageSrc === 'string') {
-    return imageSrc;
-  }
-  if (imageSrc && typeof imageSrc === 'object' && imageSrc.src) {
-    return imageSrc.src;
-  }
-  return '';
-}
+// Obtener proyectos de la colección de contenido
+const allProjects = await getCollection('proyectos');
 
-// Filtrar proyectos para el carrusel
-// Excluir slides de contacto y portada principal, tomar los primeros 6 proyectos
-const featuredProjects = slides.filter(slide =>
-  !slide.isContact &&
-  !slide.subtitle &&
-  slide.images &&
-  slide.images.length > 0
-).slice(0, 6);
+// Ordenar por order y destacados primero, luego tomar los primeros 6
+const featuredProjects = allProjects
+  .sort((a, b) => {
+    // Priorizar destacados
+    if (a.data.destacado && !b.data.destacado) return -1;
+    if (!a.data.destacado && b.data.destacado) return 1;
+    // Luego por order
+    return (a.data.order ?? 999) - (b.data.order ?? 999);
+  })
+  .slice(0, 6);
+
+// Helper function para generar URL del proyecto
+const toProjectUrl = (project: any) => `/proyectos/${project.slug ?? project.id.split('/').pop()?.replace(/\.mdx?$/, '')}`;
 ---
 
 <section id="proyectos" class="py-20 lg:py-24 bg-gray-50 section-with-pattern overflow-hidden">
@@ -40,40 +37,78 @@ const featuredProjects = slides.filter(slide =>
           {featuredProjects.map((project, index) => (
             <li class="splide__slide">
               <div class="mx-2 md:mx-3">
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden project-card group flex flex-col h-full cursor-pointer open-modal-card hover:shadow-2xl transition-all duration-300" data-slide-index={index + 1}>
+                <a 
+                  href={toProjectUrl(project)} 
+                  class="bg-white rounded-xl shadow-lg overflow-hidden project-card group flex flex-col h-full cursor-pointer hover:shadow-2xl transition-all duration-300 block"
+                >
                   <!-- Imagen del proyecto -->
                   <div class="relative h-48 md:h-56 overflow-hidden">
                     <img 
-                      src={getImageSrc(project.images[0].src)} 
-                      alt={project.title} 
+                      src={project.data.coverImage} 
+                      alt={project.data.title} 
                       class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" 
                     />
                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-                    <div class="absolute top-4 right-4">
-                      <div class="bg-primary/90 text-white text-xs font-semibold px-2 py-1 rounded-full backdrop-blur-sm">
-                        Proyecto #{index + 1}
-                      </div>
+                    <div class="absolute top-4 left-4">
+                      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-primary/90 text-white backdrop-blur-sm">
+                        <Icon name="mdi:factory" class="w-3 h-3 mr-1" />
+                        {project.data.sector}
+                      </span>
                     </div>
+                    {project.data.destacado && (
+                      <div class="absolute top-4 right-4">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-500 text-white backdrop-blur-sm">
+                          <Icon name="mdi:star" class="w-3 h-3 mr-1" />
+                          Destacado
+                        </span>
+                      </div>
+                    )}
                   </div>
                   
                   <!-- Contenido de la tarjeta -->
                   <div class="p-5 flex flex-col flex-grow">
                     <div class="mb-3">
-                      <span class="inline-block bg-primary/10 text-primary text-sm font-medium px-3 py-1 rounded-full mb-3">
-                        {project.title}
-                      </span>
+                      <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                        {project.data.title}
+                      </h3>
+                      <p class="text-sm text-gray-600 line-clamp-3 leading-relaxed">
+                        {project.data.resumen}
+                      </p>
                     </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-3 line-clamp-2">
-                      {project.description.length > 90 ? project.description.substring(0, 90) + '...' : project.description}
-                    </h3>
+                    
+                    {/* KPIs si están disponibles */}
+                    {project.data.kpis && project.data.kpis.length > 0 && (
+                      <div class="flex gap-3 mb-3 text-xs">
+                        {project.data.kpis.slice(0, 2).map((kpi: any) => (
+                          <span class="text-gray-500">
+                            <strong class="text-primary">{kpi.value}</strong> {kpi.label}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    
                     <div class="mt-auto">
-                      <button class="w-full bg-gradient-to-r from-primary to-secondary text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center group-hover:shadow-lg transition-all duration-300">
-                        <span>Ver Galería</span>
+                      <div class="flex items-center justify-between text-xs text-gray-500 mb-3">
+                        {project.data.cliente && (
+                          <span class="flex items-center">
+                            <Icon name="mdi:domain" class="w-3 h-3 mr-1" />
+                            {project.data.cliente}
+                          </span>
+                        )}
+                        {project.data.fecha && (
+                          <span class="flex items-center">
+                            <Icon name="mdi:calendar" class="w-3 h-3 mr-1" />
+                            {project.data.fecha}
+                          </span>
+                        )}
+                      </div>
+                      <div class="w-full bg-gradient-to-r from-primary to-secondary text-white font-medium py-2 px-4 rounded-lg flex items-center justify-center group-hover:shadow-lg transition-all duration-300">
+                        <span>Ver Proyecto</span>
                         <Icon name="mdi:arrow-right" class="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                      </button>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </a>
               </div>
             </li>
           ))}
@@ -82,7 +117,7 @@ const featuredProjects = slides.filter(slide =>
     </div>
   </div>
   <div class="text-center mt-20 fade-in-element">
-    <a href="/casos-exito" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-secondary transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+    <a href="/proyectos" class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-secondary transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
       Ver Todos los Proyectos
     </a>
   </div>
@@ -257,6 +292,15 @@ const featuredProjects = slides.filter(slide =>
    overflow: hidden;
    line-height: 1.5;
    height: 3rem;
+ }
+ 
+ .line-clamp-3 {
+   display: -webkit-box;
+   -webkit-line-clamp: 3;
+   -webkit-box-orient: vertical;
+   overflow: hidden;
+   line-height: 1.4;
+   height: 4.2rem;
  }
  
  /* Animaciones de fade-in */
