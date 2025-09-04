@@ -34,17 +34,35 @@
         import Splide from '@splidejs/splide';
         import '@splidejs/splide/css';
 
-        document.addEventListener('astro:page-load', () => {
-            const splideElement = document.querySelector('.splide') as HTMLElement | null;
+        // WeakMap para gestionar instancias de Splide
+        const splideInstances = new WeakMap();
+
+        function initSplide() {
+            const splideElement = document.querySelector('.splide');
             
-            if (splideElement && !(splideElement as any).splide) {
-                new Splide(splideElement, {
+            if (splideElement && splideElement instanceof HTMLElement && !splideInstances.has(splideElement)) {
+                const splideInstance = new Splide(splideElement, {
                     type: 'loop',
                     perPage: 1,
                     autoplay: true,
                 }).mount();
+                
+                splideInstances.set(splideElement, splideInstance);
             }
-        });
+        }
+
+        function destroySplide() {
+            const splideElement = document.querySelector('.splide');
+            
+            if (splideElement && splideInstances.has(splideElement)) {
+                const splideInstance = splideInstances.get(splideElement);
+                splideInstance.destroy();
+                splideInstances.delete(splideElement);
+            }
+        }
+
+        document.addEventListener('astro:page-load', initSplide);
+        document.addEventListener('astro:before-swap', destroySplide);
     </script>
 
     <style>

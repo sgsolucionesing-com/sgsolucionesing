@@ -10,8 +10,8 @@
     muted 
     playsinline 
     class="absolute z-[-1] w-full h-full object-cover parallax-background"
-    poster="/fallback-hero-image.jpg" >
-    <source src="/herovideo.webm" type="video/webm">
+    poster="/herologo.png" >
+    <source src="/herevideo.webm" type="video/webm">
     <source src="/herovideo.mp4" type="video/mp4">
     Tu navegador no soporta videos HTML5.
   </video>
@@ -97,9 +97,15 @@
     const logoRotateX = 5 + (scrollProgress * 15);
     const logoRotateY = 0 + (scrollProgress * -5);
     const backgroundTranslateZ = -10 + (scrollProgress * 20);
-    heroLogo.style.transform = `translateZ(${logoTranslateZ}px) rotateX(${logoRotateX}deg) rotateY(${logoRotateY}deg)`;
-    heroVideo.style.transform = `translateZ(${backgroundTranslateZ}px) scale(1.02)`;
-    heroOverlay.style.transform = `translateZ(${backgroundTranslateZ}px) scale(1.02)`;
+    if (heroLogo instanceof HTMLElement) {
+      heroLogo.style.transform = `translateZ(${logoTranslateZ}px) rotateX(${logoRotateX}deg) rotateY(${logoRotateY}deg)`;
+    }
+    if (heroVideo instanceof HTMLElement) {
+      heroVideo.style.transform = `translateZ(${backgroundTranslateZ}px) scale(1.02)`;
+    }
+    if (heroOverlay instanceof HTMLElement) {
+      heroOverlay.style.transform = `translateZ(${backgroundTranslateZ}px) scale(1.02)`;
+    }
   }
 
   function onScroll() {
