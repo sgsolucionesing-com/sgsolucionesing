@@ -52,6 +52,11 @@ const {
             <slot />
         </div>
         <Footer />
+        <div class="theme-toggle-icons" id="theme-icons">
+            <i class="fas fa-moon moon-icon"></i>
+            <i class="fas fa-sun sun-icon"></i>
+        </div>
+        
         <script>
             window.scrollTo(0, 0);
         </script>
@@ -65,11 +70,29 @@ const {
                 }
             }
             
-            // Llamar la función al cargar la página
-            setTheme();
+            // Contenedor para los íconos del tema
+            const themeIcons = document.getElementById('theme-icons');
             
+            // Función para actualizar los íconos del tema
+            function updateThemeIcons() {
+                const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+                const sunIcon = themeIcons.querySelector('.sun-icon');
+                const moonIcon = themeIcons.querySelector('.moon-icon');
+                
+                if (currentTheme === 'dark') {
+                    sunIcon.style.display = 'none';
+                    moonIcon.style.display = 'block';
+                } else {
+                    sunIcon.style.display = 'block';
+                    moonIcon.style.display = 'none';
+                }
+            }
+
             // Obtener el botón del toggle de tema
             const themeToggle = document.getElementById('theme-toggle');
+            
+            // Inicializar los íconos
+            updateThemeIcons();
             if (themeToggle) {
                 themeToggle.addEventListener('click', () => {
                     const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';

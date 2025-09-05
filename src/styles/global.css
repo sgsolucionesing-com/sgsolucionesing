@@ -105,3 +105,39 @@
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+/* Tema oscuro */
+.dark .sun-icon {
+  display: none;
+}
+
+.dark .moon-icon {
+  display: block;
+}
+
+.sun-icon,
+.moon-icon {
+  display: none;
+}
+
+/* Modo claro */
+.light .moon-icon {
+  display: none;
+}
+
+.light .sun-icon {
+  display: block;
+}
+
+.theme-toggle-icons {
+  position: relative;
+}
+
+.theme-toggle-icons i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 24px;
+  height: 24px;
+}
