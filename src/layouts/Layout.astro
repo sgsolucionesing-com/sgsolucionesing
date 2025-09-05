@@ -20,23 +20,6 @@ const {
 <!doctype html>
 <html lang="es">
     <head>
-        <script is:inline>
-            // Este script se ejecuta antes de que se renderice la página para evitar el "parpadeo" (FOUC).
-            // Establece el tema claro por defecto a menos que el usuario haya guardado explícitamente el tema oscuro.
-            const theme = (() => {
-                if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-                    return localStorage.getItem('theme');
-                }
-                // Si no hay nada en localStorage, siempre será 'light'.
-                return 'light';
-            })();
-
-            if (theme === 'dark') {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        </script>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" type="image/svg+xml" href={icono.src} />
@@ -71,6 +54,30 @@ const {
         <Footer />
         <script>
             window.scrollTo(0, 0);
+        </script>
+        <script>
+            function setTheme() {
+                const theme = localStorage.getItem('theme') || 'light';
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }
+            
+            // Llamar la función al cargar la página
+            setTheme();
+            
+            // Obtener el botón del toggle de tema
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    document.documentElement.classList.toggle('dark');
+                    localStorage.setItem('theme', newTheme);
+                });
+            }
         </script>
     </body>
 </html>
