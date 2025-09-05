@@ -1,0 +1,87 @@
+---
+// src/pages/test.astro
+---
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Carrusel</title>
+</head>
+<body>
+
+    <h1 style="text-align: center; font-family: sans-serif; margin: 2rem;">
+        Página de Prueba de Carrusel
+    </h1>
+
+    <section class="splide" aria-label="Carrusel de prueba">
+        <div class="splide__track">
+            <ul class="splide__list">
+                <li class="splide__slide">
+                    <div class="slide-content">SLIDE 1</div>
+                </li>
+                <li class="splide__slide">
+                    <div class="slide-content">SLIDE 2</div>
+                </li>
+                <li class="splide__slide">
+                    <div class="slide-content">SLIDE 3</div>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <script>
+        import Splide from '@splidejs/splide';
+        import '@splidejs/splide/css';
+
+        // WeakMap para gestionar instancias de Splide
+        const splideInstances = new WeakMap();
+
+        function initSplide() {
+            const splideElement = document.querySelector('.splide');
+            
+            if (splideElement && splideElement instanceof HTMLElement && !splideInstances.has(splideElement)) {
+                const splideInstance = new Splide(splideElement, {
+                    type: 'loop',
+                    perPage: 1,
+                    autoplay: true,
+                }).mount();
+                
+                splideInstances.set(splideElement, splideInstance);
+            }
+        }
+
+        function destroySplide() {
+            const splideElement = document.querySelector('.splide');
+            
+            if (splideElement && splideInstances.has(splideElement)) {
+                const splideInstance = splideInstances.get(splideElement);
+                splideInstance.destroy();
+                splideInstances.delete(splideElement);
+            }
+        }
+
+        document.addEventListener('astro:page-load', initSplide);
+        document.addEventListener('astro:before-swap', destroySplide);
+    </script>
+
+    <style>
+        /* Estilos mínimos para que el carrusel sea visible */
+        .splide {
+            max-width: 800px;
+            margin: 2rem auto;
+            border: 3px solid navy;
+        }
+        .slide-content {
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-family: sans-serif;
+            background-color: lightblue;
+            color: navy;
+        }
+    </style>
+</body>
+</html>

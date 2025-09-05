@@ -1,11 +1,69 @@
 ---
-import Welcome from '../components/Welcome.astro';
+// src/pages/index.astro (Versión final con todas las correcciones de TypeScript)
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import HeroSection from '../components/HeroSection.astro';
+import AboutSection from '../components/AboutSection.astro';
+import ServicesSection from '../components/ServicesSection.astro';
+import PlatformsSection from '../components/PlatformsSection.astro';
+import ProjectsSection from '../components/ProjectsSection.astro';
+import TestimonialsSection from '../components/TestimonialsSection.astro';
+import StatsSection from '../components/StatsSection.astro';
+import SuccessCasesModal from '../components/SuccessCasesModal.astro';
 ---
-
-<Layout>
-	<Welcome />
+<Layout title="S&G Soluciones de Ingeniería | Automatización y Proyectos">
+  <main>
+    <HeroSection />
+    <AboutSection />
+    <ServicesSection />
+    <PlatformsSection />
+    <ProjectsSection />
+    <TestimonialsSection />
+    <StatsSection />
+  </main>
+  <SuccessCasesModal />
 </Layout>
+
+<script>
+  // FIX: Le decimos a TypeScript el tipo exacto de cada elemento
+  const modal = document.getElementById('success-modal') as HTMLElement;
+  const closeBtn = document.getElementById('close-modal-btn') as HTMLElement;
+  const openCards = document.querySelectorAll('.open-modal-card') as NodeListOf<HTMLElement>;
+
+  if (modal && closeBtn && openCards.length > 0) {
+    const openModal = (slideIndex = 0) => {
+      // Usamos style.display para mostrar/ocultar. Es más directo que cambiar clases.
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      document.dispatchEvent(new CustomEvent('modal-opened', { 
+        detail: { slideIndex: slideIndex } 
+      }));
+    };
+
+    const closeModal = () => {
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    };
+
+    openCards.forEach(card => {
+      card.addEventListener('click', () => {
+        // Verificar que sea HTMLElement y tenga dataset
+        if (card instanceof HTMLElement && card.dataset.slideIndex) {
+          const slideIndex = parseInt(card.dataset.slideIndex, 10);
+          openModal(slideIndex);
+        }
+      });
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && modal.style.display !== 'none') {
+        closeModal();
+      }
+    });
+  }
+</script>

@@ -1,122 +1,761 @@
 ---
+// src/pages/casos-exito.astro - Página de casos de éxito con diseño moderno
 import Layout from '../layouts/Layout.astro';
+import { slides } from '../data/casos-exito.js';
+import { Icon } from 'astro-icon/components';
 
-// SEO metadata específico para esta página
-const title = "Casos de Éxito | S&G Soluciones de Ingeniería";
-const description = "Descubre nuestros proyectos exitosos en automatización industrial, procesos industriales y desarrollo de software en la costa norte de Colombia.";
-const keywords = "casos de éxito, proyectos, automatización industrial, ingeniería, procesos industriales, IoT, industria 4.0, desarrollo de software";
+const pageTitle = "Casos de Éxito | S&G Soluciones de Ingeniería";
+const pageDescription = "Descubre nuestros proyectos de automatización industrial, IoT e Industria 4.0 en la costa norte de Colombia";
+
+// Helper function para obtener la URL de la imagen
+function getImageSrc(imageSrc: any): string {
+  if (typeof imageSrc === 'string') {
+    return imageSrc;
+  }
+  if (imageSrc && typeof imageSrc === 'object' && imageSrc.src) {
+    return imageSrc.src;
+  }
+  return '';
+}
+
+// Filtrar slides válidos
+const validSlides = slides.filter(slide => 
+  slide.images && 
+  slide.images.length > 0 && 
+  !slide.isContact
+);
 ---
+<Layout title={pageTitle} description={pageDescription}>
+  <!-- Contenedor principal del carrusel -->
+  <main class="success-cases-main">
+    
+    <!-- Logo watermark -->
+    <div class="watermark-container">
+      <img src="/favicon.svg" alt="S&G Logo" class="watermark-logo" loading="lazy">
+    </div>
 
-<Layout title={title} description={description} keywords={keywords}>
-	<main>
-		<!-- Header Section -->
-		<div class="hero-animated-bg py-20 text-white">
-			<div class="container mx-auto px-4">
-				<h1 class="text-4xl md:text-5xl font-bold text-center mb-6">Casos de Éxito</h1>
-				<div class="section-divider"></div>
-				<p class="text-lg text-center max-w-3xl mx-auto mt-6">
-					Conoce cómo hemos ayudado a nuestros clientes a optimizar sus procesos y alcanzar sus objetivos a través de soluciones innovadoras de ingeniería.
-				</p>
-			</div>
-		</div>
-		
-		<div class="container mx-auto px-4 py-16">
-		
-		<!-- Esta sección se completará con casos reales de la empresa -->
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-			<!-- Caso de éxito 1 (ejemplo) -->
-			<article class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
-				<div class="h-48 bg-gradient-to-r from-primary/20 to-secondary/20 flex items-center justify-center">
-					<div class="service-icon">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-						</svg>
-					</div>
-				</div>
-				<div class="p-6">
-					<h3 class="text-xl font-bold mb-2">Automatización de Planta Procesadora</h3>
-					<p class="text-gray-600 mb-4">Sector: Agroindustria</p>
-					<p class="mb-4">Implementación de un sistema de automatización completo para una planta procesadora de alimentos, mejorando la eficiencia en un 40%.</p>
-					<a href="#" class="text-primary font-medium hover:underline">Ver detalles →</a>
-				</div>
-			</article>
-			
-			<!-- Caso de éxito 2 (ejemplo) -->
-			<article class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
-				<div class="h-48 bg-gradient-to-r from-primary/20 to-secondary/20 flex items-center justify-center">
-					<div class="service-icon">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-						</svg>
-					</div>
-				</div>
-				<div class="p-6">
-					<h3 class="text-xl font-bold mb-2">Sistema IoT para Monitoreo Industrial</h3>
-					<p class="text-gray-600 mb-4">Sector: Manufactura</p>
-					<p class="mb-4">Desarrollo e implementación de un sistema IoT para monitoreo en tiempo real de equipos industriales, reduciendo tiempos de inactividad en un 25%.</p>
-					<a href="#" class="text-primary font-medium hover:underline">Ver detalles →</a>
-				</div>
-			</article>
-			
-			<!-- Caso de éxito 3 (ejemplo) -->
-			<article class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
-				<div class="h-48 bg-gradient-to-r from-primary/20 to-secondary/20 flex items-center justify-center">
-					<div class="service-icon">
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-						</svg>
-					</div>
-				</div>
-				<div class="p-6">
-					<h3 class="text-xl font-bold mb-2">Software de Gestión de Procesos</h3>
-					<p class="text-gray-600 mb-4">Sector: Servicios</p>
-					<p class="mb-4">Desarrollo de una plataforma personalizada para la gestión integral de procesos empresariales, optimizando la operación y mejorando la toma de decisiones.</p>
-					<a href="#" class="text-primary font-medium hover:underline">Ver detalles →</a>
-				</div>
-			</article>
-		</div>
-		
-		<!-- Sección de testimonios -->
-		<section class="mt-20">
-			<h2 class="text-3xl font-bold text-center mb-4">Lo que dicen nuestros clientes</h2>
-			<div class="section-divider"></div>
-			
-			<div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-10">
-				<!-- Testimonio 1 -->
-				<div class="bg-light-gray p-6 rounded-lg shadow-md card-hover">
-					<p class="italic mb-4 text-gray-600">"El equipo de S&G Soluciones de Ingeniería entendió perfectamente nuestras necesidades y entregó una solución que superó nuestras expectativas. La automatización implementada nos ha permitido aumentar significativamente nuestra productividad."</p>
-					<div class="flex items-center">
-						<div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full mr-3 flex items-center justify-center text-white font-bold">CR</div>
-						<div>
-							<p class="font-bold">Carlos Rodríguez</p>
-							<p class="text-sm text-gray-600">Director de Operaciones, Empresa ABC</p>
-						</div>
-					</div>
-				</div>
-				
-				<!-- Testimonio 2 -->
-				<div class="bg-light-gray p-6 rounded-lg shadow-md card-hover">
-					<p class="italic mb-4 text-gray-600">"La implementación del sistema IoT desarrollado por S&G ha transformado nuestra capacidad de monitoreo y respuesta. Ahora podemos prevenir problemas antes de que ocurran, lo que ha resultado en ahorros significativos."</p>
-					<div class="flex items-center">
-						<div class="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full mr-3 flex items-center justify-center text-white font-bold">LM</div>
-						<div>
-							<p class="font-bold">Laura Martínez</p>
-							<p class="text-sm text-gray-600">Gerente de Tecnología, Empresa XYZ</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		
-		<!-- Call to Action -->
-		<div class="gradient-bg text-white text-center py-16 mt-20">
-			<div class="container mx-auto px-4">
-				<h2 class="text-3xl font-bold mb-4">¿Listo para transformar tu negocio?</h2>
-				<p class="mb-8 max-w-2xl mx-auto text-blue-100">Contáctanos hoy mismo para discutir cómo podemos ayudarte a optimizar tus procesos y alcanzar tus objetivos de negocio.</p>
-				<a href="/contacto" class="btn-primary">Contáctanos</a>
-			</div>
-		</div>
-	</div>
-	</main>
+    <!-- Carrusel principal -->
+    <div class="splide success-cases-carousel" id="success-cases-carousel">
+      <div class="splide__track">
+        <ul class="splide__list">
+          {validSlides.map((slide, slideIndex) => (
+            <li class="splide__slide">
+              <section class="slide-section" data-slide={slideIndex}>
+                
+                <!-- Header de la sección -->
+                <div class="slide-header">
+                  {slide.subtitle ? (
+                    <div class="hero-content">
+                      <h1 class="hero-title">{slide.title}</h1>
+                      <h2 class="hero-subtitle">{slide.subtitle}</h2>
+                      <p class="hero-description">{slide.description}</p>
+                    </div>
+                  ) : (
+                    <div class="section-header">
+                      <span class="section-badge">Proyecto #{slideIndex}</span>
+                      <h2 class="section-title">{slide.title}</h2>
+                      <p class="section-description">{slide.description}</p>
+                    </div>
+                  )}
+                </div>
+
+                <!-- Grid de imágenes -->
+                <div class="images-grid">
+                  {slide.images.map((image, imageIndex) => (
+                    <div class={`image-card ${image.type || 'horizontal'}`}>
+                      <div class="image-container">
+                        <img 
+                          src={getImageSrc(image.src)} 
+                          alt={`${slide.title} - Imagen ${imageIndex + 1}`}
+                          loading="lazy"
+                          class="project-image"
+                        />
+                        <div class="image-overlay">
+                          <button class="zoom-btn" data-image={imageIndex}>
+                            <Icon name="mdi:magnify-plus" class="w-6 h-6" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <!-- Información adicional si existe -->
+                {slide.additionalInfo && (
+                  <div class="additional-info">
+                    <div class="info-card">
+                      <h3 class="info-title">Detalles del Proyecto</h3>
+                      <p class="info-text">{slide.additionalInfo}</p>
+                    </div>
+                  </div>
+                )}
+
+              </section>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Controles de navegación personalizados -->
+      <div class="carousel-controls">
+        <button class="carousel-btn carousel-prev" aria-label="Proyecto anterior">
+          <Icon name="mdi:chevron-left" class="w-8 h-8" />
+        </button>
+        <button class="carousel-btn carousel-next" aria-label="Siguiente proyecto">
+          <Icon name="mdi:chevron-right" class="w-8 h-8" />
+        </button>
+      </div>
+
+      <!-- Indicadores personalizados -->
+      <div class="carousel-indicators">
+        {validSlides.map((_, index) => (
+          <button 
+            class="indicator-dot" 
+            data-slide={index}
+            aria-label={`Ir al proyecto ${index + 1}`}
+          ></button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Navegación inferior -->
+    <nav class="bottom-nav">
+      <a href="/" class="nav-link">
+        <Icon name="mdi:home" class="w-5 h-5" />
+        <span>Inicio</span>
+      </a>
+      <div class="nav-divider"></div>
+      <a href="/contacto" class="nav-link">
+        <Icon name="mdi:message" class="w-5 h-5" />
+        <span>Contacto</span>
+      </a>
+    </nav>
+
+  </main>
 </Layout>
+
+<!-- Cargar Splide desde CDN -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+
+<script is:inline>
+  function initSuccessCasesCarousel() {
+    // Esperar a que Splide esté disponible
+    if (typeof Splide === 'undefined') {
+      setTimeout(initSuccessCasesCarousel, 100);
+      return;
+    }
+    
+    const carouselElement = document.querySelector('#success-cases-carousel');
+    if (!carouselElement) return;
+    
+    // Verificar si ya está inicializado
+    if (carouselElement.classList.contains('is-initialized')) return;
+    
+    try {
+      const carousel = new Splide(carouselElement, {
+        type: 'loop',
+        perPage: 1,
+        perMove: 1,
+        gap: 0,
+        pagination: false, // Usamos indicadores personalizados
+        arrows: false,     // Usamos controles personalizados
+        autoplay: true,
+        interval: 12000,   // 12 segundos como en la referencia
+        pauseOnHover: true,
+        resetProgress: false,
+        keyboard: 'global',
+        speed: 800,
+        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        direction: 'ltr',
+        height: '100vh',
+        fixedHeight: '100vh'
+      });
+      
+      carousel.mount();
+      carouselElement.classList.add('is-initialized');
+      
+      // Controles personalizados
+      const prevBtn = document.querySelector('.carousel-prev');
+      const nextBtn = document.querySelector('.carousel-next');
+      const indicators = document.querySelectorAll('.indicator-dot');
+      
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => carousel.go('<'));
+      }
+      
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => carousel.go('>'));
+      }
+      
+      // Indicadores personalizados
+      indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+          carousel.go(index);
+        });
+      });
+      
+      // Actualizar indicador activo
+      carousel.on('active', (slide) => {
+        indicators.forEach((indicator, index) => {
+          indicator.classList.toggle('active', index === slide.index);
+        });
+      });
+      
+      // Configurar primer indicador como activo
+      if (indicators.length > 0) {
+        indicators[0].classList.add('active');
+      }
+      
+      // Funcionalidad de zoom para imágenes
+      const zoomBtns = document.querySelectorAll('.zoom-btn');
+      zoomBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const img = btn.closest('.image-container').querySelector('.project-image');
+          if (img) {
+            // Crear modal de zoom (implementación simple)
+            createImageModal(img.src, img.alt);
+          }
+        });
+      });
+      
+    } catch (error) {
+      console.error('Error inicializando carrusel de casos de éxito:', error);
+    }
+  }
+  
+  // Función para crear modal de imagen
+  function createImageModal(src, alt) {
+    const modal = document.createElement('div');
+    modal.className = 'image-modal';
+    modal.innerHTML = `
+      <div class="modal-backdrop">
+        <div class="modal-content">
+          <img src="${src}" alt="${alt}" class="modal-image">
+          <button class="modal-close" aria-label="Cerrar">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Eventos de cierre
+    const closeBtn = modal.querySelector('.modal-close');
+    const backdrop = modal.querySelector('.modal-backdrop');
+    
+    closeBtn.addEventListener('click', () => {
+      document.body.removeChild(modal);
+    });
+    
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) {
+        document.body.removeChild(modal);
+      }
+    });
+    
+    // Cerrar con Escape
+    document.addEventListener('keydown', function escapeHandler(e) {
+      if (e.key === 'Escape') {
+        document.body.removeChild(modal);
+        document.removeEventListener('keydown', escapeHandler);
+      }
+    });
+  }
+  
+  // Inicializar cuando todo esté listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(initSuccessCasesCarousel, 500);
+    });
+  } else {
+    setTimeout(initSuccessCasesCarousel, 500);
+  }
+</script>
+
+<style is:global>
+/* Reset y configuración base */
+.success-cases-main {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Logo watermark */
+.watermark-container {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 10;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.watermark-logo {
+  width: 120px;
+  height: auto;
+  filter: brightness(0) invert(1);
+}
+
+/* Carrusel principal */
+#success-cases-carousel {
+  height: 100vh;
+  width: 100%;
+}
+
+#success-cases-carousel .splide__track,
+#success-cases-carousel .splide__list {
+  height: 100vh;
+}
+
+.splide__slide {
+  height: 100vh;
+  overflow-y: auto;
+  padding: 0;
+}
+
+/* Secciones de slides */
+.slide-section {
+  min-height: 100vh;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  position: relative;
+}
+
+/* Headers de sección */
+.slide-header {
+  text-align: center;
+  max-width: 800px;
+  margin-bottom: 2rem;
+}
+
+.hero-content .hero-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(45deg, #00ffff, #0071bc);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+}
+
+.hero-content .hero-subtitle {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #00ffff;
+  margin-bottom: 1.5rem;
+}
+
+.hero-content .hero-description {
+  font-size: 1.2rem;
+  color: #a0a0a0;
+  line-height: 1.6;
+}
+
+.section-header .section-badge {
+  display: inline-block;
+  background: rgba(0, 255, 255, 0.1);
+  color: #00ffff;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+}
+
+.section-header .section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.section-header .section-description {
+  font-size: 1.1rem;
+  color: #c0c0c0;
+  line-height: 1.6;
+}
+
+/* Grid de imágenes */
+.images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.image-card {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.image-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border-color: rgba(0, 255, 255, 0.3);
+}
+
+.image-card.vertical {
+  grid-row: span 2;
+}
+
+.image-card.featured {
+  grid-column: span 2;
+}
+
+.image-container {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+}
+
+.image-card.vertical .image-container {
+  height: 400px;
+}
+
+.project-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.image-card:hover .project-image {
+  transform: scale(1.05);
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 255, 255, 0.1) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image-card:hover .image-overlay {
+  opacity: 1;
+}
+
+.zoom-btn {
+  background: rgba(0, 255, 255, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.zoom-btn:hover {
+  background: rgba(0, 255, 255, 1);
+  transform: scale(1.1);
+}
+
+/* Información adicional */
+.additional-info {
+  width: 100%;
+  max-width: 800px;
+}
+
+.info-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.info-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #00ffff;
+  margin-bottom: 1rem;
+}
+
+.info-text {
+  color: #c0c0c0;
+  line-height: 1.6;
+}
+
+/* Controles del carrusel */
+.carousel-controls {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2rem;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.carousel-btn {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  pointer-events: all;
+}
+
+.carousel-btn:hover {
+  background: rgba(0, 255, 255, 0.2);
+  border-color: rgba(0, 255, 255, 0.5);
+  transform: scale(1.1);
+}
+
+/* Indicadores del carrusel */
+.carousel-indicators {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 1rem;
+  z-index: 100;
+}
+
+.indicator-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.indicator-dot.active {
+  background: #00ffff;
+  transform: scale(1.3);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+.indicator-dot:hover {
+  background: rgba(0, 255, 255, 0.7);
+}
+
+/* Navegación inferior */
+.bottom-nav {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 100;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 25px;
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  background: rgba(0, 255, 255, 0.1);
+  border-color: rgba(0, 255, 255, 0.3);
+  color: #00ffff;
+}
+
+.nav-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Modal de imagen */
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+
+.modal-backdrop {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.modal-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-image {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-close {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  background: rgba(255, 0, 0, 0.2);
+  border-color: rgba(255, 0, 0, 0.5);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .slide-section {
+    padding: 1rem;
+    gap: 2rem;
+  }
+
+  .hero-content .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-content .hero-subtitle {
+    font-size: 1.5rem;
+  }
+
+  .section-header .section-title {
+    font-size: 2rem;
+  }
+
+  .images-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .image-card.vertical,
+  .image-card.featured {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+
+  .image-container,
+  .image-card.vertical .image-container {
+    height: 200px;
+  }
+
+  .carousel-controls {
+    display: none;
+  }
+
+  .watermark-container {
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .watermark-logo {
+    width: 80px;
+  }
+
+  .bottom-nav {
+    top: 1rem;
+    left: 1rem;
+  }
+
+  .nav-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-content .hero-subtitle {
+    font-size: 1.25rem;
+  }
+
+  .section-header .section-title {
+    font-size: 1.75rem;
+  }
+
+  .carousel-indicators {
+    bottom: 1rem;
+    gap: 0.75rem;
+  }
+
+  .indicator-dot {
+    width: 10px;
+    height: 10px;
+  }
+}
+</style>

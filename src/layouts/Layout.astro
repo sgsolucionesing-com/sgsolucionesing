@@ -1,58 +1,122 @@
 ---
+// src/layouts/Layout.astro
 import '../styles/global.css';
 import Navigation from '../components/Navigation.astro';
 import Footer from '../components/Footer.astro';
+import icono from '../assets/branding/icon.svg'
 
 interface Props {
-	title?: string;
-	description?: string;
-	keywords?: string;
+    title?: string;
+    description?: string;
+    keywords?: string;
 }
 
 const { 
-	title = "S&G Soluciones de Ingeniería | Automatización Industrial y Desarrollo de Software", 
-	description = "Empresa especializada en soluciones de ingeniería, automatización industrial, procesos industriales y desarrollo de software en la costa norte de Colombia.",
-	keywords = "automatización industrial, ingeniería, procesos industriales, IoT, industria 4.0, desarrollo de software, costa norte, Colombia"
+    title = "S&G Soluciones de Ingeniería | Automatización Industrial y Desarrollo de Software", 
+    description = "Empresa especializada en soluciones de ingeniería, automatización industrial, procesos industriales y desarrollo de software en la costa norte de Colombia.",
+    keywords = "automatización industrial, ingeniería, procesos industriales, IoT, industria 4.0, desarrollo de software, costa norte, Colombia"
 } = Astro.props;
 ---
-
 <!doctype html>
 <html lang="es">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="icon" type="image/png" href="/assets/icono.png" />
-		<meta name="generator" content={Astro.generator} />
-		
-		<!-- SEO Metadata -->
-		<title>{title}</title>
-		<meta name="description" content={description} />
-		<meta name="keywords" content={keywords} />
-		
-		<!-- Open Graph / Facebook -->
-		<meta property="og:type" content="website" />
-		<meta property="og:title" content={title} />
-		<meta property="og:description" content={description} />
-		<meta property="og:site_name" content="S&G Soluciones de Ingeniería" />
-		
-		<!-- Twitter -->
-		<meta property="twitter:card" content="summary_large_image" />
-		<meta property="twitter:title" content={title} />
-		<meta property="twitter:description" content={description} />
-		
-		<!-- Fonts -->
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-		
-		<!-- Font Awesome -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-	</head>
-	<body class="flex flex-col min-h-screen">
-		<Navigation />
-		<div class="flex-grow">
-			<slot />
-		</div>
-		<Footer />
-	</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" type="image/svg+xml" href={icono.src} />
+        <meta name="generator" content={Astro.generator} />
+        
+        <meta name="astro-view-transitions-enabled" content="false" />
+
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="keywords" content={keywords} />
+        
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:site_name" content="S&G Soluciones de Ingeniería" />
+        
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:title" content={title} />
+        <meta property="twitter:description" content={description} />
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    </head>
+    <body class="flex flex-col min-h-screen bg-white text-gray-800 dark:bg-dark-blue dark:text-gray-200 transition-colors duration-300">
+        <Navigation />
+        <div class="flex-grow">
+            <slot />
+        </div>
+        <Footer />
+        <div class="theme-toggle-icons" id="theme-icons">
+            <i class="fas fa-moon moon-icon"></i>
+            <i class="fas fa-sun sun-icon"></i>
+        </div>
+        
+        <script>
+            window.scrollTo(0, 0);
+        </script>
+        <script>
+            function setTheme() {
+                const theme = localStorage.getItem('theme') || 'light';
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }
+            
+            // Contenedor para los íconos del tema
+            const themeIcons = document.getElementById('theme-icons');
+            
+            // Función para actualizar los íconos del tema
+            function updateThemeIcons() {
+                const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+                const sunIcon = themeIcons.querySelector('.sun-icon');
+                const moonIcon = themeIcons.querySelector('.moon-icon');
+                
+                if (currentTheme === 'dark') {
+                    sunIcon.style.display = 'none';
+                    moonIcon.style.display = 'block';
+                } else {
+                    sunIcon.style.display = 'block';
+                    moonIcon.style.display = 'none';
+                }
+            }
+
+            // Obtener el botón del toggle de tema
+            const themeToggle = document.getElementById('theme-toggle');
+            
+            // Inicializar los íconos
+            updateThemeIcons();
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    document.documentElement.classList.toggle('dark');
+                    localStorage.setItem('theme', newTheme);
+                });
+            }
+        </script>
+    </body>
 </html>
+
+<style is:global>
+    :root {
+        --primary-color: #00A99D;
+        --secondary-color: #005B6A;
+    }
+    html {
+        scroll-behavior: smooth;
+    }
+    body {
+        font-family: 'Inter', sans-serif;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Montserrat', sans-serif;
+    }
+</style>
