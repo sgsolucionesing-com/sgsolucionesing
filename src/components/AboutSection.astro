@@ -1,113 +1,99 @@
 ---
-// Componente mejorado para la sección 'Quiénes Somos'
-// Importamos el componente Image de Astro para optimizar las imágenes
-import { Image } from 'astro:assets';
-// La imagen se cargará desde la ruta especificada. ¡No es necesario cambiar esta línea!
-import aboutImage from '../assets/images/Aboutimg.jpg'; 
+// Componente para la sección 'Quiénes Somos'
 ---
 
-<section id="nosotros" class="py-20 lg:py-28 bg-slate-50 overflow-hidden">
+<section id="nosotros" class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-20">
-            
-            <div class="animate-on-scroll" data-animation="fade-in-up">
-                <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-                    Quiénes Somos
-                </h2>
-                <div class="w-24 h-1.5 bg-gradient-to-r from-blue-600 to-cyan-400 mb-6"></div>
-                <h3 class="text-2xl font-semibold text-blue-600 mb-4">
-                    Tu Aliado Estratégico en Ingeniería
-                </h3>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="fade-in-element">
+                <h2 class="text-4xl font-bold text-gray-900 mb-6">Quiénes Somos</h2>
+                <div class="section-divider w-20 ml-0"></div>
+                <h3 class="text-2xl font-semibold text-primary mb-4">Su Aliado Estratégico en Ingeniería</h3>
                 <p class="text-gray-600 mb-6 text-lg leading-relaxed">
                     Especialistas en automatización y soluciones tecnológicas, transformamos oportunidades en resultados estratégicos mediante una gestión integral de proyectos. Nos adaptamos con precisión a sus necesidades, abordando con confianza cualquier desafío que su visión demande.
                 </p>
-                <div class="bg-blue-100 border-l-4 border-blue-500 p-6 rounded-r-lg shadow-sm">
-                    <p class="text-blue-900 font-medium text-lg">
+                <div class="bg-blue-50 border-l-4 border-primary p-6 rounded-r-lg">
+                    <p class="text-gray-800 font-medium text-lg">
                         "Nuestra experiencia se demuestra en más de 100 casos de éxito y proyectos de ingeniería."
                     </p>
                 </div>
             </div>
             
-            <div class="animate-on-scroll" data-animation="fade-in-up" style="--animation-delay: 150ms;">
-                <Image 
-                    src={aboutImage} 
-                    alt="Equipo de ingenieros trabajando en un proyecto de SGS Soluciones"
-                    class="rounded-xl shadow-2xl object-cover w-full h-full transform hover:scale-105 transition-transform duration-500"
-                    widths={[400, 800, 1200]}
-                    sizes="(max-width: 600px) 400px, (max-width: 1024px) 800px, 1200px"
-                />
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-            <div class="animate-on-scroll p-6" data-animation="fade-in-up" style="--animation-delay: 300ms;">
-                <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 mx-auto mb-4">
-                    <i class="fas fa-award text-3xl text-blue-600"></i>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 fade-in-element" style="transition-delay: 150ms;">
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                    <div class="text-center">
+                        <i class="fas fa-award text-4xl text-primary mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Experiencia</h3>
+                        <p class="text-gray-600">Más de 15 años en el mercado industrial.</p>
+                    </div>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">Experiencia</h3>
-                <p class="text-gray-600">Más de 15 años en el mercado industrial.</p>
-            </div>
-            
-            <div class="animate-on-scroll p-6" data-animation="fade-in-up" style="--animation-delay: 450ms;">
-                <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 mx-auto mb-4">
-                    <i class="fas fa-handshake text-3xl text-blue-600"></i>
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                    <div class="text-center">
+                        <i class="fas fa-handshake text-4xl text-primary mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Confianza</h3>
+                        <p class="text-gray-600">Líderes de la industria confían en nosotros.</p>
+                    </div>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">Confianza</h3>
-                <p class="text-gray-600">Líderes de la industria confían en nosotros.</p>
-            </div>
-
-            <div class="animate-on-scroll p-6" data-animation="fade-in-up" style="--animation-delay: 600ms;">
-                <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 mx-auto mb-4">
-                    <i class="fas fa-lightbulb text-3xl text-blue-600"></i>
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                    <div class="text-center">
+                        <i class="fas fa-lightbulb text-4xl text-primary mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Innovación</h3>
+                        <p class="text-gray-600">Tecnologías de vanguardia aplicadas.</p>
+                    </div>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">Innovación</h3>
-                <p class="text-gray-600">Tecnologías de vanguardia aplicadas.</p>
-            </div>
-
-            <div class="animate-on-scroll p-6" data-animation="fade-in-up" style="--animation-delay: 750ms;">
-                 <div class="flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 mx-auto mb-4">
-                    <i class="fas fa-chart-line text-3xl text-blue-600"></i>
+                <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                    <div class="text-center">
+                        <i class="fas fa-chart-line text-4xl text-primary mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Resultados</h3>
+                        <p class="text-gray-600">Optimización comprobada de procesos.</p>
+                    </div>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">Resultados</h3>
-                <p class="text-gray-600">Optimización comprobada de procesos.</p>
             </div>
         </div>
     </div>
 </section>
 
 <style>
-    /* Usamos data attributes para una animación más limpia */
-    .animate-on-scroll {
+    .section-divider {
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        margin: 2rem auto;
+    }
+
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* --- ANIMACIONES DE SCROLL --- */
+    .fade-in-element {
         opacity: 0;
         transform: translateY(30px);
         transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        transition-delay: var(--animation-delay, 0s); /* Usa una variable para el retraso */
     }
 
-    .animate-on-scroll.is-visible {
+    .fade-in-element.is-visible {
         opacity: 1;
         transform: translateY(0);
     }
 </style>
 
 <script>
-    // El script sigue siendo el mismo, pero ahora es más versátil
-    // gracias al uso de data-attributes y la variable CSS.
+    // --- ANIMACIÓN DE SCROLL ---
     document.addEventListener('DOMContentLoaded', () => {
-        const observer = new IntersectionObserver((entries) => {
+        const observer = new IntersectionObserver((entries, observerInstance) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('is-visible');
-                    // No es necesario des-observar si quieres que la animación se repita
-                    // observer.unobserve(entry.target); 
+                    observerInstance.unobserve(entry.target);
                 }
             });
         }, {
-            threshold: 0.1,
+            threshold: 0.1 
         });
 
-        // Buscamos todos los elementos que queremos animar
-        const elementsToAnimate = document.querySelectorAll('.animate-on-scroll');
+        const elementsToAnimate = document.querySelectorAll('.fade-in-element');
         elementsToAnimate.forEach(el => {
             observer.observe(el);
         });

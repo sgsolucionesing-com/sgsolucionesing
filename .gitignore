@@ -56,7 +56,3 @@ coverage/
 
 # Sistema operativo
 Thumbs.db
-
-# Aider files
-.aider*
-.cache-db*
