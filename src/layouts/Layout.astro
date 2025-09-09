@@ -3,6 +3,7 @@
 import '../styles/global.css';
 import Navigation from '../components/Navigation.astro';
 import Footer from '../components/Footer.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 import icono from '../assets/branding/icon.svg'
 
 interface Props {
@@ -45,62 +46,55 @@ const {
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
         
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+        <script is:inline>
+            const getThemePreference = () => {
+                if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+                    return localStorage.getItem('theme');
+                }
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            };
+
+            const isDark = getThemePreference() === 'dark';
+            document.documentElement.classList.toggle('dark', isDark);
+
+            document.addEventListener('astro:after-swap', () => {
+                const isDark = getThemePreference() === 'dark';
+                document.documentElement.classList.toggle('dark', isDark);
+            });
+        </script>
     </head>
-    <body class="flex flex-col min-h-screen bg-white text-gray-800 dark:bg-dark-blue dark:text-gray-200 transition-colors duration-300">
+    <body class="flex flex-col min-h-screen bg-light text-dark dark:bg-dark-blue dark:text-light transition-colors duration-300">
         <Navigation />
         <div class="flex-grow">
             <slot />
         </div>
         <Footer />
-        <div class="theme-toggle-icons" id="theme-icons">
-            <i class="fas fa-moon moon-icon"></i>
-            <i class="fas fa-sun sun-icon"></i>
+        <div class="fixed bottom-4 right-4">
+            <ThemeToggle />
         </div>
-        
-        <script>
+        <script is:inline>
             window.scrollTo(0, 0);
         </script>
         <script>
-            function setTheme() {
-                const theme = localStorage.getItem('theme') || 'light';
-                if (theme === 'dark') {
-                    document.documentElement.classList.add('dark');
-                } else {
-                    document.documentElement.classList.remove('dark');
-                }
-            }
-            
-            // Contenedor para los íconos del tema
-            const themeIcons = document.getElementById('theme-icons');
-            
-            // Función para actualizar los íconos del tema
-            function updateThemeIcons() {
-                const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-                const sunIcon = themeIcons.querySelector('.sun-icon');
-                const moonIcon = themeIcons.querySelector('.moon-icon');
-                
-                if (currentTheme === 'dark') {
-                    sunIcon.style.display = 'none';
-                    moonIcon.style.display = 'block';
-                } else {
-                    sunIcon.style.display = 'block';
-                    moonIcon.style.display = 'none';
-                }
-            }
+            const themeToggle = () => {
+                const isDark = document.documentElement.classList.toggle('dark');
+                localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            };
 
-            // Obtener el botón del toggle de tema
-            const themeToggle = document.getElementById('theme-toggle');
-            
-            // Inicializar los íconos
-            updateThemeIcons();
-            if (themeToggle) {
-                themeToggle.addEventListener('click', () => {
-                    const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                    document.documentElement.classList.toggle('dark');
-                    localStorage.setItem('theme', newTheme);
-                });
-            }
+            document.addEventListener('DOMContentLoaded', () => {
+                const toggleButton = document.getElementById('theme-toggle');
+                if (toggleButton) {
+                    toggleButton.addEventListener('click', themeToggle);
+                }
+            });
+
+            document.addEventListener('astro:after-swap', () => {
+                const newToggleButton = document.getElementById('theme-toggle');
+                if (newToggleButton) {
+                    newToggleButton.addEventListener('click', themeToggle);
+                }
+            });
         </script>
     </body>
 </html>
