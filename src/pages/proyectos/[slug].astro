@@ -155,18 +155,48 @@ const pageKeywords = `${data.sector}, ${data.tecnologias.join(', ')}, automatiza
           <h2 class="text-2xl font-bold text-gray-900 mb-6">Galería del Proyecto</h2>
           <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {data.gallery.map((image, index) => (
-              <div class="group relative rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
+              <div class="group relative rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow cursor-pointer" data-gallery-item data-image={image} data-index={index}>
                 <img 
                   src={image} 
                   alt={`${data.title} - Imagen ${index + 1}`} 
                   class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                 />
-                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <Icon name="mdi:magnify-plus" class="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </div>
               </div>
             ))}
           </div>
         </section>
       )}
+
+      <!-- Modal para galería -->
+      <div id="gallery-modal" class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4">
+        <div class="relative max-w-4xl max-h-full">
+          <!-- Botón cerrar -->
+          <button id="close-modal" class="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors z-10">
+            <Icon name="mdi:close" class="w-8 h-8" />
+          </button>
+          
+          <!-- Navegación anterior -->
+          <button id="prev-image" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-10">
+            <Icon name="mdi:chevron-left" class="w-10 h-10" />
+          </button>
+          
+          <!-- Navegación siguiente -->
+          <button id="next-image" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-10">
+            <Icon name="mdi:chevron-right" class="w-10 h-10" />
+          </button>
+          
+          <!-- Imagen del modal -->
+          <img id="modal-image" src="" alt="" class="max-w-full max-h-full object-contain rounded-lg" />
+          
+          <!-- Contador de imágenes -->
+          <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white text-sm bg-black/50 px-3 py-1 rounded-full">
+            <span id="current-image">1</span> / <span id="total-images">1</span>
+          </div>
+        </div>
+      </div>
 
       <!-- CTA y navegación -->
       <footer class="border-t border-gray-200 pt-10">
@@ -197,3 +227,122 @@ const pageKeywords = `${data.sector}, ${data.tecnologias.join(', ')}, automatiza
     </article>
   </main>
 </Layout>
+
+<script is:inline>
+  // Funcionalidad del modal de galería
+  document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('gallery-modal');
+    const modalImage = document.getElementById('modal-image');
+    const currentImageSpan = document.getElementById('current-image');
+    const totalImagesSpan = document.getElementById('total-images');
+    const closeBtn = document.getElementById('close-modal');
+    const prevBtn = document.getElementById('prev-image');
+    const nextBtn = document.getElementById('next-image');
+    const galleryItems = document.querySelectorAll('[data-gallery-item]');
+    
+    if (!modal || !modalImage) return;
+    
+    let currentIndex = 0;
+    let images = [];
+    
+    // Recopilar todas las imágenes de la galería
+    galleryItems.forEach((item, index) => {
+      const imageSrc = item.getAttribute('data-image');
+      if (imageSrc) {
+        images.push(imageSrc);
+      }
+      
+      // Agregar event listener para abrir modal
+      item.addEventListener('click', () => {
+        openModal(index);
+      });
+    });
+    
+    // Establecer total de imágenes
+    if (totalImagesSpan) {
+      totalImagesSpan.textContent = images.length.toString();
+    }
+    
+    function openModal(index) {
+      currentIndex = index;
+      updateModalImage();
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeModal() {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = 'auto';
+    }
+    
+    function updateModalImage() {
+      if (modalImage && images[currentIndex]) {
+        modalImage.src = images[currentIndex];
+        modalImage.alt = 'Imagen ' + (currentIndex + 1) + ' de la galería';
+        
+        if (currentImageSpan) {
+          currentImageSpan.textContent = (currentIndex + 1).toString();
+        }
+        
+        // Mostrar/ocultar botones de navegación
+        if (prevBtn) {
+          prevBtn.style.display = images.length > 1 ? 'block' : 'none';
+        }
+        if (nextBtn) {
+          nextBtn.style.display = images.length > 1 ? 'block' : 'none';
+        }
+      }
+    }
+    
+    function nextImage() {
+      currentIndex = (currentIndex + 1) % images.length;
+      updateModalImage();
+    }
+    
+    function prevImage() {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      updateModalImage();
+    }
+    
+    // Event listeners
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeModal);
+    }
+    
+    if (nextBtn) {
+      nextBtn.addEventListener('click', nextImage);
+    }
+    
+    if (prevBtn) {
+      prevBtn.addEventListener('click', prevImage);
+    }
+    
+    // Cerrar modal al hacer click en el fondo
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+    }
+    
+    // Navegación con teclado
+    document.addEventListener('keydown', (e) => {
+      if (modal && !modal.classList.contains('hidden')) {
+        switch(e.key) {
+          case 'Escape':
+            closeModal();
+            break;
+          case 'ArrowLeft':
+            prevImage();
+            break;
+          case 'ArrowRight':
+            nextImage();
+            break;
+        }
+      }
+    });
+  });
+</script>
