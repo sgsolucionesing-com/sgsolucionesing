@@ -86,6 +86,32 @@ El diseño del sitio debe seguir estas pautas:
 
 ## Desarrollo
 
+### Funcionalidades Implementadas
+
+#### Modal de Galería de Imágenes
+
+En las páginas de proyectos individuales (`/proyectos/[slug]`), se ha implementado un modal interactivo para visualizar las imágenes de la galería:
+
+**Características:**
+- **Activación**: Click en cualquier imagen de la galería
+- **Navegación**: 
+  - Flechas laterales para navegar entre imágenes
+  - Teclas de flecha izquierda/derecha del teclado
+  - Tecla Escape para cerrar
+- **Interfaz**:
+  - Contador de imágenes (ej: "1 / 5")
+  - Icono de lupa en hover para indicar funcionalidad
+  - Fondo oscuro semitransparente
+  - Botón de cierre (X)
+- **Responsive**: Optimizado para dispositivos móviles y desktop
+- **Accesibilidad**: Cierre al hacer click en el fondo del modal
+
+**Implementación técnica:**
+- JavaScript vanilla integrado en la página
+- CSS con Tailwind para estilos
+- Manejo de eventos de teclado y mouse
+- Verificaciones de tipos para TypeScript
+
 ### Flujo de Trabajo
 
 1. **Creación de Ramas**: Antes de implementar cualquier cambio, crear una nueva rama:
@@ -109,6 +135,7 @@ El diseño del sitio debe seguir estas pautas:
 - Seguir los principios de componentes reutilizables
 - Optimizar imágenes y recursos para rendimiento
 - Realizar pruebas en diferentes navegadores y dispositivos
+- Actualizar documentación al implementar nuevas funcionalidades
 
 ## SEO
 
