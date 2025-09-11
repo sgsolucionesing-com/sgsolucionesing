@@ -6,7 +6,7 @@
     schema: z.object({
       title: z.string(),
       slug: z.string().optional(), // opcional; si no, se toma del nombre del archivo
-      sector: z.enum(['Minería','Cementero','Industrial','Energía','Oil & Gas','Otros']).default('Industrial'),
+      sector: z.enum(['Minería','Cementero','Industrial','Energía','Alimentos','Oil & Gas','Otros']).default('Industrial'),
       cliente: z.string().optional(),
       ubicacion: z.string().optional(),
       fecha: z.string().optional(),
