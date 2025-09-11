@@ -171,28 +171,31 @@ const pageKeywords = `${data.sector}, ${data.tecnologias.join(', ')}, automatiza
       )}
 
       <!-- Modal para galería -->
-      <div id="gallery-modal" class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-4">
-        <div class="relative max-w-4xl max-h-full">
+      <div id="gallery-modal" class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-2 sm:p-4">
+        <div class="relative w-full h-full max-w-7xl flex items-center justify-center">
           <!-- Botón cerrar -->
-          <button id="close-modal" class="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors z-10">
-            <Icon name="mdi:close" class="w-8 h-8" />
+          <button id="close-modal" class="absolute top-2 right-2 sm:top-4 sm:right-4 text-white hover:text-gray-300 transition-colors z-20 bg-black/50 rounded-full p-2 sm:p-3">
+            <Icon name="mdi:close" class="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
           
           <!-- Navegación anterior -->
-          <button id="prev-image" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-10">
-            <Icon name="mdi:chevron-left" class="w-10 h-10" />
+          <button id="prev-image" class="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-20 bg-black/50 rounded-full p-2 sm:p-3">
+            <Icon name="mdi:chevron-left" class="w-6 h-6 sm:w-8 sm:h-8" />
           </button>
           
           <!-- Navegación siguiente -->
-          <button id="next-image" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-10">
-            <Icon name="mdi:chevron-right" class="w-10 h-10" />
+          <button id="next-image" class="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-300 transition-colors z-20 bg-black/50 rounded-full p-2 sm:p-3">
+            <Icon name="mdi:chevron-right" class="w-6 h-6 sm:w-8 sm:h-8" />
           </button>
           
-          <!-- Imagen del modal -->
-          <img id="modal-image" src="" alt="" class="max-w-full max-h-full object-contain rounded-lg" />
+          <!-- Contenedor de imagen -->
+          <div class="relative w-full h-full flex items-center justify-center px-12 sm:px-16 py-16 sm:py-20">
+            <!-- Imagen del modal -->
+            <img id="modal-image" src="" alt="" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl" />
+          </div>
           
           <!-- Contador de imágenes -->
-          <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white text-sm bg-black/50 px-3 py-1 rounded-full">
+          <div class="absolute bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 text-white text-sm sm:text-base bg-black/70 px-4 py-2 rounded-full backdrop-blur-sm">
             <span id="current-image">1</span> / <span id="total-images">1</span>
           </div>
         </div>
@@ -344,5 +347,35 @@ const pageKeywords = `${data.sector}, ${data.tecnologias.join(', ')}, automatiza
         }
       }
     });
+    
+    // Navegación táctil para dispositivos móviles
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const minSwipeDistance = 50;
+    
+    if (modalImage) {
+      modalImage.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+      }, { passive: true });
+      
+      modalImage.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+      }, { passive: true });
+    }
+    
+    function handleSwipe() {
+      const swipeDistance = touchEndX - touchStartX;
+      
+      if (Math.abs(swipeDistance) > minSwipeDistance) {
+        if (swipeDistance > 0) {
+          // Deslizar hacia la derecha - imagen anterior
+          prevImage();
+        } else {
+          // Deslizar hacia la izquierda - imagen siguiente
+          nextImage();
+        }
+      }
+    }
   });
 </script>
