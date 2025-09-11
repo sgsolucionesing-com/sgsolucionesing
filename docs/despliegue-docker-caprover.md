@@ -227,7 +227,7 @@ El archivo `nginx.conf.template` contiene la configuración optimizada de Nginx:
 
 - **Configuración SPA**: Redirección de rutas para aplicaciones de una sola página
 - **Headers de seguridad**: X-Frame-Options, X-Content-Type-Options, X-XSS-Protection, Referrer-Policy
-- **Content Security Policy (CSP)**: Configuración que permite Font Awesome desde cdnjs.cloudflare.com
+- **Content Security Policy (CSP)**: Configuración que permite Font Awesome desde cdnjs.cloudflare.com y recursos de Splide desde cdn.jsdelivr.net
 - **Caché de assets estáticos**: Configuración optimizada para archivos CSS, JS, imágenes
 - **Compresión Gzip**: Habilitada para mejorar el rendimiento
 - **Health checks**: Endpoints `/health` y `/status` para monitoreo
@@ -237,9 +237,9 @@ El archivo `nginx.conf.template` contiene la configuración optimizada de Nginx:
 #### Configuración de CSP
 
 La Content Security Policy está configurada para permitir:
-- **style-src**: Estilos desde el mismo origen, inline, Google Fonts, Font Awesome Kit y cdnjs.cloudflare.com
+- **style-src**: Estilos desde el mismo origen, inline, Google Fonts, Font Awesome Kit, cdnjs.cloudflare.com y cdn.jsdelivr.net
 - **font-src**: Fuentes desde el mismo origen, Google Fonts, Font Awesome Kit y cdnjs.cloudflare.com
-- **script-src**: Scripts desde el mismo origen, inline, Font Awesome Kit y Google Fonts
+- **script-src**: Scripts desde el mismo origen, inline, Font Awesome Kit, Google Fonts y cdn.jsdelivr.net
 - **img-src**: Imágenes desde el mismo origen, data URIs y cualquier HTTPS
 - **connect-src**: Conexiones solo desde el mismo origen
 
