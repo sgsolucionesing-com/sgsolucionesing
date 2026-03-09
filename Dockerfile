@@ -20,9 +20,6 @@ COPY postcss.config.js ./
 # Instalar todas las dependencias (incluyendo devDependencies para el build)
 RUN npm ci
 
-# Invalidar cache para copiar código fuente actualizado
-ARG CACHEBUST=1
-
 # Copiar código fuente
 COPY src/ ./src/
 COPY public/ ./public/
@@ -48,6 +45,9 @@ COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 
 # Copiar archivos construidos desde la etapa de build
 COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Copiar archivos públicos explícitamente para garantizar disponibilidad
+COPY public/ /usr/share/nginx/html/
 
 # Exponer puerto 80
 EXPOSE 80
