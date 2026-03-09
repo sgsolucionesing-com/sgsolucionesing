@@ -17,16 +17,18 @@ RUN npm ci
 
 COPY src/ ./src/
 COPY public/ ./public/
+COPY nginx.conf ./nginx.conf
 
 RUN npm run build
-
-# Crear configuración de nginx en la etapa de build
-COPY nginx.conf /app/nginx.conf
 
 # Etapa 2: Producción
 FROM nginx:alpine AS production
 
-RUN apk add --no-cache curl && \
+RUN apk add --no-cache curl
+
+# Consumir el SHA del commit para invalidar cache de todas las capas siguientes
+ARG CAPROVER_GIT_COMMIT_SHA=0
+RUN echo "deploy: $CAPROVER_GIT_COMMIT_SHA" > /build-info.txt && \
     rm -rf /etc/nginx/conf.d/* /etc/nginx/templates/*
 
 # Copiar configuración de nginx desde builder
