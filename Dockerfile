@@ -17,32 +17,29 @@ RUN npm ci
 
 COPY src/ ./src/
 COPY public/ ./public/
-COPY nginx.conf ./nginx.conf
 
 RUN npm run build
 
-# Etapa 2: Producción
-FROM nginx:alpine AS production
+# Etapa 2: Producción (versión específica para forzar rebuild sin cache)
+FROM nginx:1.27-alpine AS production
 
 RUN apk add --no-cache curl
 
-# Consumir el SHA del commit para invalidar cache de todas las capas siguientes
-ARG CAPROVER_GIT_COMMIT_SHA=0
-RUN echo "deploy: $CAPROVER_GIT_COMMIT_SHA" > /build-info.txt && \
-    rm -rf /etc/nginx/conf.d/* /etc/nginx/templates/*
+# Crear directorio para configuración personalizada
+RUN mkdir -p /etc/nginx/templates
 
-# Copiar configuración de nginx desde builder
-COPY --from=builder /app/nginx.conf /etc/nginx/conf.d/default.conf
+# Configuración de Nginx optimizada para CapRover
+COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 
-# Copiar archivos construidos
+# Copiar archivos construidos desde la etapa de build
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copiar archivos públicos explícitamente
-COPY --from=builder /app/public /usr/share/nginx/html/
-
+# Exponer puerto 80
 EXPOSE 80
 
+# Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost/health || exit 1
 
+# Comando por defecto
 CMD ["nginx", "-g", "daemon off;"]
