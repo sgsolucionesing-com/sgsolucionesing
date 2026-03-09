@@ -20,6 +20,9 @@ COPY postcss.config.js ./
 # Instalar todas las dependencias (incluyendo devDependencies para el build)
 RUN npm ci
 
+# Invalidar cache para copiar código fuente actualizado
+ARG CACHEBUST=1
+
 # Copiar código fuente
 COPY src/ ./src/
 COPY public/ ./public/
