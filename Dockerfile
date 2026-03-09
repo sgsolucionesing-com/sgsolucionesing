@@ -20,6 +20,9 @@ COPY postcss.config.js ./
 # Instalar todas las dependencias (incluyendo devDependencies para el build)
 RUN npm ci
 
+# Usar el commit SHA de CapRover para invalidar cache de código fuente
+ARG CAPROVER_GIT_COMMIT_SHA=0
+
 # Copiar código fuente
 COPY src/ ./src/
 COPY public/ ./public/
@@ -39,6 +42,9 @@ ENV PORT=80
 
 # Crear directorio para configuración personalizada
 RUN mkdir -p /etc/nginx/templates
+
+# Invalidar cache para archivos de configuración y contenido
+ARG CAPROVER_GIT_COMMIT_SHA=0
 
 # Configuración de Nginx optimizada para CapRover
 COPY nginx.conf.template /etc/nginx/templates/default.conf.template
