@@ -88,6 +88,24 @@ El diseño del sitio debe seguir estas pautas:
 
 ### Funcionalidades Implementadas
 
+#### Modo Claro/Oscuro
+
+El sitio incluye un sistema completo de temas claro y oscuro:
+
+**Características:**
+- **Detección automática**: Respeta la preferencia del sistema operativo del usuario
+- **Persistencia**: Guarda la preferencia del usuario en localStorage
+- **Múltiples controles**: Botones de tema en la navegación principal y botón flotante
+- **Transiciones suaves**: Cambios de tema con animaciones fluidas
+- **Accesibilidad**: Etiquetas ARIA y tooltips descriptivos
+- **Iconografía clara**: Iconos de sol/luna que cambian según el tema activo
+
+**Implementación técnica:**
+- **Configuración Tailwind**: `darkMode: 'class'` en `tailwind.config.mjs`
+- **Script global**: Función `window.toggleTheme()` disponible en toda la aplicación
+- **Eventos personalizados**: Sistema de notificación para cambios de tema
+- **Compatibilidad Astro**: Manejo correcto de navegación SPA
+
 #### Modal de Galería de Imágenes
 
 En las páginas de proyectos individuales (`/proyectos/[slug]`), se ha implementado un modal interactivo para visualizar las imágenes de la galería:
@@ -111,6 +129,7 @@ En las páginas de proyectos individuales (`/proyectos/[slug]`), se ha implement
   - Espaciado responsive (menor en móviles, mayor en desktop)
   - Soporte completo para gestos táctiles
 - **Accesibilidad**: Cierre al hacer click en el fondo del modal
+- **Soporte de temas**: Compatible con modo claro y oscuro
 
 **Implementación técnica:**
 - JavaScript vanilla integrado en la página
