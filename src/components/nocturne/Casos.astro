@@ -1,0 +1,48 @@
+---
+// src/components/nocturne/Casos.astro
+import { getCollection } from 'astro:content';
+
+const casos = (await getCollection('proyectos'))
+  .sort((a, b) => (Number(b.data.destacado) - Number(a.data.destacado)) || ((a.data.order ?? 99) - (b.data.order ?? 99)))
+  .slice(0, 3);
+---
+<section class="sec casos" id="casos">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="kick rv">Casos de éxito</p>
+        <h2 class="rv">Proyectos entregados en planta.</h2>
+      </div>
+      <p class="lead rv">
+        Cada intervención parte de un diagnóstico y termina en cifras: más disponibilidad, energía bajo
+        control y procesos visibles.
+      </p>
+    </div>
+    <div class="case-grid">
+      {casos.map((c) => (
+        <article class="case rv">
+          <a class="fig" href={`/proyectos/${c.slug}`}>
+            <img src={c.data.coverImage} alt={c.data.title} />
+            <span class="meta">{[c.data.sector, c.data.ubicacion, c.data.fecha].filter(Boolean).join(' · ')}</span>
+          </a>
+          <div class="body">
+            <h3>{c.data.title}</h3>
+            <p class="rz">{c.data.resumen}</p>
+            <div class="kpis">
+              {c.data.kpis.slice(0, 3).map((k) => (
+                <div>
+                  <div class="kn">{k.value}</div>
+                  <div class="kl">{k.label}</div>
+                </div>
+              ))}
+            </div>
+            <a class="verlink" href={`/proyectos/${c.slug}`}>Ver caso <span class="arrow"></span></a>
+          </div>
+        </article>
+      ))}
+    </div>
+    <div class="more">
+      <a class="btn-o" href="/proyectos">Ver todos los casos <span class="arrow"></span></a>
+    </div>
+  </div>
+</section>

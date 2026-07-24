@@ -1,0 +1,65 @@
+---
+// src/layouts/BaseLayout.astro — Rediseño "Nocturne" (Fase 1)
+// Layout namespaced: no reemplaza a Layout.astro (usado por contacto.astro y proyectos/*)
+import '../styles/nocturne.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Ingeniería en automatización industrial, Industria 4.0 / IoT, gestión de energía y desarrollo de software a la medida.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body id="top">
+    <nav class="nav" id="nav">
+      <a class="brand" href="/#top" aria-label="S&amp;G Soluciones de Ingeniería">
+        <img class="mark" src="/assets/logo/icono.png" alt="" />
+        <span class="bt"><span class="n">S&amp;G</span><span class="d">Soluciones de Ingeniería</span></span>
+      </a>
+      <div class="links">
+        <a href="/#servicios">Servicios</a>
+        <a href="/#casos">Casos</a>
+        <a href="/#nosotros">Nosotros</a>
+        <a href="/#contacto">Contacto</a>
+      </div>
+      <a class="cta" href="/#contacto">Cotiza tu proyecto</a>
+    </nav>
+
+    <slot />
+
+    <footer class="site">
+      <div class="wrap">
+        <span class="brand"><img class="mark" src="/assets/logo/icono.png" alt="" /><span class="n">S&amp;G Soluciones de Ingeniería</span></span>
+        <span>© 2026 · Barranquilla, Colombia · Automatización · Energía · Software</span>
+      </div>
+    </footer>
+
+    <script is:inline>
+      const nav = document.getElementById('nav');
+      addEventListener('scroll', () => nav.classList.toggle('solid', scrollY > 40), { passive: true });
+      const io = new IntersectionObserver((es) => es.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      }), { threshold: .15 });
+      document.querySelectorAll('.rv:not(.in)').forEach(el => io.observe(el));
+    </script>
+  </body>
+</html>
