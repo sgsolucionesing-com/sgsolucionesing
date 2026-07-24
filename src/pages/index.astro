@@ -1,21 +1,17 @@
 ---
-// src/pages/index.astro - Home
-import Layout from '../layouts/Layout.astro';
-import HeroSection from '../components/HeroSection.astro';
-import AboutSection from '../components/AboutSection.astro';
-import ServicesSection from '../components/ServicesSection.astro';
-import PlatformsSection from '../components/PlatformsSection.astro';
-import ProjectsSection from '../components/ProjectsSection.astro';
-import StatsSection from '../components/StatsSection.astro';
-// NOTA: TestimonialsSection se retira del render hasta contar con testimonios reales.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/nocturne/Hero.astro';
+import Servicios from '../components/nocturne/Servicios.astro';
+import Casos from '../components/nocturne/Casos.astro';
+import Nosotros from '../components/nocturne/Nosotros.astro';
+import Testimonios from '../components/nocturne/Testimonios.astro';
+import Contacto from '../components/nocturne/Contacto.astro';
 ---
-<Layout title="S&G Soluciones de Ingeniería | Automatización y Proyectos">
-  <main>
-    <HeroSection />
-    <AboutSection />
-    <ServicesSection />
-    <PlatformsSection />
-    <ProjectsSection />
-    <StatsSection />
-  </main>
-</Layout>
+<BaseLayout title="S&G Soluciones de Ingeniería | Automatización industrial, IoT y software" description="Ingeniería en automatización industrial, Industria 4.0 / IoT, gestión de energía y desarrollo de software a la medida para la industria de la costa norte de Colombia.">
+  <Hero />
+  <Servicios />
+  <Casos />
+  <Nosotros />
+  <Testimonios />
+  <Contacto />
+</BaseLayout>
