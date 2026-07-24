@@ -1,12 +1,17 @@
 server {
-    listen ${PORT};
+    # Puerto fijo 80: coincide con EXPOSE y el HEALTHCHECK del Dockerfile.
+    # Antes era ${PORT}, variable que inyectaba CapRover pero que Dokploy no
+    # define; al quedar vacía, nginx abortaba con "host not found in ${PORT}".
+    listen 80;
     server_name _;
     root /usr/share/nginx/html;
     index index.html;
-    
-    # Configuración para SPA
+
+    # Sitio estático (Astro SSG): las rutas inexistentes deben dar 404.
+    # El fallback a /index.html hacía que cualquier URL respondiera 200 con
+    # el home, generando contenido duplicado para los buscadores.
     location / {
-        try_files $uri $uri/ /index.html;
+        try_files $uri $uri/ =404;
     }
     
     # Configuración de cache para assets estáticos
