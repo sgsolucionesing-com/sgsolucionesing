@@ -1,0 +1,35 @@
+---
+// src/components/nocturne/Contacto.astro
+---
+<section class="sec contact" id="contacto">
+  <div class="wrap grid">
+    <div>
+      <p class="kick rv">Contacto</p>
+      <h2 class="rv">Cuéntanos tu proceso.</h2>
+      <p class="sub rv">
+        Evaluamos tu planta y proponemos una ruta clara: qué medir, qué automatizar y qué integrar. Respuesta
+        en menos de 24 horas hábiles.
+      </p>
+      <ul class="clist rv">
+        <li><span class="lb">Ubicación</span><span>Barranquilla, Atlántico, Colombia</span></li>
+        <li><span class="lb">Teléfono</span><a href="tel:+573243025107">+57 324 3025107</a></li>
+        <li><span class="lb">Correo</span><a href="mailto:informacion@sgsolucionesing.com">informacion@sgsolucionesing.com</a></li>
+      </ul>
+    </div>
+    <form class="form rv" action="mailto:informacion@sgsolucionesing.com" method="post" enctype="text/plain">
+      <div class="fld">
+        <label for="nombre">Nombre y empresa</label>
+        <input type="text" id="nombre" name="nombre" required />
+      </div>
+      <div class="fld">
+        <label for="correo">Correo</label>
+        <input type="email" id="correo" name="correo" required />
+      </div>
+      <div class="fld">
+        <label for="mensaje">¿Qué necesitas resolver?</label>
+        <textarea id="mensaje" name="mensaje" required></textarea>
+      </div>
+      <button type="submit" class="btn-t">Enviar solicitud <span class="arrow"></span></button>
+    </form>
+  </div>
+</section>
