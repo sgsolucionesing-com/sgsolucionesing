@@ -54,7 +54,7 @@ Este proyecto incluye documentación detallada en la carpeta `docs/`:
 - **[Guía de Contribución](docs/contribucion.md)**: Instrucciones para contribuir al proyecto
 - **[Optimización SEO](docs/seo-optimizacion.md)**: Prácticas de SEO implementadas
 - **[Guía de Desarrollo](docs/guia-desarrollo.md)**: Directrices técnicas para el desarrollo
-- **[Despliegue Docker y CapRover](docs/despliegue-docker-caprover.md)**: Guía completa de despliegue
+- **[Despliegue en Dokploy](docs/despliegue-dokploy.md)**: Guía completa de despliegue
 
 ## 🐳 Despliegue
 
@@ -63,26 +63,12 @@ Este proyecto incluye documentación detallada en la carpeta `docs/`:
 # Construcción y ejecución
 docker build -t sgsolucionesing .
 docker run -p 8080:80 sgsolucionesing
-
-# O usando Docker Compose
-docker-compose up -d
 ```
 
-### CapRover
-El proyecto está optimizado para despliegue con CapRover:
-- `captain-definition` configurado
-- Dockerfile con Nginx avanzado y seguridad mejorada
-- Health checks (`/health`) y monitoreo (`/status`)
-- Script de despliegue automatizado (`deploy-caprover.sh`)
-- Configuración de variables de entorno (`.caprover`)
-- Compresión gzip y headers de seguridad
+### Dokploy
+El sitio se despliega en producción a través de [Dokploy](https://dokploy.com/), que construye la imagen a partir del `Dockerfile` multi-stage (Astro build + Nginx) y actualiza el servicio Swarm correspondiente.
 
-```bash
-# Despliegue automatizado
-./deploy-caprover.sh
-```
-
-Consulta la [guía de despliegue](docs/despliegue-docker-caprover.md) para instrucciones detalladas.
+Consulta la [guía de despliegue](docs/despliegue-dokploy.md) para el detalle del proceso y la verificación manual.
 
 ## 🌐 Páginas del Sitio
 

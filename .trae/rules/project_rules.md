@@ -9,14 +9,15 @@ Este proyecto contiene la landing page de S&G Soluciones de Ingeniería, una emp
 - Desarrollo de software
 
 **Ubicación**: Región de la costa norte de Colombia
-**Estructura del sitio**: 3 páginas principales (inicio, casos de éxito, contacto)
+**Estructura del sitio**: inicio (`index.astro`), listado de proyectos (`proyectos/index.astro`), detalle de proyecto (`proyectos/[slug].astro`) y contacto (`contacto.astro`)
 
 ## Stack Tecnológico
 
-- **Framework**: Astro (manteniendo HTML puro)
-- **Estilos**: Tailwind CSS + CSS personalizado
-- **Interactividad**: JavaScript (preferiblemente Vue cuando sea necesario)
-- **Iconografía**: Font Awesome
+- **Framework**: Astro 5 (sitio estático, sin server-side rendering)
+- **Estilos**: Tailwind CSS + sistema de diseño propio "Nocturne" (`src/styles/nocturne.css`)
+- **Interactividad**: JavaScript vanilla (scripts inline en `BaseLayout.astro` y en la página de detalle de proyecto)
+- **Iconografía**: astro-icon (Iconify, `@iconify-json/mdi`)
+- **Contenido**: colección `proyectos` (MDX) con schema Zod en `src/content/config.ts`
 - **Estructura**: HTML5 semántico
 
 ## Estándares de Desarrollo

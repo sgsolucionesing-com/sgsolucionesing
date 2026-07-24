@@ -17,34 +17,37 @@ S&G Soluciones de Ingeniería website - landing page for an industrial automatio
 ## Architecture & Technology Stack
 
 ### Core Technologies
-- **Astro 5.x** - Static site generator with component islands (maintaining pure HTML)
-- **Tailwind CSS** - Utility-first CSS framework
-- **Font Awesome** - Icon system
-- **astro-icon** - Additional icon support using Iconify
-- **Splide.js** - Carousel/slider functionality
+- **Astro 5.x** - Static site generator (SSG), no server-side rendering
+- **Tailwind CSS 3.x** (`@astrojs/tailwind`) - Utility-first CSS framework
+- **astro-icon** - Icon support using Iconify (`@iconify-json/mdi`)
+- **@astrojs/mdx** - MDX support for project content
+- **@astrojs/sitemap** - Sitemap generation
 - **TypeScript** - Type safety (extends astro/tsconfigs/strict)
-- **HTML5** - Semantic structure
-- **JavaScript/Vue** - Interactive functionality (preferably Vue when needed)
+- **Zod** - Content collection schema validation
 
 ### Project Structure
 ```
 src/
 ├── pages/          # Route files (.astro) - kebab-case naming
 ├── components/     # Reusable UI components - PascalCase naming
-├── layouts/        # Page templates (Layout.astro is main)
-├── data/           # Static data (casos-exito.js contains project data)
-├── assets/         # Processed images and assets
-└── styles/         # Global CSS
+│   └── nocturne/   # Section components for the "Nocturne" design system
+├── layouts/         # Page templates (BaseLayout.astro is the only layout)
+├── content/         # Content collections (proyectos/, config.ts with Zod schema)
+├── assets/          # Processed images and assets
+└── styles/          # Global CSS (nocturne.css)
 
 public/             # Static files served as-is
-docs/              # Development documentation (Spanish)
+docs/               # Development documentation (Spanish)
 ```
 
 ### Page Structure
-The website has **3 main pages**:
-1. **Home page** (index.astro) - Main landing page
-2. **Success Cases** (casos-exito.astro) - Projects and achievements showcase
-3. **Contact** (contacto.astro) - Contact information and forms
+The website has these routes:
+1. **Home page** (`index.astro`) - Main landing page, composed of the `nocturne/` section components
+2. **Contact** (`contacto.astro`) - Contact information and form
+3. **Proyectos listing** (`proyectos/index.astro`) - Project/case study index
+4. **Proyecto detail** (`proyectos/[slug].astro`) - Dynamic route rendering a single `proyectos` content collection entry
+
+There is no `casos-exito.astro` page; "casos de éxito" content lives under `proyectos/`.
 
 ## Coding Standards & Conventions
 
@@ -53,12 +56,12 @@ The website has **3 main pages**:
 - **Language**: All content and comments in Spanish
 - **Code Quality**: Clear, concise, and maintainable with short helpful comments
 - **HTML**: Semantic HTML5 structure
-- **CSS**: Tailwind utility-first approach, group classes by category (layout, spacing, typography)
+- **CSS**: Tailwind utility-first approach where applicable; the Nocturne design system also uses hand-written CSS classes (see below)
 - **JavaScript**: camelCase for variables/functions, use `const` for immutable values
 
 ### Naming Conventions
-- **Components**: PascalCase (e.g., `HeroSection.astro`)
-- **Pages/Routes**: kebab-case (e.g., `casos-exito.astro`)  
+- **Components**: PascalCase (e.g., `Servicios.astro`)
+- **Pages/Routes**: kebab-case (e.g., `contacto.astro`)
 - **Assets**: lowercase-hyphen names, no spaces
 - **Variables**: camelCase for JS, kebab-case for CSS classes
 
@@ -71,59 +74,48 @@ The website has **3 main pages**:
 ## Component Architecture
 
 ### Layout System
-- **Layout.astro** - Main layout wrapper with Navigation/Footer, includes comprehensive SEO meta tags
-- Page components composed of section components (HeroSection, AboutSection, etc.)
-- Modal system for "Casos de Éxito" (success cases) gallery
-- All text content in Spanish with lang="es"
+- **`BaseLayout.astro`** (`src/layouts/`) - The single layout used by every page (home, contacto, proyectos/*). Renders the fixed nav (`.nav`, toggled `.solid` on scroll), the `<slot />` content, and the footer.
+- Includes an inline script that toggles `.solid` on the nav past 40px of scroll, and drives a scroll-reveal effect via `IntersectionObserver` on elements with the `.rv` class (adds `.in` when they enter the viewport).
+- Page components composed of section components under `src/components/nocturne/`.
+- All text content in Spanish with `lang="es"`.
 
-### Key Components
-- **HeroSection.astro** - Hero with animated background and logo
-- **StatsSection.astro** - Statistics with animated counters
-- **ServicesSection.astro** - Services with FontAwesome icons
-- **PlatformsSection.astro** - Multi-platform access with device icons
-- **AboutSection.astro** - "Who We Are" company information
-- **ProjectsSection.astro** - Project library with images
-- **TestimonialsSection.astro** - Testimonials with custom avatars
-- **SuccessCasesModal.astro** - Modal system for project gallery
+### Key Components (`src/components/nocturne/`)
+- **`Hero.astro`** - Hero section
+- **`Servicios.astro`** - Services section
+- **`Casos.astro`** - Featured projects/case studies section
+- **`Nosotros.astro`** - "Who We Are" company information
+- **`Testimonios.astro`** - Testimonials section
+- **`Contacto.astro`** - Contact section/form
+
+### Project detail gallery
+- `src/pages/proyectos/[slug].astro` renders the MDX body of a `proyectos` collection entry inside `.prose-n`, plus an image gallery with a lightbox-style modal.
+- Modal supports keyboard navigation (arrow keys, Escape) and touch swipe on mobile.
 
 ## Critical Technical Details
 
-### View Transitions
-- View Transitions are explicitly **DISABLED** via meta tag in Layout.astro
-- This configuration fixes modal functionality issues - do not change
+### Design System — "Nocturne"
+- Defined in `src/styles/nocturne.css`, imported once from `BaseLayout.astro`.
+- **Design tokens** (CSS custom properties): `--teal`, `--navy`, `--ink`, `--paper`, `--line`, `--muted`.
+- **Typography**: Barlow (body) and Barlow Condensed (headings/kickers), loaded from Google Fonts in `BaseLayout.astro`.
+- **Reusable classes**: `.kick` (section kicker/eyebrow), `.btn-t` / `.btn-o` (filled/outline buttons), `.sec` (section padding), `.phead` (page header hero block used on interior pages), `.factbar` (stats/facts bar), `.prose-n` (MDX/prose content styling), among others defined in `nocturne.css`.
+- Tailwind config (`tailwind.config.js`) exposes matching tokens as Tailwind colors: `teal`, `navy`, `ink`, `paper`, `line`, `muted`, and font families `cond` (Barlow Condensed) / `body` (Barlow). There is no `primary`/`secondary`/`dark-blue`/`light-gray` palette — that belonged to the previous design and no longer exists.
+
+### Content Collections
+- `src/content/config.ts` defines the `proyectos` collection with a Zod schema: `title`, `slug` (optional), `sector` (enum), `cliente`, `ubicacion`, `fecha`, `coverImage`, `resumen`, `kpis[]`, `tecnologias[]`, `tags[]`, `destacado`, `order`, `gallery[]`.
+- Project entries are MDX files under `src/content/proyectos/`.
 
 ### Asset Management
-- Images imported as Astro assets for optimization
-- `casos-exito.js` contains extensive image imports and structured project data
-- Assets organized in `assets/projects/casos-exito-assets/` with HOR/ and VER/ subdirectories
-
-### Styling Implementation
-- **Corporate Colors**: Defined in `tailwind.config.mjs`
-- **Typography**: Inter (general text) and Montserrat (headings) from Google Fonts
-- **Icons**: Font Awesome 6.4.0 loaded from cdnjs.cloudflare.com
-- **Global Styles**: Custom reusable components in `src/styles/global.css`:
-  - `.btn`, `.btn-primary`, `.btn-secondary`, `.btn-outline` - Button variants
-  - `.section` - Consistent section padding
-  - `.gradient-bg`, `.hero-animated-bg` - Background effects
-  - `.card-hover` - Card hover effects
-  - `.stats-counter` - Gradient text counters
-  - `.service-icon` - Gradient icon backgrounds
-
-### Modal System
-- Success cases modal uses vanilla JavaScript with TypeScript type assertions
-- Modal state managed through DOM manipulation (style.display)
-- Event listeners handle open/close/keyboard interactions
-- Splide.js integration for carousel functionality within modal
+- Images imported as Astro assets for optimization where applicable.
+- Assets organized under `src/assets/` (branding, images, icons) and `public/`.
 
 ## SEO & Performance Requirements
 
 ### SEO Implementation
-- **Meta Tags**: Title, description, keywords for proper search indexing
-- **Open Graph & Twitter Cards**: Social media optimization
+- **Meta Tags**: Title, description for proper search indexing (set via `BaseLayout.astro` props)
 - **Structured Content**: Clear header hierarchy (h1, h2, h3)
 - **URL Structure**: Descriptive, SEO-friendly URLs with relevant keywords
 - **Image Optimization**: Descriptive filenames and alt attributes
-- **Content Strategy**: Original, valuable content with natural keyword integration
+- **Sitemap**: Generated automatically via `@astrojs/sitemap`, using `site` from `astro.config.mjs`
 
 ### Performance Optimization
 - Minimize unnecessary JavaScript usage
@@ -156,21 +148,19 @@ The website has **3 main pages**:
 
 ### Astro Best Practices & SEO Optimization
 - **Astro Framework**: Always follow Astro best practices and optimizations:
-  - Use component islands architecture effectively
-  - Optimize bundle sizes with selective hydration
+  - Optimize bundle sizes; this is a static, mostly zero-JS site — avoid adding client-side frameworks/hydration unless truly needed
   - Implement proper static site generation (SSG) strategies
   - Use Astro's built-in image optimization
   - Follow Astro's performance recommendations
 - **SEO Excellence**: Apply comprehensive SEO best practices:
   - Semantic HTML structure with proper heading hierarchy
-  - Meta tags optimization (title, description, keywords, Open Graph, Twitter Cards)
-  - Structured data implementation when applicable
+  - Meta tags optimization (title, description, Open Graph if added)
   - Image optimization with descriptive alt attributes and filenames
   - URL structure optimization with meaningful slugs
   - Site performance optimization (Core Web Vitals)
 - **File Organization**: Maintain structured file organization:
   - Components grouped by functionality in logical subdirectories
-  - Images organized by category (branding/, projects/, ui/, etc.)
+  - Images organized by category (branding/, images/, icons/, etc.)
   - Assets properly separated between `src/assets/` (processed) and `public/` (static)
   - Clear naming conventions for all files and directories
 
@@ -184,29 +174,20 @@ The website has **3 main pages**:
 ## Security & Configuration
 
 ### Content Security Policy (CSP)
-- Update CSP when adding external fonts/icons/CDNs
-- Current trusted sources: Google Fonts, Font Awesome (cdnjs.cloudflare.com)
-- Prefer local assets when possible
+- Defined in `nginx.conf.template`. Update it when adding external fonts/scripts/CDNs.
+- Prefer local assets when possible.
 
 ### Security Headers
 - Nginx configuration includes security headers (X-Frame-Options, X-Content-Type-Options, CSP)
 - Never commit secrets or API keys
-- Use CapRover environment variables for sensitive configuration
 
 ## Deployment
 
-### CapRover Deployment
-- Optimized for CapRover deployment with Docker
-- Health check endpoints: `/health` and `/status`
-- Nginx configuration with gzip compression and security headers
-- Use `./deploy-caprover.sh` for automated deployment
-- Monitor via CapRover web panel or `docker logs`
+The site is deployed on **Dokploy** (server `balerion`, app `LandingPage`, Swarm service `sgsolucionescom-landingpage-ugsoai`). See `docs/despliegue-dokploy.md` for the full deployment guide, including the manual deploy/verification commands and the `${PORT}` pitfall to avoid in `nginx.conf.template` (Dokploy does not define that variable — use a fixed `listen 80;`).
 
 ### Deployment Files
-- `Dockerfile` - Multi-stage build with Nginx
-- `captain-definition` - CapRover configuration
-- `nginx.conf.template` - Nginx configuration with SPA support
-- `deploy-caprover.sh` - Automated deployment script
+- `Dockerfile` - Multi-stage build: Astro build (`node:20-alpine`) → Nginx (`nginx:1.27-alpine`)
+- `nginx.conf.template` - Nginx configuration, rendered with `envsubst` at container start; serves the site as static (no SPA fallback — `try_files $uri $uri/ =404;`)
 
 ## Business Context
 
