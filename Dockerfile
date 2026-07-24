@@ -2,7 +2,7 @@
 # Build multi-stage para optimizar el tamaño de la imagen
 
 # Etapa 1: Build
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
@@ -28,7 +28,7 @@ RUN apk add --no-cache curl
 # Crear directorio para configuración personalizada
 RUN mkdir -p /etc/nginx/templates
 
-# Configuración de Nginx optimizada para CapRover
+# Configuración de Nginx para servir el sitio estático
 COPY nginx.conf.template /etc/nginx/templates/default.conf.template
 
 # Copiar archivos construidos desde la etapa de build
