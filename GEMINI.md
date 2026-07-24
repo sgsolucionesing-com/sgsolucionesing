@@ -42,9 +42,11 @@ docker build -t sgsite . && docker run -p 8080:80 sgsite
 
 ### Technologies
 
-*   **Framework**: [Astro](https://astro.build/)
-*   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-*   **Icons**: [Astro Icon](https://github.com/natemoo-re/astro-icon#readme)
+*   **Framework**: [Astro](https://astro.build/) (static site generation, no server-side rendering)
+*   **Styling**: [Tailwind CSS](https://tailwindcss.com/) plus the hand-written "Nocturne" design system (`src/styles/nocturne.css`)
+*   **Icons**: [Astro Icon](https://github.com/natemoo-re/astro-icon#readme) (Iconify, `@iconify-json/mdi`)
+*   **Content**: `@astrojs/mdx` + Astro content collections for project case studies
+*   **SEO**: `@astrojs/sitemap` for sitemap generation
 
 ### TypeScript
 
@@ -53,64 +55,59 @@ This project uses TypeScript. The `tsconfig.json` file extends `astro/tsconfigs/
 ### Coding Conventions
 
 *   **HTML/Astro**: Use 2-space indentation and semantic HTML.
-*   **CSS/Tailwind**: Use Tailwind classes whenever possible. Group classes by category (layout, spacing, typography, etc.).
+*   **CSS/Tailwind**: Use Tailwind classes whenever possible; use the Nocturne classes (`.kick`, `.btn-t`, `.btn-o`, `.sec`, etc.) for design-system-specific styling.
 *   **JavaScript**: Use camelCase for variable and function names. Use `const` for variables that do not change.
 
 ### Naming Conventions
 
-*   **Components**: PascalCase (e.g., `HeroSection.astro`)
-*   **Pages/Routes**: kebab-case (e.g., `casos-exito.astro`)
+*   **Components**: PascalCase (e.g., `Servicios.astro`)
+*   **Pages/Routes**: kebab-case (e.g., `contacto.astro`)
 *   **Assets**: lowercase-hyphen names
 
 ### File Structure & Organization
 
 *   **Structured File Organization**: Maintain organized file structure:
     *   Components grouped by functionality in logical subdirectories
-    *   Images organized by category (branding/, projects/, ui/, etc.)
+    *   Images organized by category (branding/, images/, icons/, etc.)
     *   Assets properly separated between `src/assets/` (processed) and `public/` (static)
     *   Clear naming conventions for all files and directories
-*   **`src/pages/`**: Route files (`.astro`) for each page.
-*   **`src/components/`**: Reusable UI components (PascalCase).
-*   **`src/layouts/`**: Reusable layout components (PascalCase).
+*   **`src/pages/`**: Route files (`.astro`) for each page: `index.astro`, `contacto.astro`, `proyectos/index.astro`, `proyectos/[slug].astro`.
+*   **`src/components/`**: Reusable UI components (PascalCase), grouped under `nocturne/`.
+*   **`src/layouts/`**: The single `BaseLayout.astro` used by every page.
+*   **`src/content/`**: Content collections — `proyectos/` (MDX entries) with the Zod schema in `config.ts`.
 *   **`src/assets/`**: Images and other assets that will be processed by Astro.
 *   **`public/`**: Static assets that will be served as-is.
-*   **`src/styles/`**: Global styles.
+*   **`src/styles/`**: Global styles (`nocturne.css`).
 *   **`docs/`**: Project documentation.
 
 ### Components
 
-*   **`Layout.astro`**: The main layout component that all pages use as a base.
-*   **`Welcome.astro`**: The main component for the home page, which integrates all other components.
-*   **`HeroSection.astro`**: The hero section with an animated background and the company logo.
-*   **`StatsSection.astro`**: The statistics section with animated counters.
-*   **`ServicesSection.astro`**: The services section with FontAwesome icons.
-*   **`PlatformsSection.astro`**: The multi-platform access section with device icons.
-*   **`AboutSection.astro`**: The "Who We Are" section with company information.
-*   **`SectorsSection.astro`**: The application sectors section.
-*   **`ProjectsSection.astro`**: The project library with images.
-*   **`TestimonialsSection.astro`**: The testimonials section with custom avatars.
+*   **`BaseLayout.astro`**: The only layout component; all pages use it as a base. Renders the fixed nav, `<slot />`, footer, and the scroll/reveal script.
+*   **`Hero.astro`**: The hero section (`src/components/nocturne/`).
+*   **`Servicios.astro`**: The services section.
+*   **`Casos.astro`**: The featured projects/case studies section.
+*   **`Nosotros.astro`**: The "Who We Are" section with company information.
+*   **`Testimonios.astro`**: The testimonials section.
+*   **`Contacto.astro`**: The contact section/form.
 
 ### Styling
 
-*   **Colors**: The corporate colors are defined in `tailwind.config.mjs`.
-*   **Typography**: The `Inter` and `Montserrat` font families are used for general text and headings, respectively.
-*   **Reusable UI Components**: Several reusable UI components are defined in `src/styles/global.css`, including:
-    *   `.btn`, `.btn-primary`, `.btn-secondary`, `.btn-outline`: Buttons with different styles.
-    *   `.section`: A container for sections with consistent padding.
-    *   `.gradient-bg`: A gradient background.
-    *   `.hero-animated-bg`: An animated gradient background for the hero section.
-    *   `.card-hover`: A card with a hover effect.
-    *   `.stats-counter`: A counter with a gradient text effect.
-    *   `.service-icon`: An icon with a gradient background and a shadow.
-    *   `.section-divider`: A divider with a gradient.
-    *   `.gradient-text`: A utility for creating gradient text.
-*   **Animations and Effects**: The website uses several animations and effects, including an animated gradient background, scroll-based fade-in animations, and hover effects.
+*   **Design tokens**: Defined as CSS custom properties in `src/styles/nocturne.css` (`--teal`, `--navy`, `--ink`, `--paper`, `--line`, `--muted`) and mirrored as Tailwind colors in `tailwind.config.js` (`teal`, `navy`, `ink`, `paper`, `line`, `muted`). There is no `primary`/`secondary`/`dark-blue`/`light-gray` palette — that belonged to a previous design.
+*   **Typography**: The `Barlow` (body) and `Barlow Condensed` (headings/kickers) font families are used, exposed as the Tailwind font families `body` and `cond`.
+*   **Reusable UI Classes**: Several reusable classes are defined in `src/styles/nocturne.css`, including:
+    *   `.kick`: Section kicker/eyebrow label.
+    *   `.btn-t` / `.btn-o`: Filled and outline button variants.
+    *   `.sec`: Consistent section padding.
+    *   `.sec-head`: Section heading block.
+    *   `.phead`: Page-header hero block used on interior pages (e.g. project detail).
+    *   `.factbar`: Stats/facts bar.
+    *   `.prose-n`: Prose styling for MDX project content.
+*   **Animations and Effects**: Scroll-based reveal via `IntersectionObserver` (`.rv` → `.in`), nav `.solid` state on scroll, hover transitions on buttons/cards.
 
 ### Astro Best Practices & Performance Optimization
 
 *   **Astro Framework Best Practices**: Always follow Astro optimizations and best practices:
-    *   Use component islands architecture effectively
-    *   Optimize bundle sizes with selective hydration
+    *   Keep the site static/zero-JS by default; avoid client-side hydration unless truly needed
     *   Implement proper static site generation (SSG) strategies
     *   Use Astro's built-in image optimization
     *   Follow Astro's performance recommendations
@@ -122,18 +119,16 @@ This project uses TypeScript. The `tsconfig.json` file extends `astro/tsconfigs/
 
 *   **Comprehensive SEO**: Apply comprehensive SEO best practices:
     *   Semantic HTML structure with proper heading hierarchy
-    *   Meta tags optimization (title, description, keywords, Open Graph, Twitter Cards)
-    *   Structured data implementation when applicable
+    *   Meta tags optimization (title, description)
     *   Image optimization with descriptive alt attributes and filenames
     *   URL structure optimization with meaningful slugs
     *   Site performance optimization (Core Web Vitals)
-*   **Metadata**: Each page includes the necessary metadata for SEO (title, description, keywords), as well as Open Graph and Twitter metadata.
+*   **Metadata**: Each page passes `title` and `description` to `BaseLayout.astro` for SEO.
 *   **Titles and Descriptions**: Follow the recommendations in `docs/seo-optimizacion.md` for writing effective titles and descriptions.
-*   **Keywords**: Use the main and secondary keywords listed in `docs/seo-optimizacion.md`.
 *   **URL Structure**: Use descriptive and friendly URLs that include relevant keywords.
 *   **Image Optimization**: Use descriptive file names and `alt` attributes for images.
 *   **Header Structure**: Maintain a clear hierarchy of headers (`<h1>`, `<h2>`, `<h3>`, etc.).
-*   **Content**: Create original and valuable content that is updated regularly. Include keywords naturally, use lists and short paragraphs, and add internal links and multimedia.
+*   **Sitemap**: Generated automatically via `@astrojs/sitemap`, driven by `site` in `astro.config.mjs`.
 
 ### Accessibility
 
@@ -141,7 +136,7 @@ This project uses TypeScript. The `tsconfig.json` file extends `astro/tsconfigs/
 *   Ensure adequate contrast between text and background.
 *   Provide alternative text for images.
 *   Ensure that forms are accessible.
-*   Verify keyboard navigation.
+*   Verify keyboard navigation (the project detail gallery modal supports arrow keys and Escape).
 
 ## Contribution Guidelines
 
@@ -173,38 +168,29 @@ This project uses TypeScript. The `tsconfig.json` file extends `astro/tsconfigs/
 
 ## Deployment
 
-This project is optimized for deployment with CapRover and Docker.
+This project is deployed on **Dokploy** (server `balerion`, app `LandingPage`, Swarm service `sgsolucionescom-landingpage-ugsoai`), using the multi-stage `Dockerfile`.
 
 ### Deployment Files
 
-*   `Dockerfile`: A multi-stage Dockerfile that builds the Astro application and serves it with Nginx.
-*   `captain-definition`: A CapRover configuration file that specifies the path to the Dockerfile.
-*   `nginx.conf.template`: An Nginx configuration template that includes settings for a Single Page Application (SPA), security headers, caching, and compression.
-*   `deploy-caprover.sh`: A script that automates the deployment process to CapRover.
+*   `Dockerfile`: A multi-stage Dockerfile that builds the Astro application (`node:20-alpine`) and serves it with Nginx (`nginx:1.27-alpine`).
+*   `nginx.conf.template`: An Nginx configuration template, rendered with `envsubst` at container start. Serves the site as fully static content (`try_files $uri $uri/ =404;`, no SPA fallback), plus security headers, caching, and compression.
 
 ### Deployment Process
 
-The recommended way to deploy the application is to use the `deploy-caprover.sh` script. This script will:
-
-1.  Verify that the necessary files and dependencies are in place.
-2.  Run tests if they exist.
-3.  Build and test a local Docker image.
-4.  Create a tarball for deployment to CapRover.
-
-Alternatively, you can deploy the application manually by following the instructions in the `docs/despliegue-docker-caprover.md` file.
+The recommended way to deploy is described step by step in `docs/despliegue-dokploy.md`, including the manual deploy commands and how to verify the built image (`nginx -t`) before updating the Swarm service.
 
 ### Monitoring and Maintenance
 
-*   **Health Checks**: The application exposes a `/health` endpoint that can be used to monitor its status.
+*   **Health Checks**: The application exposes a `/health` endpoint that can be used to monitor its status, and is used by the `HEALTHCHECK` in the `Dockerfile`.
 *   **Status Endpoint**: The application exposes a `/status` endpoint that returns a JSON object with information about the service.
-*   **Logs**: Logs can be viewed in the CapRover web panel or by using the `docker logs` command.
+*   **Logs**: Logs can be viewed via `docker service logs sgsolucionescom-landingpage-ugsoai` on the Dokploy host.
 
 ### Security
 
 *   **Security Headers**: The Nginx configuration includes several security headers, such as `X-Frame-Options`, `X-Content-Type-Options`, and `Content-Security-Policy`.
-*   **Content Security Policy (CSP)**: The CSP is configured to allow resources from trusted sources, such as Google Fonts and Font Awesome.
-*   **Secrets**: Secrets should be set as environment variables in CapRover, not committed to the repository.
+*   **Content Security Policy (CSP)**: Defined in `nginx.conf.template`; update it whenever a new external font/script/CDN source is added.
+*   **Secrets**: Secrets should be set as environment variables in Dokploy, not committed to the repository.
 
 ### Troubleshooting
 
-If you encounter any problems during deployment, refer to the "Solución de Problemas" section in the `docs/despliegue-docker-caprover.md` file.
+If you encounter deployment problems, see `docs/despliegue-dokploy.md`, particularly the note about `nginx.conf.template` never referencing environment variables that Dokploy does not define (the `${PORT}` incident is documented there as a cautionary example).

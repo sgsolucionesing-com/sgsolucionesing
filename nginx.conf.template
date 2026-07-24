@@ -36,7 +36,7 @@ server {
     gzip_comp_level 6;
     gzip_types text/plain text/css text/xml text/javascript application/javascript application/xml+rss application/json;
     
-    # Health check endpoint para CapRover
+    # Health check endpoint, usado por el HEALTHCHECK del Dockerfile
     location /health {
         access_log off;
         return 200 "healthy\n";
