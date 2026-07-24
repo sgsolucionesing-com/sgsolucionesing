@@ -268,3 +268,13 @@ footer.site .brand .n{font-family:var(--cond);font-weight:700;letter-spacing:.03
 .close .row{display:flex;gap:14px;flex-wrap:wrap;margin-top:32px}
 .close .btn-o{border-color:rgba(255,255,255,.5);color:#fff}
 .close .btn-o:hover{border-color:var(--teal);color:#fff;background:rgba(0,167,157,.18)}
+
+/* --- Mapa de ubicación (contacto) --- */
+.mapsec{padding:clamp(64px,7vw,104px) 0}
+.mapsec h2{font-size:clamp(32px,3.8vw,54px);line-height:.98;text-transform:uppercase;margin:16px 0 0;max-width:18ch}
+.mapsec .mapinfo{list-style:none;margin:26px 0 0;padding:0;display:grid;gap:10px}
+.mapsec .mapinfo li{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+.mapsec .mapinfo .lb{font-family:var(--cond);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-700);min-width:96px}
+.mapsec .mapinfo span:not(.lb){font-size:15.5px;color:var(--muted)}
+.mapsec .mapframe{margin-top:32px;height:clamp(320px,40vw,420px);border:1px solid var(--line);overflow:hidden}
+.mapsec .mapframe iframe{width:100%;height:100%;display:block}
