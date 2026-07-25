@@ -22,11 +22,12 @@ Este proyecto es la landing page oficial de S&G Soluciones de Ingeniería, una e
 - Soluciones de automatización de procesos industriales
 - Proyectos de Industria 4.0, IoT y desarrollo de software
 
-El sitio web está desarrollado utilizando Astro, con un enfoque en mantener HTML puro, JavaScript (preferiblemente Vue) y CSS con Tailwind. La estructura del sitio consta de tres páginas principales:
+El sitio web está desarrollado como un sitio estático (SSG) con Astro, con foco en HTML semántico, JavaScript mínimo (vanilla) y CSS con Tailwind más el sistema de diseño propio "Nocturne". La estructura del sitio consta de estas rutas principales:
 
-1. Página principal (Home)
-2. Casos de éxito
-3. Contacto
+1. Página principal (`index.astro`)
+2. Contacto (`contacto.astro`)
+3. Listado de proyectos (`proyectos/index.astro`)
+4. Detalle de proyecto (`proyectos/[slug].astro`), ruta dinámica sobre la colección de contenido `proyectos`
 
 ## Instalación
 
@@ -57,25 +58,36 @@ El proyecto sigue la estructura estándar de Astro:
 │   └── favicon.svg
 ├── src/
 │   ├── assets/          # Imágenes, fuentes y otros recursos
-│   ├── components/      # Componentes reutilizables
-│   ├── layouts/         # Plantillas de diseño
-│   └── pages/           # Páginas del sitio
-│       ├── index.astro  # Página principal
-│       ├── casos-exito.astro  # Página de casos de éxito
-│       └── contacto.astro  # Página de contacto
+│   ├── components/
+│   │   └── nocturne/    # Componentes de sección del sistema de diseño "Nocturne"
+│   ├── content/
+│   │   ├── config.ts    # Schema Zod de la colección `proyectos`
+│   │   └── proyectos/   # Entradas MDX de casos/proyectos
+│   ├── layouts/
+│   │   └── BaseLayout.astro  # Layout único del sitio
+│   ├── pages/           # Páginas del sitio
+│   │   ├── index.astro           # Página principal
+│   │   ├── contacto.astro        # Página de contacto
+│   │   └── proyectos/
+│   │       ├── index.astro       # Listado de proyectos
+│   │       └── [slug].astro      # Detalle de proyecto
+│   └── styles/
+│       └── nocturne.css # Sistema de diseño "Nocturne" (tokens y clases)
 ├── astro.config.mjs     # Configuración de Astro
 ├── package.json         # Dependencias y scripts
 └── tsconfig.json        # Configuración de TypeScript
 ```
 
+Para el detalle completo de la estructura, ver [`estructura-proyecto.md`](./estructura-proyecto.md).
+
 ## Guía de Estilo
 
-El diseño del sitio debe seguir estas pautas:
+El diseño del sitio sigue el sistema "Nocturne", definido en `src/styles/nocturne.css` e importado desde `BaseLayout.astro`:
 
 - **Estilo**: Moderno, empresarial, atractivo y minimalista
-- **Paleta de colores**: [Pendiente de definir]
-- **Tipografía**: [Pendiente de definir]
-- **Componentes**: Utilizar Tailwind CSS para estilos consistentes
+- **Paleta de colores**: tokens CSS `--teal`, `--navy`, `--ink`, `--paper`, `--line`, `--muted` (expuestos también como colores de Tailwind: `teal`, `navy`, `ink`, `paper`, `line`, `muted` en `tailwind.config.js`)
+- **Tipografía**: Barlow (texto general, token `body`) y Barlow Condensed (títulos/kickers, token `cond`), cargadas desde Google Fonts en `BaseLayout.astro`
+- **Componentes**: Tailwind CSS para utilidades + clases propias de Nocturne (`.kick`, `.btn-t`/`.btn-o`, `.sec`, `.phead`, `.factbar`, `.prose-n`, entre otras)
 
 ### Principios de Diseño
 
@@ -88,23 +100,18 @@ El diseño del sitio debe seguir estas pautas:
 
 ### Funcionalidades Implementadas
 
-#### Modo Claro/Oscuro
+#### Navegación fija y scroll-reveal
 
-El sitio incluye un sistema completo de temas claro y oscuro:
+`BaseLayout.astro` incluye un script inline con dos comportamientos globales:
 
 **Características:**
-- **Detección automática**: Respeta la preferencia del sistema operativo del usuario
-- **Persistencia**: Guarda la preferencia del usuario en localStorage
-- **Múltiples controles**: Botones de tema en la navegación principal y botón flotante
-- **Transiciones suaves**: Cambios de tema con animaciones fluidas
-- **Accesibilidad**: Etiquetas ARIA y tooltips descriptivos
-- **Iconografía clara**: Iconos de sol/luna que cambian según el tema activo
+- **Nav sólida al hacer scroll**: la barra de navegación (`.nav`) agrega la clase `.solid` al superar 40px de scroll vertical
+- **Reveal on scroll**: cualquier elemento con la clase `.rv` recibe `.in` cuando entra en el viewport (vía `IntersectionObserver`, threshold 0.15), disparando su animación de aparición
 
 **Implementación técnica:**
-- **Configuración Tailwind**: `darkMode: 'class'` en `tailwind.config.mjs`
-- **Script global**: Función `window.toggleTheme()` disponible en toda la aplicación
-- **Eventos personalizados**: Sistema de notificación para cambios de tema
-- **Compatibilidad Astro**: Manejo correcto de navegación SPA
+- Script `is:inline` al final del `<body>` en `src/layouts/BaseLayout.astro`
+- No requiere JavaScript de terceros: es vanilla JS mínimo
+- El sitio es SSG (sin hidratación de frameworks); todo el comportamiento interactivo es JS vanilla puntual como este
 
 #### Modal de Galería de Imágenes
 
@@ -183,7 +190,7 @@ Para contribuir al proyecto:
 
 ## Despliegue
 
-[Pendiente de definir el proceso de despliegue]
+El sitio se despliega en **Dokploy** (build multi-stage con Astro + Nginx). Ver la guía completa en [`despliegue-dokploy.md`](./despliegue-dokploy.md).
 
 ---
 
