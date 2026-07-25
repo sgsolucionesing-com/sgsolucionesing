@@ -8,7 +8,15 @@ const pageDescription =
   'Ponte en contacto con nuestro equipo de expertos en soluciones de ingeniería, automatización industrial y desarrollo de software.';
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription}>
+<BaseLayout title={pageTitle} description={pageDescription} image="/assets/img/pruebas-1.jpg">
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    name: pageTitle,
+    description: pageDescription,
+    url: 'https://www.sgsolucionesing.com/contacto',
+  })} />
+
   <header class="phead">
     <div class="bg"><img src="/assets/img/pruebas-1.jpg" alt="" aria-hidden="true" /></div>
     <div class="wrap">
