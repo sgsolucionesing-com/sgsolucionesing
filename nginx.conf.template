@@ -1,3 +1,9 @@
+# NOTA (feat/contacto-resend): este archivo quedó SIN USO a partir de que el
+# Dockerfile pasó de nginx a un server Node standalone (@astrojs/node), para
+# poder correr la API route /api/contacto (envío de leads con Resend). Se
+# conserva como referencia histórica y por si se necesita volver a servir el
+# sitio con nginx. Los headers de seguridad que definía acá ahora los aplica
+# src/middleware.ts sobre las respuestas de Astro.
 server {
     # Puerto fijo 80: coincide con EXPOSE y el HEALTHCHECK del Dockerfile.
     # Antes era ${PORT}, variable que inyectaba CapRover pero que Dokploy no
