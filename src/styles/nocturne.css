@@ -137,6 +137,11 @@ h1,h2,h3,h4{font-family:var(--cond);font-weight:600;margin:0;letter-spacing:-0.0
 .form input:focus,.form textarea:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:transparent}
 .form textarea{resize:vertical;min-height:88px}
 .form .btn-t{width:100%;justify-content:center;margin-top:6px}
+.form .btn-t:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.form .hp{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.form-msg{margin:14px 0 0;font-size:14px;line-height:1.5;min-height:1.2em}
+.form-msg.ok{color:var(--teal-300)}
+.form-msg.error{color:#ff9c8a}
 footer.site{background:#090e10;color:rgba(226,236,236,.6);padding:40px 0}
 footer.site .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center;font-size:13.5px}
 footer.site .brand{display:flex;align-items:center;gap:10px;color:#fff}
