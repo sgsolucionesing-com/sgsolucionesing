@@ -17,22 +17,47 @@ const data = proyecto.data;
 
 const pageTitle = `${data.title} | Caso de Éxito - S&G Soluciones de Ingeniería`;
 const pageDescription = data.resumen;
+const coverImageUrl = new URL(data.coverImage, Astro.site).href;
+const logoUrl = new URL('/logo.png', Astro.site).href;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription}>
+<BaseLayout title={pageTitle} description={pageDescription} image={data.coverImage} type="article">
   <script type="application/ld+json" slot="head" set:html={JSON.stringify({
     '@context': 'https://schema.org',
-    '@type': 'CaseStudy',
-    name: data.title,
-    industry: data.sector,
-    location: data.ubicacion,
-    datePublished: data.fecha,
+    '@type': 'Article',
+    headline: data.title,
+    image: [coverImageUrl],
     description: data.resumen,
-    provider: {
+    ...(data.fecha ? { datePublished: data.fecha } : {}),
+    about: data.sector,
+    author: {
       '@type': 'Organization',
       name: 'S&G Soluciones de Ingeniería',
-      url: 'https://sgsolucionesing.com',
+      url: 'https://www.sgsolucionesing.com',
     },
+    publisher: {
+      '@type': 'Organization',
+      name: 'S&G Soluciones de Ingeniería',
+      url: 'https://www.sgsolucionesing.com',
+      logo: {
+        '@type': 'ImageObject',
+        url: logoUrl,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonicalUrl,
+    },
+  })} />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://www.sgsolucionesing.com/' },
+      { '@type': 'ListItem', position: 2, name: 'Casos de éxito', item: 'https://www.sgsolucionesing.com/proyectos' },
+      { '@type': 'ListItem', position: 3, name: data.title, item: canonicalUrl },
+    ],
   })} />
 
   <header class="phead">
