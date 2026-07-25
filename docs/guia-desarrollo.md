@@ -20,30 +20,34 @@ Utilizamos [Tailwind CSS](https://tailwindcss.com/) para los estilos por su enfo
 
 **Ventajas clave:**
 - Desarrollo rápido con clases utilitarias
-- Personalización a través de `tailwind.config.mjs`
+- Personalización a través de `tailwind.config.js`
 - Optimización automática para producción
 - Consistencia en el diseño
 
 ### Estándares de Diseño
 
+El sitio sigue el sistema de diseño **"Nocturne"**, definido en `src/styles/nocturne.css` e importado una única vez desde `BaseLayout.astro`.
+
 **Colores Corporativos:**
-Todos los colores están definidos en `tailwind.config.mjs` y deben coincidir con el diseño original:
+Los tokens de color están definidos como CSS custom properties en `src/styles/nocturne.css` y expuestos también como colores de Tailwind en `tailwind.config.js`:
 
 ```javascript
 colors: {
-  primary: '#2DD4BF',      // Teal principal
-  secondary: '#1E3A8A',    // Azul secundario
-  'dark-blue': '#0F172A',  // Azul oscuro
-  accent: '#FFD700',       // Dorado para acentos
-  dark: '#333333',         // Gris oscuro
-  light: '#F8FAFC'         // Gris claro
+  teal: { DEFAULT: '#00a79d', 300: '#7fd8cf', 600: '#009088', 700: '#00706a', 50: '#e7f6f3' },
+  navy: '#122a49',
+  ink: { DEFAULT: '#0d1417', 2: '#141d21' },
+  paper: { DEFAULT: '#f4f6f6', 2: '#eceff0' },
+  line: '#d9dedf',
+  muted: '#5b6567',
 }
 ```
 
+No existe la paleta `primary`/`secondary`/`dark-blue`/`light-gray`; pertenecía al diseño anterior.
+
 **Iconografía:**
-- Utilizar Font Awesome para iconos consistentes
-- Iconos específicos por sección (fa-robot, fa-cloud, fa-chart-line, etc.)
-- Aplicar clases `.service-icon` para efectos hover uniformes
+- Utilizar `astro-icon` con el set de Iconify `@iconify-json/mdi` para iconos consistentes
+- No se usa Font Awesome en este proyecto
+- Aplicar las clases de Nocturne (`.svc`, `.svc-grid`, etc.) para efectos hover uniformes en iconos de servicios
 
 ## Estructura de Archivos
 
@@ -53,7 +57,7 @@ Los componentes se organizan en la carpeta `src/components/` y siguen estas conv
 
 - Nombres en PascalCase (ej. `ServiceCard.astro`)
 - Un componente por archivo
-- Componentes relacionados pueden agruparse en subcarpetas
+- Componentes relacionados pueden agruparse en subcarpetas (ej. `src/components/nocturne/` agrupa las secciones del sistema de diseño "Nocturne": `Hero`, `Servicios`, `Casos`, `Nosotros`, `Testimonios`, `Contacto`)
 
 **Estructura básica de un componente:**
 
@@ -95,22 +99,21 @@ const formattedTitle = title.toUpperCase();
 
 Las páginas se almacenan en `src/pages/` y siguen estas convenciones:
 
-- Nombres en kebab-case (ej. `casos-exito.astro`)
+- Nombres en kebab-case (ej. `contacto.astro`)
 - Rutas automáticas basadas en la estructura de archivos
-- Metadatos SEO consistentes
+- Metadatos SEO consistentes (`title` y `description`)
 
 **Estructura básica de una página:**
 
 ```astro
 ---
 // Importaciones
-import Layout from '../layouts/Layout.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 import ServiceCard from '../components/ServiceCard.astro';
 
 // Metadatos SEO
 const title = "Servicios | S&G Soluciones de Ingeniería";
 const description = "Descubre nuestros servicios de automatización industrial, desarrollo de software y soluciones IoT para optimizar tus procesos.";
-const keywords = "servicios, automatización industrial, desarrollo software, IoT, ingeniería";
 
 // Datos de la página
 const services = [
@@ -123,7 +126,7 @@ const services = [
 ];
 ---
 
-<Layout title={title} description={description} keywords={keywords}>
+<BaseLayout title={title} description={description}>
   <main class="container mx-auto py-12 px-4">
     <h1 class="text-4xl font-bold text-center mb-12">Nuestros Servicios</h1>
     
@@ -137,73 +140,53 @@ const services = [
       ))}
     </div>
   </main>
-</Layout>
+</BaseLayout>
 ```
 
 ### Layouts
 
-Los layouts se almacenan en `src/layouts/` y proporcionan la estructura común para las páginas.
+El sitio tiene un único layout, `src/layouts/BaseLayout.astro`, usado por todas las páginas. Solo acepta `title` y `description` como props (no hay `keywords` ni `ogImage`).
 
-**Estructura básica de un layout:**
+**Estructura real del layout** (ver `src/layouts/BaseLayout.astro`):
 
 ```astro
 ---
-// Importaciones
-import '../styles/global.css';
+// src/layouts/BaseLayout.astro — Rediseño "Nocturne"
+import '../styles/nocturne.css';
 
-// Definición de props
 interface Props {
   title: string;
-  description: string;
-  keywords: string;
-  ogImage?: string;
+  description?: string;
 }
 
-// Destructuración de props con valores por defecto
-const { 
-  title, 
-  description, 
-  keywords,
-  ogImage = "/images/og-default.jpg" 
+const {
+  title,
+  description = 'Ingeniería en automatización industrial, Industria 4.0 / IoT, gestión de energía y desarrollo de software a la medida.',
 } = Astro.props;
-
-// URL canónica
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
   <head>
-    <!-- Metadatos básicos -->
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="keywords" content={keywords} />
-    <link rel="canonical" href={canonicalURL} />
-    
-    <!-- Open Graph -->
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonicalURL} />
-    <meta property="og:image" content={ogImage} />
-    
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImage} />
-    
-    <!-- Fuentes -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
-  <body class="min-h-screen bg-light text-dark">
-    <!-- Contenido de la página -->
+  <body id="top">
+    <nav class="nav" id="nav"><!-- ... --></nav>
     <slot />
+    <footer class="site"><!-- ... --></footer>
+    <script is:inline>
+      // Nav sólida al hacer scroll + reveal on scroll para elementos .rv
+    </script>
   </body>
 </html>
 ```
@@ -222,7 +205,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 - Utiliza las clases de Tailwind siempre que sea posible
 - Agrupa las clases por categoría para mejorar la legibilidad
 - Para estilos específicos de componentes, usa la etiqueta `<style>` en el componente
-- Para estilos globales, utiliza `src/styles/global.css`
+- Para estilos globales, utiliza `src/styles/nocturne.css`
 
 ### JavaScript
 
@@ -301,6 +284,8 @@ Esto generará una versión optimizada del sitio en la carpeta `dist/`.
 - Comprueba que los enlaces internos y externos funcionen
 - Asegura que los formularios envíen datos correctamente
 - Verifica que los metadatos SEO estén presentes en todas las páginas
+
+El sitio se despliega en **Dokploy** (Astro build → imagen Nginx). Ver la guía completa en [`despliegue-dokploy.md`](./despliegue-dokploy.md).
 
 ## Recursos Útiles
 

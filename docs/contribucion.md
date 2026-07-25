@@ -94,13 +94,15 @@ Cuando hayas completado tu trabajo:
 ```html
 <button class="
   px-4 py-2 rounded-lg  /* Spacing y bordes */
-  bg-primary text-white  /* Colores */
+  bg-teal text-white  /* Colores (tokens Nocturne) */
   font-medium transition-colors  /* Tipografía y transiciones */
-  hover:bg-primary-dark focus:ring-2  /* Estados */
+  hover:bg-teal-600 focus:ring-2  /* Estados */
 ">
   Botón de Acción
 </button>
 ```
+
+Para componentes que ya siguen el sistema de diseño "Nocturne" (secciones de la home, páginas de proyectos), preferí las clases hechas a mano de `src/styles/nocturne.css` (`.btn-t`, `.btn-o`, `.sec`, etc.) en vez de reconstruirlas con utilidades de Tailwind.
 
 ### JavaScript
 
@@ -128,10 +130,11 @@ const validarFormulario = () => {
 
 Sigue estas pautas al crear nuevos archivos:
 
-- **Componentes**: Colócalos en `src/components/` con nombres descriptivos en PascalCase (ej. `ContactForm.astro`)
-- **Páginas**: Colócalas en `src/pages/` con nombres en kebab-case (ej. `casos-exito.astro`)
-- **Estilos**: Estilos específicos de componentes dentro del componente, estilos globales en `src/styles/`
+- **Componentes**: Colócalos en `src/components/` con nombres descriptivos en PascalCase (ej. `ContactForm.astro`); las secciones del sistema de diseño "Nocturne" viven en `src/components/nocturne/`
+- **Páginas**: Colócalas en `src/pages/` con nombres en kebab-case (ej. `contacto.astro`)
+- **Estilos**: Estilos específicos de componentes dentro del componente, estilos globales en `src/styles/nocturne.css`
 - **Assets**: Imágenes y otros recursos en `src/assets/` organizados por tipo
+- **Contenido**: Nuevos proyectos/casos de éxito como archivos MDX en `src/content/proyectos/`, respetando el schema de `src/content/config.ts`
 
 ## Optimización de Rendimiento
 
@@ -146,16 +149,15 @@ Asegúrate de que cada página incluya los metadatos necesarios para SEO:
 
 ```astro
 ---
-import Layout from '../layouts/Layout.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 
 const title = "Título de la Página | S&G Soluciones de Ingeniería";
 const description = "Descripción clara y concisa para SEO";
-const keywords = "palabras, clave, relevantes";
 ---
 
-<Layout title={title} description={description} keywords={keywords}>
+<BaseLayout title={title} description={description}>
   <!-- Contenido de la página -->
-</Layout>
+</BaseLayout>
 ```
 
 ## Pruebas
