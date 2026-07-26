@@ -1,0 +1,29 @@
+---
+// src/components/nocturne/Clientes.astro
+const clientes = [
+  'GELCO',
+  'Ultracem',
+  'Litoplas',
+  'Cabot',
+  'Farmacapsulab',
+  'Polyrec',
+  'B&B Pro Energy',
+  'Sonepar',
+  'Ternium',
+  'Ajover',
+  'Postobón',
+  'Sempertex',
+  'Incobra',
+  'Puerto de Santa Marta',
+];
+---
+<section class="clientes">
+  <div class="wrap">
+    <p class="kick rv">Confían en nosotros</p>
+    <div class="logos rv">
+      {clientes.map((c) => (
+        <span class="logo">{c}</span>
+      ))}
+    </div>
+  </div>
+</section>
