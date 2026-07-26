@@ -29,7 +29,7 @@ const pageDescription =
   })} />
 
   <header class="phead">
-    <div class="bg"><img src="/assets/img/tablero-1.jpg" alt="" aria-hidden="true" /></div>
+    <div class="bg"><img src="/assets/img/tablero-1.jpg" alt="" aria-hidden="true" fetchpriority="high" /></div>
     <div class="wrap">
       <span class="kick rv in">Casos de éxito</span>
       <h1 class="rv in d1">Proyectos que se miden <em>en indicadores.</em></h1>
@@ -53,7 +53,7 @@ const pageDescription =
         <article class="case rv">
           <figure class="fig">
             <span class="mk2"></span>
-            <img src={c.data.coverImage} alt={c.data.title} />
+            <img src={c.data.coverImage} alt={c.data.title} loading="lazy" decoding="async" />
             {c.data.kpis?.[0] && <span class="tagline">{c.data.kpis[0].value}</span>}
             <span class="mk"></span>
           </figure>
