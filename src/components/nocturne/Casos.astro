@@ -22,7 +22,7 @@ const casos = (await getCollection('proyectos'))
       {casos.map((c) => (
         <article class="case rv">
           <a class="fig" href={`/proyectos/${c.slug}`}>
-            <img src={c.data.coverImage} alt={c.data.title} />
+            <img src={c.data.coverImage} alt={c.data.title} loading="lazy" decoding="async" />
             <span class="meta">{[c.data.sector, c.data.ubicacion, c.data.fecha].filter(Boolean).join(' · ')}</span>
           </a>
           <div class="body">
