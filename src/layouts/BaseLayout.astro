@@ -6,12 +6,21 @@ import '../styles/nocturne.css';
 interface Props {
   title: string;
   description?: string;
+  image?: string;
+  type?: string;
+  noindex?: boolean;
 }
 
 const {
   title,
   description = 'Ingeniería en automatización industrial, Industria 4.0 / IoT, gestión de energía y desarrollo de software a la medida.',
+  image = '/assets/img/pruebas-1.jpg',
+  type = 'website',
+  noindex = false,
 } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(image, Astro.site).href;
 ---
 
 <!doctype html>
@@ -22,12 +31,33 @@ const {
     <title>{title}</title>
     <meta name="description" content={description} />
 
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#0d1417" />
+    <meta name="author" content="S&G Soluciones de Ingeniería" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="S&G Soluciones de Ingeniería" />
+    <meta property="og:locale" content="es_CO" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
+
+    <slot name="head" />
   </head>
   <body id="top">
     <nav class="nav" id="nav">
