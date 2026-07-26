@@ -7,8 +7,40 @@ import Clientes from '../components/nocturne/Clientes.astro';
 import Nosotros from '../components/nocturne/Nosotros.astro';
 import Testimonios from '../components/nocturne/Testimonios.astro';
 import Contacto from '../components/nocturne/Contacto.astro';
+
+const pageTitle = 'S&G Soluciones de Ingeniería | Automatización industrial, IoT y software';
+const pageDescription =
+  'Automatización industrial, Industria 4.0/IoT, gestión de energía y desarrollo de software a la medida para la industria de la Región Caribe de Colombia.';
 ---
-<BaseLayout title="S&G Soluciones de Ingeniería | Automatización industrial, IoT y software" description="Ingeniería en automatización industrial, Industria 4.0 / IoT, gestión de energía y desarrollo de software a la medida para la industria de la costa norte de Colombia.">
+<BaseLayout title={pageTitle} description={pageDescription} image="/assets/img/pruebas-1.jpg">
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    name: 'S&G Soluciones de Ingeniería',
+    url: 'https://www.sgsolucionesing.com',
+    logo: 'https://www.sgsolucionesing.com/logo.png',
+    image: 'https://www.sgsolucionesing.com/assets/img/pruebas-1.jpg',
+    description:
+      'Empresa de ingeniería especializada en automatización industrial, Industria 4.0/IoT, gestión y calidad de energía, y desarrollo de software a la medida para la industria de la Región Caribe de Colombia.',
+    telephone: '+573243025107',
+    email: 'informacion@sgsolucionesing.com',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Barranquilla',
+      addressRegion: 'Atlántico',
+      addressCountry: 'CO',
+    },
+    areaServed: 'Región Caribe, Colombia',
+    knowsAbout: [
+      'Automatización industrial',
+      'Industria 4.0',
+      'IoT industrial',
+      'Gestión de energía',
+      'SCADA',
+      'Desarrollo de software industrial',
+    ],
+  })} />
+
   <Hero />
   <Servicios />
   <Casos />

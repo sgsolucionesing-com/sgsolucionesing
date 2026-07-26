@@ -8,10 +8,26 @@ const items = (await getCollection('proyectos'))
 
 const pageTitle = 'Casos de Éxito | S&G Soluciones de Ingeniería';
 const pageDescription =
-  'Explora nuestros proyectos reales de automatización industrial, IoT e Industria 4.0: monitoreo predictivo, bancos de condensadores, tableros inteligentes y más.';
+  'Casos reales de automatización industrial, IoT e Industria 4.0: monitoreo predictivo, bancos de condensadores, tableros inteligentes y más resultados medibles.';
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription}>
+<BaseLayout title={pageTitle} description={pageDescription} image="/assets/img/tablero-1.jpg">
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: pageTitle,
+    description: pageDescription,
+    url: 'https://www.sgsolucionesing.com/proyectos',
+  })} />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Inicio', item: 'https://www.sgsolucionesing.com/' },
+      { '@type': 'ListItem', position: 2, name: 'Casos de éxito', item: 'https://www.sgsolucionesing.com/proyectos' },
+    ],
+  })} />
+
   <header class="phead">
     <div class="bg"><img src="/assets/img/tablero-1.jpg" alt="" aria-hidden="true" /></div>
     <div class="wrap">
