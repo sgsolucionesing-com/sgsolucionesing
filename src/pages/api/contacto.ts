@@ -8,7 +8,7 @@ import { Resend } from 'resend';
 
 export const prerender = false;
 
-const CONTACT_TO = import.meta.env.CONTACT_TO ?? 'informacion@sgsolucionesing.com';
+const CONTACT_TO = import.meta.env.CONTACT_TO ?? 'comercial.proyectos@sgsolucionesing.com';
 
 // El dominio de este remitente debe estar verificado en Resend (registros
 // DNS en Cloudflare) o el envío falla. Ver runbook de despliegue en el PR.
