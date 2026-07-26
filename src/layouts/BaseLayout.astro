@@ -7,20 +7,25 @@ interface Props {
   title: string;
   description?: string;
   image?: string;
+  imageAlt?: string;
   type?: string;
   noindex?: boolean;
 }
 
+const DEFAULT_IMAGE = '/assets/og-image.jpg';
+
 const {
   title,
   description = 'Ingeniería en automatización industrial, Industria 4.0 / IoT, gestión de energía y desarrollo de software a la medida.',
-  image = '/assets/img/pruebas-1.jpg',
+  image = DEFAULT_IMAGE,
+  imageAlt = 'S&G Soluciones de Ingeniería — automatización industrial, energía y software.',
   type = 'website',
   noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = new URL(image, Astro.site).href;
+const imageIsDefault = image === DEFAULT_IMAGE;
 ---
 
 <!doctype html>
@@ -44,6 +49,9 @@ const ogImage = new URL(image, Astro.site).href;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={imageAlt} />
+    {imageIsDefault && <meta property="og:image:width" content="1200" />}
+    {imageIsDefault && <meta property="og:image:height" content="630" />}
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
@@ -65,13 +73,20 @@ const ogImage = new URL(image, Astro.site).href;
         <img class="mark" src="/assets/logo/icono.png" alt="" />
         <span class="bt"><span class="n">S&amp;G</span><span class="d">Soluciones de Ingeniería</span></span>
       </a>
-      <div class="links">
-        <a href="/#servicios">Servicios</a>
-        <a href="/#casos">Casos</a>
-        <a href="/#nosotros">Nosotros</a>
-        <a href="/#contacto">Contacto</a>
+      <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+      <div id="nav-menu">
+        <div class="links">
+          <a href="/#servicios">Servicios</a>
+          <a href="/#casos">Casos</a>
+          <a href="/#nosotros">Nosotros</a>
+          <a href="/#contacto">Contacto</a>
+        </div>
+        <a class="cta" href="/#contacto">Cotiza tu proyecto</a>
       </div>
-      <a class="cta" href="/#contacto">Cotiza tu proyecto</a>
     </nav>
 
     <slot />
@@ -90,6 +105,21 @@ const ogImage = new URL(image, Astro.site).href;
         if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
       }), { threshold: .15 });
       document.querySelectorAll('.rv:not(.in)').forEach(el => io.observe(el));
+
+      const navToggle = document.querySelector('.nav-toggle');
+      const navMenu = document.getElementById('nav-menu');
+      if (navToggle && navMenu) {
+        const closeMenu = () => {
+          nav.classList.remove('open');
+          navToggle.setAttribute('aria-expanded', 'false');
+        };
+        navToggle.addEventListener('click', () => {
+          const willOpen = !nav.classList.contains('open');
+          nav.classList.toggle('open', willOpen);
+          navToggle.setAttribute('aria-expanded', String(willOpen));
+        });
+        navMenu.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeMenu));
+      }
     </script>
   </body>
 </html>
