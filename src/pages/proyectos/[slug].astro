@@ -15,7 +15,7 @@ const { proyecto } = Astro.props;
 const { Content } = await proyecto.render();
 const data = proyecto.data;
 
-const pageTitle = `${data.title} | Caso de Éxito - S&G Soluciones de Ingeniería`;
+const pageTitle = `${data.title} | S&G Soluciones de Ingeniería`;
 const pageDescription = data.resumen;
 const coverImageUrl = new URL(data.coverImage, Astro.site).href;
 const logoUrl = new URL('/logo.png', Astro.site).href;
@@ -61,7 +61,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
   })} />
 
   <header class="phead">
-    <div class="bg"><img src={data.coverImage} alt="" aria-hidden="true" /></div>
+    <div class="bg"><img src={data.coverImage} alt="" aria-hidden="true" fetchpriority="high" /></div>
     <div class="wrap">
       <a class="crumb" href="/proyectos"><span class="back"></span> Casos de éxito</a>
       <div class="metaline rv in">{[data.sector, data.ubicacion, data.fecha].filter(Boolean).join(' · ')}</div>
@@ -109,7 +109,7 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
         <div class="gal-grid">
           {data.gallery.map((image, index) => (
             <div class="g-item" data-index={index}>
-              <img src={image} alt={`${data.title} - Imagen ${index + 1}`} />
+              <img src={image} alt={`${data.title} - Imagen ${index + 1}`} loading="lazy" decoding="async" />
             </div>
           ))}
         </div>
