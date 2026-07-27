@@ -312,4 +312,6 @@ footer.site .brand .n{font-family:var(--cond);font-weight:700;letter-spacing:.03
 .clientes .logos{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:22px 44px}
 .clientes .logo{font-family:var(--cond);font-weight:600;font-size:clamp(15px,1.6vw,19px);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);white-space:nowrap;transition:color .18s}
 .clientes .logo:hover{color:var(--teal-700)}
-@media(max-width:640px){.clientes .logos{gap:16px 28px}}
+.clientes .logo-img{height:clamp(28px,3.2vw,38px);width:auto;max-width:150px;object-fit:contain;filter:grayscale(1) opacity(.65);transition:filter .18s;display:block}
+.clientes .logo-img:hover{filter:none;opacity:1}
+@media(max-width:640px){.clientes .logos{gap:16px 28px}.clientes .logo-img{height:clamp(24px,7vw,32px)}}

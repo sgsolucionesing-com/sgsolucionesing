@@ -1,20 +1,22 @@
 ---
 // src/components/nocturne/Clientes.astro
+// logo: nombre de archivo en public/assets/logos/ (logo oficial verificado).
+// Sin `logo` => se muestra como wordmark de texto (no se encontró un logo confiable).
 const clientes = [
-  'GELCO',
-  'Ultracem',
-  'Litoplas',
-  'Cabot',
-  'Farmacapsulab',
-  'Polyrec',
-  'B&B Pro Energy',
-  'Sonepar',
-  'Ternium',
-  'Ajover',
-  'Postobón',
-  'Sempertex',
-  'Incobra',
-  'Puerto de Santa Marta',
+  { name: 'GELCO', logo: 'gelco.png' },
+  { name: 'Ultracem', logo: 'ultracem.png' },
+  { name: 'Litoplas', logo: 'litoplas.png' },
+  { name: 'Cabot', logo: 'cabot.svg' },
+  { name: 'Farmacapsulab', logo: 'farmacapsulab.png' },
+  { name: 'Polyrec' },
+  { name: 'B&B Pro Energy', logo: 'bb-pro-energy.png' },
+  { name: 'Sonepar', logo: 'sonepar.svg' },
+  { name: 'Ternium', logo: 'ternium.svg' },
+  { name: 'Ajover', logo: 'ajover.svg' },
+  { name: 'Postobón', logo: 'postobon.svg' },
+  { name: 'Sempertex', logo: 'sempertex.png' },
+  { name: 'Incobra', logo: 'incobra.png' },
+  { name: 'Puerto de Santa Marta', logo: 'puerto-santa-marta.png' },
 ];
 ---
 <section class="clientes">
@@ -22,7 +24,17 @@ const clientes = [
     <p class="kick rv">Confían en nosotros</p>
     <div class="logos rv">
       {clientes.map((c) => (
-        <span class="logo">{c}</span>
+        c.logo ? (
+          <img
+            src={`/assets/logos/${c.logo}`}
+            alt={c.name}
+            class="logo-img"
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <span class="logo">{c.name}</span>
+        )
       ))}
     </div>
   </div>
