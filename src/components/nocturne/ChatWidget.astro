@@ -5,7 +5,7 @@
 // streaming de respuestas y captura de leads.
 const WHATSAPP_NUMBER = '573243025107';
 const WHATSAPP_DEFAULT_TEXT = 'Hola S&G, vengo del chat del sitio web.';
-const waDefaultLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_DEFAULT_TEXT)}`;
+const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(WHATSAPP_DEFAULT_TEXT)}`;
 ---
 
 <div class="chat-widget" id="chat-widget">
@@ -422,10 +422,14 @@ const waDefaultLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponen
       return text;
     }
 
+    function waLinkFor(text) {
+      return 'https://api.whatsapp.com/send?phone=' + WHATSAPP_NUMBER + '&text=' + encodeURIComponent(text);
+    }
+
     function updateWaLink(lastMessage) {
       if (!waLink) return;
       if (lastMessage) userHistory.push(lastMessage);
-      waLink.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(buildWaText());
+      waLink.href = waLinkFor(buildWaText());
     }
 
     function escapeHtml(s) {
@@ -438,12 +442,12 @@ const waDefaultLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponen
     function formatBotHtml(raw) {
       var s = escapeHtml(raw || '');
       s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-      var waSandra = 'https://wa.me/573243025107?text=' + encodeURIComponent(buildWaText());
+      var waSandra = waLinkFor(buildWaText());
       var attrs = ' target="_blank" rel="noopener noreferrer"';
-      var re = /(\+?57[\s.-]?324[\s.-]?3025107|573243025107|wa\.me\/573243025107)|(\+?57[\s.-]?300[\s.-]?630[\s.-]?0658|573006300658)|([\w.+-]+@[\w-]+\.[a-zA-Z]{2,})|(https?:\/\/[^\s<]+)/g;
-      return s.replace(re, function (m, sandra, general, email, url) {
+      // Detecta el número (con o sin +57 y con cualquier separador), correos y URLs.
+      var re = /((?:\+?57[\s.-]?)?324[\s.-]?302[\s.-]?5107|573243025107|3243025107|wa\.me\/573243025107)|([\w.+-]+@[\w-]+\.[a-zA-Z]{2,})|(https?:\/\/[^\s<]+)/g;
+      return s.replace(re, function (m, sandra, email, url) {
         if (sandra) return '<a href="' + waSandra + '"' + attrs + '>' + m + '</a>';
-        if (general) return '<a href="https://wa.me/573006300658"' + attrs + '>' + m + '</a>';
         if (email) return '<a href="mailto:' + m + '">' + m + '</a>';
         if (url) return '<a href="' + m + '"' + attrs + '>' + m + '</a>';
         return m;
