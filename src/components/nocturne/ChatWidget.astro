@@ -213,6 +213,18 @@ const waDefaultLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponen
     color: #fff;
     border-bottom-right-radius: 4px;
   }
+  :global(.chat-bubble strong) {
+    font-weight: 600;
+  }
+  :global(.chat-bubble--bot a) {
+    color: var(--teal-700);
+    text-decoration: underline;
+    font-weight: 600;
+  }
+  :global(.chat-bubble--user a) {
+    color: #fff;
+    text-decoration: underline;
+  }
   :global(.chat-bubble--typing) {
     display: inline-flex;
     align-items: center;
@@ -391,14 +403,13 @@ const waDefaultLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponen
     var sessionId = getSessionId();
 
     var userHistory = [];
-    function updateWaLink(lastMessage) {
-      if (!waLink) return;
-      if (lastMessage) userHistory.push(lastMessage);
+
+    // Arma el texto prellenado para WhatsApp: resumen de la consulta + datos captados.
+    function buildWaText() {
       var joined = userHistory.join(' ');
       var email = (joined.match(/[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}/) || [])[0];
       var phone = (joined.match(/(?:\+?57[\s.-]?)?3\d{2}[\s.-]?\d{3}[\s.-]?\d{4}/) || [])[0];
       var nameM = joined.match(/\b(?:me llamo|mi nombre es|soy)\s+([A-Za-zÁÉÍÓÚÑáéíóúñ]+(?:\s+[A-Za-zÁÉÍÓÚÑáéíóúñ]+){0,2})/i);
-      // Mensaje prellenado para Sandra: resumen de la consulta + datos captados.
       var text = 'Hola, vengo del chat de la web de S&G y me gustaría que me atienda un asesor.';
       if (userHistory.length) {
         text += '\n\nResumen de mi consulta: ' + userHistory.slice(-3).join(' ').slice(0, 300);
@@ -408,13 +419,45 @@ const waDefaultLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponen
       if (email) info.push('Correo: ' + email);
       if (phone) info.push('Tel: ' + phone);
       if (info.length) text += '\n\nMis datos: ' + info.join(' · ');
-      waLink.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
+      return text;
+    }
+
+    function updateWaLink(lastMessage) {
+      if (!waLink) return;
+      if (lastMessage) userHistory.push(lastMessage);
+      waLink.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(buildWaText());
+    }
+
+    function escapeHtml(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // Formatea el texto del bot: escapa HTML, aplica negrita (**), y convierte los
+    // números de WhatsApp / correos / URLs en enlaces clickeables. El link de
+    // Sandra (324) abre WhatsApp ya con el resumen de la consulta.
+    function formatBotHtml(raw) {
+      var s = escapeHtml(raw || '');
+      s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      var waSandra = 'https://wa.me/573243025107?text=' + encodeURIComponent(buildWaText());
+      var attrs = ' target="_blank" rel="noopener noreferrer"';
+      var re = /(\+?57[\s.-]?324[\s.-]?3025107|573243025107|wa\.me\/573243025107)|(\+?57[\s.-]?300[\s.-]?630[\s.-]?0658|573006300658)|([\w.+-]+@[\w-]+\.[a-zA-Z]{2,})|(https?:\/\/[^\s<]+)/g;
+      return s.replace(re, function (m, sandra, general, email, url) {
+        if (sandra) return '<a href="' + waSandra + '"' + attrs + '>' + m + '</a>';
+        if (general) return '<a href="https://wa.me/573006300658"' + attrs + '>' + m + '</a>';
+        if (email) return '<a href="mailto:' + m + '">' + m + '</a>';
+        if (url) return '<a href="' + m + '"' + attrs + '>' + m + '</a>';
+        return m;
+      });
     }
 
     function addBubble(role, text) {
       var bubble = document.createElement('div');
       bubble.className = 'chat-bubble chat-bubble--' + (role === 'user' ? 'user' : 'bot');
-      bubble.textContent = text;
+      if (role === 'user') {
+        bubble.textContent = text;
+      } else {
+        bubble.innerHTML = formatBotHtml(text);
+      }
       messagesEl.appendChild(bubble);
       messagesEl.scrollTop = messagesEl.scrollHeight;
       return bubble;
@@ -553,20 +596,22 @@ const waDefaultLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponen
           reveal();
         }
 
-        botBubble.textContent =
+        botBubble.innerHTML = formatBotHtml(
           accumulated ||
-          'No pude generar una respuesta. Escribinos por WhatsApp y te ayudamos enseguida: https://wa.me/' +
-            WHATSAPP_NUMBER;
+            'No pude generar una respuesta. Escribinos por WhatsApp y te ayudamos enseguida: https://wa.me/' +
+              WHATSAPP_NUMBER
+        );
         messagesEl.scrollTop = messagesEl.scrollHeight;
       } catch (err) {
         if (typingBubble && typingBubble.parentNode) {
           typingBubble.parentNode.removeChild(typingBubble);
         }
         if (!botBubble) botBubble = addBubble('bot', '');
-        botBubble.textContent =
+        botBubble.innerHTML = formatBotHtml(
           'Ahora mismo no puedo responder por acá. Escribinos por WhatsApp: https://wa.me/' +
-          WHATSAPP_NUMBER +
-          ' y te atendemos enseguida.';
+            WHATSAPP_NUMBER +
+            ' y te atendemos enseguida.'
+        );
       } finally {
         setSending(false);
         input.focus();
