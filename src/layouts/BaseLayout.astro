@@ -2,6 +2,7 @@
 // src/layouts/BaseLayout.astro — Rediseño "Nocturne"
 // Layout único: todas las páginas del sitio (home, contacto, proyectos/*) usan este layout.
 import '../styles/nocturne.css';
+import WhatsAppChat from '../components/nocturne/WhatsAppChat.astro';
 
 interface Props {
   title: string;
@@ -97,6 +98,8 @@ const imageIsDefault = image === DEFAULT_IMAGE;
         <span>© 2026 · Barranquilla, Colombia · Automatización · Energía · Software</span>
       </div>
     </footer>
+
+    <WhatsAppChat />
 
     <script is:inline>
       const nav = document.getElementById('nav');
