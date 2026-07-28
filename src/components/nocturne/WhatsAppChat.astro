@@ -1,0 +1,201 @@
+---
+// Botón flotante de WhatsApp (click-to-chat). Sin backend ni API:
+// abre WhatsApp con un mensaje prellenado; la empresa responde desde su app.
+const numero = '573006300658';
+const mensaje = 'Hola S&G, quiero más información sobre sus servicios de ingeniería.';
+const waLink = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+---
+
+<div class="wa-widget" id="wa-widget">
+  <div class="wa-bubble" id="wa-bubble" role="dialog" aria-label="Chat de WhatsApp">
+    <button class="wa-bubble-close" id="wa-bubble-close" aria-label="Cerrar">&times;</button>
+    <div class="wa-bubble-head">
+      <span class="wa-bubble-dot"></span>
+      <span class="wa-bubble-name">S&amp;G Soluciones de Ingeniería</span>
+    </div>
+    <p class="wa-bubble-text">¡Hola! ¿En qué proyecto podemos ayudarte? Escríbenos y te respondemos por WhatsApp.</p>
+    <a class="wa-bubble-cta" href={waLink} target="_blank" rel="noopener noreferrer">Iniciar chat</a>
+  </div>
+
+  <a
+    class="wa-fab"
+    id="wa-fab"
+    href={waLink}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Escríbenos por WhatsApp"
+  >
+    <svg viewBox="0 0 32 32" width="30" height="30" aria-hidden="true" focusable="false">
+      <path
+        fill="currentColor"
+        d="M16.04 4C9.93 4 4.98 8.95 4.98 15.06c0 2.13.6 4.11 1.64 5.8L4.5 28l7.35-2.07a11 11 0 0 0 4.19.83h.01c6.1 0 11.06-4.95 11.06-11.06C27.1 8.95 22.15 4 16.04 4Zm0 20.2h-.01a9.13 9.13 0 0 1-4.65-1.27l-.33-.2-3.86 1.09 1.03-3.76-.22-.35a9.07 9.07 0 0 1-1.4-4.84c0-5.03 4.1-9.13 9.14-9.13a9.06 9.06 0 0 1 6.45 2.68 9.06 9.06 0 0 1 2.68 6.46c0 5.04-4.1 9.13-9.13 9.13Zm5.01-6.84c-.27-.14-1.63-.8-1.88-.9-.25-.09-.44-.14-.62.14-.18.27-.71.9-.87 1.08-.16.18-.32.2-.6.07-.27-.14-1.16-.43-2.2-1.36-.82-.73-1.36-1.63-1.52-1.9-.16-.27-.02-.42.12-.55.12-.12.27-.32.4-.48.14-.16.18-.27.28-.46.09-.18.05-.34-.02-.48-.07-.14-.62-1.5-.85-2.05-.22-.53-.45-.46-.62-.47l-.53-.01c-.18 0-.48.07-.73.34-.25.27-.96.94-.96 2.3 0 1.36.98 2.66 1.12 2.85.14.18 1.93 2.95 4.68 4.14.65.28 1.16.45 1.56.58.65.21 1.25.18 1.72.11.52-.08 1.63-.67 1.86-1.31.23-.64.23-1.19.16-1.31-.07-.11-.25-.18-.52-.32Z"
+      ></path>
+    </svg>
+  </a>
+</div>
+
+<style>
+  .wa-widget {
+    position: fixed;
+    right: clamp(16px, 3vw, 26px);
+    bottom: clamp(16px, 3vw, 26px);
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+  }
+  .wa-fab {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #25d366;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(13, 20, 23, 0.28);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .wa-fab:hover {
+    transform: translateY(-2px) scale(1.04);
+    box-shadow: 0 12px 30px rgba(13, 20, 23, 0.34);
+  }
+  .wa-fab:focus-visible {
+    outline: 3px solid var(--teal-300);
+    outline-offset: 3px;
+  }
+  /* Anillo de atención (una vez, sutil) */
+  .wa-fab::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5);
+    animation: wa-pulse 2.4s ease-out 3;
+  }
+  @keyframes wa-pulse {
+    to {
+      box-shadow: 0 0 0 16px rgba(37, 211, 102, 0);
+    }
+  }
+  /* Burbuja de saludo */
+  .wa-bubble {
+    position: relative;
+    max-width: 260px;
+    background: #fff;
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 16px 14px;
+    box-shadow: 0 14px 34px rgba(13, 20, 23, 0.16);
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .wa-bubble.show {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .wa-bubble-close {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 2px 4px;
+  }
+  .wa-bubble-close:hover {
+    color: var(--ink);
+  }
+  .wa-bubble-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .wa-bubble-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #25d366;
+    flex: none;
+  }
+  .wa-bubble-name {
+    font-family: var(--cond);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .wa-bubble-text {
+    margin: 0 0 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #374042;
+  }
+  .wa-bubble-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 40px;
+    background: #25d366;
+    color: #fff;
+    font-family: var(--cond);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-radius: 8px;
+  }
+  .wa-bubble-cta:hover {
+    background: #1fb457;
+  }
+  @media (max-width: 520px) {
+    .wa-bubble {
+      max-width: min(78vw, 260px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wa-fab::after {
+      animation: none;
+    }
+    .wa-fab,
+    .wa-bubble {
+      transition: none;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var bubble = document.getElementById('wa-bubble');
+    var closeBtn = document.getElementById('wa-bubble-close');
+    if (!bubble) return;
+    var KEY = 'wa-bubble-dismissed';
+    var dismissed = false;
+    try {
+      dismissed = sessionStorage.getItem(KEY) === '1';
+    } catch (e) {}
+    function hide() {
+      bubble.classList.remove('show');
+      try {
+        sessionStorage.setItem(KEY, '1');
+      } catch (e) {}
+    }
+    if (!dismissed) {
+      setTimeout(function () {
+        bubble.classList.add('show');
+      }, 3500);
+    }
+    if (closeBtn) closeBtn.addEventListener('click', hide);
+  })();
+</script>
