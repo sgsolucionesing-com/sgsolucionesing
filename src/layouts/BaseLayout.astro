@@ -2,7 +2,7 @@
 // src/layouts/BaseLayout.astro — Rediseño "Nocturne"
 // Layout único: todas las páginas del sitio (home, contacto, proyectos/*) usan este layout.
 import '../styles/nocturne.css';
-import WhatsAppChat from '../components/nocturne/WhatsAppChat.astro';
+import ChatWidget from '../components/nocturne/ChatWidget.astro';
 
 interface Props {
   title: string;
@@ -99,7 +99,7 @@ const imageIsDefault = image === DEFAULT_IMAGE;
       </div>
     </footer>
 
-    <WhatsAppChat />
+    <ChatWidget />
 
     <script is:inline>
       const nav = document.getElementById('nav');
