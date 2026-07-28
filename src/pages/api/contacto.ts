@@ -13,6 +13,7 @@ const CONTACT_TO = import.meta.env.CONTACT_TO ?? 'comercial.proyectos@sgsolucion
 // El dominio de este remitente debe estar verificado en Resend (registros
 // DNS en Cloudflare) o el envío falla. Ver runbook de despliegue en el PR.
 const CONTACT_FROM = import.meta.env.CONTACT_FROM ?? 'S&G Web <web@sgsolucionesing.com>';
+const CONTACT_CC = import.meta.env.CONTACT_CC ?? 'gestion.ofertas@sgsolucionesing.com';
 
 const contactoSchema = z.object({
   nombre: z.string().trim().min(2, 'Muy corto').max(120, 'Muy largo'),
@@ -67,6 +68,7 @@ export const POST: APIRoute = async ({ request }) => {
     const { error } = await resend.emails.send({
       from: CONTACT_FROM,
       to: CONTACT_TO,
+      cc: CONTACT_CC,
       replyTo: correo,
       subject: `Nuevo contacto web: ${nombre}`,
       text: `Nombre: ${nombre}\nCorreo: ${correo}\n\nMensaje:\n${mensaje}`,

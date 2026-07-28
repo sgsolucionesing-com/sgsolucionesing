@@ -3,7 +3,7 @@
 // (WhatsAppChat.astro). El chat incluye un enlace directo a WhatsApp adentro
 // del panel, así que cubre el mismo caso de uso y suma atención con IA,
 // streaming de respuestas y captura de leads.
-const WHATSAPP_NUMBER = '573006300658';
+const WHATSAPP_NUMBER = '573243025107';
 const WHATSAPP_DEFAULT_TEXT = 'Hola S&G, vengo del chat del sitio web.';
 const waDefaultLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_DEFAULT_TEXT)}`;
 ---
@@ -19,8 +19,8 @@ const waDefaultLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponen
     <header class="chat-head">
       <span class="chat-head-dot" aria-hidden="true"></span>
       <div class="chat-head-info">
-        <span class="chat-head-name">Asistente S&amp;G</span>
-        <span class="chat-head-status">En línea</span>
+        <span class="chat-head-name">Sofía · S&amp;G</span>
+        <span class="chat-head-status">Asesora · En línea</span>
       </div>
       <button class="chat-close" id="chat-close" type="button" aria-label="Cerrar chat">&times;</button>
     </header>
@@ -187,27 +187,62 @@ const waDefaultLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponen
     gap: 10px;
     background: var(--paper);
   }
-  .chat-bubble {
-    max-width: 84%;
+  /* Las burbujas se crean por JS (createElement) y NO reciben el scope de
+     Astro, por eso estas reglas van con :global para que se apliquen. */
+  :global(.chat-bubble) {
+    max-width: 82%;
     padding: 10px 13px;
-    border-radius: 12px;
+    border-radius: 14px;
     font-size: 14.5px;
     line-height: 1.5;
     white-space: pre-wrap;
     word-break: break-word;
+    box-shadow: 0 1px 2px rgba(13, 20, 23, 0.08);
+    animation: chat-pop 0.18s ease both;
   }
-  .chat-bubble--bot {
+  :global(.chat-bubble--bot) {
     align-self: flex-start;
     background: #fff;
     border: 1px solid var(--line);
     color: var(--ink);
     border-bottom-left-radius: 4px;
   }
-  .chat-bubble--user {
+  :global(.chat-bubble--user) {
     align-self: flex-end;
     background: var(--teal-700);
     color: #fff;
     border-bottom-right-radius: 4px;
+  }
+  :global(.chat-bubble--typing) {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 13px 15px;
+  }
+  :global(.chat-bubble--typing span) {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+    animation: chat-dot 1.2s infinite ease-in-out both;
+  }
+  :global(.chat-bubble--typing span:nth-child(2)) {
+    animation-delay: 0.18s;
+  }
+  :global(.chat-bubble--typing span:nth-child(3)) {
+    animation-delay: 0.36s;
+  }
+  @keyframes chat-dot {
+    0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
+    40% { transform: scale(1); opacity: 1; }
+  }
+  @keyframes chat-pop {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.chat-bubble) { animation: none; }
+    :global(.chat-bubble--typing span) { animation: none; opacity: 0.6; }
   }
 
   .chat-typing {
@@ -321,8 +356,8 @@ const waDefaultLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponen
 <script is:inline>
   (function () {
     var STORAGE_KEY = 'sg-chat-session-id';
-    var WHATSAPP_NUMBER = '573006300658';
-    var GREETING = '¡Hola! Soy el asistente de S&G. ¿En qué proyecto o proceso te puedo ayudar?';
+    var WHATSAPP_NUMBER = '573243025107';
+    var GREETING = '¡Hola! Soy Sofía, del equipo de S&G. Contame qué proceso querés automatizar, medir o mejorar y te oriento con gusto. 😊';
 
     var widget = document.getElementById('chat-widget');
     var fab = document.getElementById('chat-fab');
@@ -355,12 +390,24 @@ const waDefaultLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponen
 
     var sessionId = getSessionId();
 
+    var userHistory = [];
     function updateWaLink(lastMessage) {
       if (!waLink) return;
-      var text = 'Hola S&G, vengo del chat del sitio web.';
-      if (lastMessage) {
-        text += ' Sobre esto: "' + lastMessage.slice(0, 180) + '"';
+      if (lastMessage) userHistory.push(lastMessage);
+      var joined = userHistory.join(' ');
+      var email = (joined.match(/[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}/) || [])[0];
+      var phone = (joined.match(/(?:\+?57[\s.-]?)?3\d{2}[\s.-]?\d{3}[\s.-]?\d{4}/) || [])[0];
+      var nameM = joined.match(/\b(?:me llamo|mi nombre es|soy)\s+([A-Za-zÁÉÍÓÚÑáéíóúñ]+(?:\s+[A-Za-zÁÉÍÓÚÑáéíóúñ]+){0,2})/i);
+      // Mensaje prellenado para Sandra: resumen de la consulta + datos captados.
+      var text = 'Hola, vengo del chat de la web de S&G y me gustaría que me atienda un asesor.';
+      if (userHistory.length) {
+        text += '\n\nResumen de mi consulta: ' + userHistory.slice(-3).join(' ').slice(0, 300);
       }
+      var info = [];
+      if (nameM) info.push('Nombre: ' + nameM[1]);
+      if (email) info.push('Correo: ' + email);
+      if (phone) info.push('Tel: ' + phone);
+      if (info.length) text += '\n\nMis datos: ' + info.join(' · ');
       waLink.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
     }
 
@@ -371,6 +418,20 @@ const waDefaultLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponen
       messagesEl.appendChild(bubble);
       messagesEl.scrollTop = messagesEl.scrollHeight;
       return bubble;
+    }
+
+    function addTyping() {
+      var bubble = document.createElement('div');
+      bubble.className = 'chat-bubble chat-bubble--bot chat-bubble--typing';
+      bubble.setAttribute('aria-label', 'Sofía está escribiendo');
+      bubble.innerHTML = '<span></span><span></span><span></span>';
+      messagesEl.appendChild(bubble);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+      return bubble;
+    }
+
+    function sleep(ms) {
+      return new Promise(function (resolve) { setTimeout(resolve, ms); });
     }
 
     function openPanel() {
@@ -436,7 +497,6 @@ const waDefaultLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponen
       isSending = state;
       sendBtn.disabled = state;
       input.disabled = state;
-      typingEl.hidden = !state;
     }
 
     async function sendMessage(text) {
@@ -444,8 +504,21 @@ const waDefaultLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponen
       updateWaLink(text);
       setSending(true);
 
-      var botBubble = addBubble('bot', '');
+      var typingBubble = addTyping();
+      var startedAt = Date.now();
+      var MIN_TYPING = 900;
       var accumulated = '';
+      var revealed = false;
+      var botBubble = null;
+
+      function reveal() {
+        if (revealed) return;
+        revealed = true;
+        if (typingBubble && typingBubble.parentNode) {
+          typingBubble.parentNode.removeChild(typingBubble);
+        }
+        botBubble = addBubble('bot', accumulated);
+      }
 
       try {
         var res = await fetch('/api/chat', {
@@ -463,16 +536,33 @@ const waDefaultLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponen
           var chunk = await reader.read();
           if (chunk.done) break;
           accumulated += decoder.decode(chunk.value, { stream: true });
-          botBubble.textContent = accumulated;
-          messagesEl.scrollTop = messagesEl.scrollHeight;
+          // Mantenemos "Sofía está escribiendo…" al menos MIN_TYPING ms.
+          if (!revealed && accumulated && Date.now() - startedAt >= MIN_TYPING) {
+            reveal();
+          }
+          if (revealed && botBubble) {
+            botBubble.textContent = accumulated;
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+          }
         }
 
-        if (!accumulated) {
-          botBubble.textContent =
-            'No pude generar una respuesta. Escribinos por WhatsApp y te ayudamos enseguida: https://wa.me/' +
-            WHATSAPP_NUMBER;
+        // Respuesta rápida/corta: garantizamos el tiempo mínimo de escritura.
+        if (!revealed) {
+          var remaining = MIN_TYPING - (Date.now() - startedAt);
+          if (remaining > 0) await sleep(remaining);
+          reveal();
         }
+
+        botBubble.textContent =
+          accumulated ||
+          'No pude generar una respuesta. Escribinos por WhatsApp y te ayudamos enseguida: https://wa.me/' +
+            WHATSAPP_NUMBER;
+        messagesEl.scrollTop = messagesEl.scrollHeight;
       } catch (err) {
+        if (typingBubble && typingBubble.parentNode) {
+          typingBubble.parentNode.removeChild(typingBubble);
+        }
+        if (!botBubble) botBubble = addBubble('bot', '');
         botBubble.textContent =
           'Ahora mismo no puedo responder por acá. Escribinos por WhatsApp: https://wa.me/' +
           WHATSAPP_NUMBER +
