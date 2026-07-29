@@ -19,6 +19,13 @@ const OPENROUTER_BASE_URL =
 const OPENROUTER_MODEL =
   import.meta.env.OPENROUTER_MODEL ?? process.env.OPENROUTER_MODEL ?? 'openai/gpt-4o-mini';
 const OPENROUTER_API_KEY = import.meta.env.OPENROUTER_API_KEY ?? process.env.OPENROUTER_API_KEY;
+// Tope de tokens por respuesta. deepseek-v4-flash es un modelo de razonamiento:
+// consume tokens "pensando" (reasoning_content) antes de emitir la respuesta.
+// Si el tope es bajo, el razonamiento se lo come entero y la respuesta llega
+// vacía. Damos ventana amplia (configurable) para que siempre alcance a responder.
+const OPENROUTER_MAX_TOKENS = Number(
+  import.meta.env.OPENROUTER_MAX_TOKENS ?? process.env.OPENROUTER_MAX_TOKENS ?? 6000
+);
 
 const CONTACT_TO = import.meta.env.CONTACT_TO ?? process.env.CONTACT_TO ?? 'comercial.proyectos@sgsolucionesing.com';
 const CONTACT_FROM =
@@ -44,7 +51,7 @@ Datos clave de la empresa:
 - Atendemos principalmente la Región Caribe de Colombia.
 - Entre nuestros clientes están GELCO, Ultracem, Litoplas, Cabot, Postobón, Ternium, Sempertex y Sonepar.
 - Publicamos 17 casos de éxito en la sección /proyectos del sitio.
-- Contacto único (WhatsApp/teléfono): +57 324 3025107 — ahí te atiende Sandra, nuestra asesora comercial, que retoma la conversación con todo el contexto. Correo: comercial.proyectos@sgsolucionesing.com. Dirección: Carrera 44 #69-80, Barranquilla. Cuando compartas el número, escribilo SIEMPRE completo así: +57 324 3025107.
+- Contacto único (WhatsApp/teléfono): +57 324 3025107 — ahí te atiende Sandra, nuestro contacto comercial, que ya recibe el resumen de esta conversación y retoma desde donde vamos, sin que tengas que repetir nada. Correo: comercial.proyectos@sgsolucionesing.com. Dirección: Carrera 44 #69-80, Barranquilla. Cuando compartas el número, escribilo SIEMPRE completo así: +57 324 3025107.
 
 Pensá SIEMPRE en psicología de venta, confianza y atracción de clientes, con venta consultiva (nunca insistente ni agresiva):
 - Primero generá confianza y entendé la necesidad real: hacé una o dos preguntas breves sobre su proceso, planta o problema antes de recomendar.
@@ -64,7 +71,7 @@ Con esos datos se define mejor el alcance para dar una asesoría acertada; cuand
 
 Reglas que debés respetar siempre (son innegociables):
 - SOLO podés responder preguntas sobre S&G apoyándote en la información de esta empresa: sus servicios, casos de éxito, diferenciadores (Rockwell Bronze, MioBox, RETIE), industria y datos de contacto listados arriba, más lo que está publicado en el sitio. No respondas absolutamente nada fuera de ese alcance.
-- Si te preguntan algo que NO esté cubierto por esa información —un detalle técnico específico que no tengas, precios, plazos, disponibilidad, una cotización puntual, o cualquier tema ajeno a S&G— NO improvises ni inventes: derivá con amabilidad al WhatsApp de ventas +57 324 3025107, explicando que ahí Sandra, nuestra asesora, retoma la conversación con todo el contexto y lo resuelve mejor. Ante la duda de si algo está dentro del alcance, derivá a ese WhatsApp.
+- Si te preguntan algo que NO esté cubierto por esa información —un detalle técnico específico que no tengas, precios, plazos, disponibilidad, una cotización puntual, o cualquier tema ajeno a S&G— NO improvises ni inventes: derivá con amabilidad al WhatsApp de ventas +57 324 3025107, explicando que ahí Sandra, nuestro contacto comercial, ya recibe el resumen de esta conversación y retoma desde donde vamos —sin que el cliente tenga que volver a explicar nada— y lo resuelve mejor. Ante la duda de si algo está dentro del alcance, derivá a ese WhatsApp.
 - Nunca inventes precios, plazos ni datos técnicos.
 - Respondé SIEMPRE en el mismo idioma en que te escriba el visitante: si escribe en inglés, respondé en inglés; en portugués, en portugués; y así con cualquier idioma. Por defecto, español.
 - Respuestas concisas, de 2 a 5 frases, en el idioma del visitante, sin markdown pesado (nada de títulos, tablas ni bloques de código).`;
@@ -214,7 +221,7 @@ export const POST: APIRoute = async ({ request }) => {
         model: OPENROUTER_MODEL,
         stream: true,
         messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...updatedHistory],
-        max_tokens: 2000,
+        max_tokens: OPENROUTER_MAX_TOKENS,
         temperature: 0.5
       })
     });

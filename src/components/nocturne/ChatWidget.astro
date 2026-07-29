@@ -404,15 +404,21 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
 
     var userHistory = [];
 
-    // Arma el texto prellenado para WhatsApp: resumen de la consulta + datos captados.
+    // Arma el texto prellenado para WhatsApp: resumen COMPLETO de la consulta +
+    // datos captados, para que Sandra retome con todo el contexto sin que el
+    // cliente tenga que volver a explicar nada.
     function buildWaText() {
       var joined = userHistory.join(' ');
       var email = (joined.match(/[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}/) || [])[0];
       var phone = (joined.match(/(?:\+?57[\s.-]?)?3\d{2}[\s.-]?\d{3}[\s.-]?\d{4}/) || [])[0];
       var nameM = joined.match(/\b(?:me llamo|mi nombre es|soy)\s+([A-Za-zÁÉÍÓÚÑáéíóúñ]+(?:\s+[A-Za-zÁÉÍÓÚÑáéíóúñ]+){0,2})/i);
-      var text = 'Hola, vengo del chat de la web de S&G y me gustaría que me atienda un asesor.';
+      var text = 'Hola, vengo del chat de la web de S&G. Este es el resumen de mi consulta para que puedan retomarla:';
       if (userHistory.length) {
-        text += '\n\nResumen de mi consulta: ' + userHistory.slice(-3).join(' ').slice(0, 300);
+        // Incluimos toda la consulta del cliente (no solo los últimos mensajes),
+        // en viñetas, con un tope amplio para no exceder el límite del enlace.
+        var recap = userHistory.map(function (m) { return '• ' + m.trim(); }).join('\n');
+        if (recap.length > 1200) recap = recap.slice(0, 1200) + '…';
+        text += '\n\n' + recap;
       }
       var info = [];
       if (nameM) info.push('Nombre: ' + nameM[1]);
