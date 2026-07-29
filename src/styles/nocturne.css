@@ -58,7 +58,10 @@ h1,h2,h3,h4{font-family:var(--cond);font-weight:600;margin:0;letter-spacing:-0.0
     .nav #nav-menu{transition:none}
   }
 }
-.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;padding:0 var(--edge) clamp(40px,5vw,72px);position:relative;overflow:hidden;background:var(--ink)}
+/* padding-top reserva el alto del nav fijo (~70px) para que la línea superior
+   del hero (.kick) no se pise con el logo. Con min-height (no alto fijo) el
+   contenido crece si hace falta y nunca se recorta. */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;padding:clamp(92px,12vh,132px) var(--edge) clamp(40px,5vw,72px);position:relative;overflow:hidden;background:var(--ink)}
 .hero .bg{position:absolute;inset:0;z-index:0}
 .hero .bg img{width:100%;height:100%;object-fit:cover;transform:scale(1.06);animation:kb 18s ease-out forwards}
 @keyframes kb{to{transform:scale(1)}}
