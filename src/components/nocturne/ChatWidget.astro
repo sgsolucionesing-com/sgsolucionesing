@@ -81,6 +81,7 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
 
   /* --- FAB --- */
   .chat-fab {
+    position: relative;
     width: 58px;
     height: 58px;
     border: 0;
@@ -93,6 +94,33 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
     cursor: pointer;
     box-shadow: 0 8px 24px rgba(13, 20, 23, 0.28);
     transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  }
+  /* Anillo de atención "estoy acá, listo para hablar": un pulso sutil que se
+     expande y se desvanece alrededor del botón mientras el chat está cerrado. */
+  .chat-fab::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    border: 2px solid var(--teal-300);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .chat-widget:not(.is-open) .chat-fab--attention::after {
+    animation: chat-fab-ring 2.6s ease-out infinite;
+  }
+  .chat-widget:not(.is-open) .chat-fab--attention .chat-fab-icon {
+    animation: chat-fab-bob 2.6s ease-in-out infinite;
+  }
+  @keyframes chat-fab-ring {
+    0% { opacity: 0.5; transform: scale(1); }
+    70% { opacity: 0; transform: scale(1.75); }
+    100% { opacity: 0; transform: scale(1.75); }
+  }
+  @keyframes chat-fab-bob {
+    0%, 84%, 100% { transform: translateY(0); }
+    90% { transform: translateY(-3px); }
+    95% { transform: translateY(0); }
   }
   .chat-fab:hover {
     background: var(--teal-600);
@@ -362,6 +390,11 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
     .chat-panel {
       transition: none;
     }
+    /* Sin movimiento: nada de pulso ni rebote de atención. */
+    .chat-widget:not(.is-open) .chat-fab--attention::after,
+    .chat-widget:not(.is-open) .chat-fab--attention .chat-fab-icon {
+      animation: none;
+    }
   }
 </style>
 
@@ -487,12 +520,94 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
       return new Promise(function (resolve) { setTimeout(resolve, ms); });
     }
 
+    // --- Sonido sutil (Web Audio, sin archivo externo ni cambios de CSP) ---
+    // Los navegadores bloquean el audio hasta que hay una interacción del
+    // usuario; por eso el AudioContext se crea/reanuda recién al abrir el chat.
+    var audioCtx = null;
+    function ensureAudio() {
+      if (audioCtx) return audioCtx;
+      try {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return null;
+        audioCtx = new AC();
+      } catch (e) {
+        audioCtx = null;
+      }
+      return audioCtx;
+    }
+    // kind: 'ready' (dos notas al abrir) | 'reply' (blip al llegar respuesta).
+    function playChime(kind) {
+      var ctx = ensureAudio();
+      if (!ctx) return;
+      if (ctx.state === 'suspended') { try { ctx.resume(); } catch (e) {} }
+      var now = ctx.currentTime;
+      var notes = kind === 'reply' ? [660] : [587.33, 880];
+      notes.forEach(function (freq, i) {
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        var start = now + i * 0.12;
+        var dur = 0.16;
+        // Volumen bajo (0.06) para que sea un aviso sutil, no molesto.
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(0.06, start + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(start);
+        osc.stop(start + dur + 0.02);
+      });
+    }
+
+    // --- Animación de atención en el FAB ("estoy listo para hablar") ---
+    function startAttention() {
+      if (isOpen) return;
+      fab.classList.add('chat-fab--attention');
+    }
+    function stopAttention() {
+      fab.classList.remove('chat-fab--attention');
+    }
+
+    // --- Inactividad: si pasa mucho tiempo sin actividad en una conversación
+    // ya iniciada, Sofía ofrece cerrar o pasar a WhatsApp (una sola vez). ---
+    var INACTIVITY_MS = 4 * 60 * 1000; // 4 minutos = "mucho tiempo"
+    var inactivityTimer = null;
+    var conversationStarted = false;
+    var nudged = false;
+
+    function clearInactivity() {
+      if (inactivityTimer) { clearTimeout(inactivityTimer); inactivityTimer = null; }
+    }
+    function armInactivity() {
+      clearInactivity();
+      if (!conversationStarted) return;
+      inactivityTimer = setTimeout(inactivityNudge, INACTIVITY_MS);
+    }
+    function inactivityNudge() {
+      inactivityTimer = null;
+      if (isSending) { armInactivity(); return; } // no cortar una respuesta en curso
+      if (nudged) return;
+      nudged = true;
+      addBubble(
+        'bot',
+        'Veo que quedamos en pausa. ¿Seguimos por acá o preferís que Sandra, nuestro contacto comercial, retome por WhatsApp con el resumen de la charla? Escribime cuando gustes, o contactala directo al +57 324 3025107. 😊'
+      );
+      updateWaLink('');
+      playChime('reply');
+      if (!isOpen) startAttention(); // si está cerrado, volvemos a llamar la atención
+    }
+
     function openPanel() {
       isOpen = true;
       widget.classList.add('is-open');
       panel.classList.add('is-open');
       panel.setAttribute('aria-hidden', 'false');
       fab.setAttribute('aria-expanded', 'true');
+      stopAttention();
+      // El click de apertura habilita el audio: sonido sutil de "listo".
+      playChime('ready');
+      armInactivity();
       if (!hydrated) {
         hydrated = true;
         hydrate();
@@ -553,6 +668,11 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
     }
 
     async function sendMessage(text) {
+      // Hay conversación real en curso: reseteamos el aviso de inactividad.
+      conversationStarted = true;
+      nudged = false;
+      clearInactivity();
+
       addBubble('user', text);
       updateWaLink(text);
       setSending(true);
@@ -571,6 +691,8 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
           typingBubble.parentNode.removeChild(typingBubble);
         }
         botBubble = addBubble('bot', accumulated);
+        // Aviso sutil de que llegó la respuesta.
+        playChime('reply');
       }
 
       try {
@@ -625,6 +747,8 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
       } finally {
         setSending(false);
         input.focus();
+        // La respuesta terminó: (re)armamos el temporizador de inactividad.
+        armInactivity();
       }
     }
 
@@ -637,5 +761,11 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
     });
 
     updateWaLink('');
+
+    // Llama la atención de forma sutil poco después de cargar (si no lo abrieron)
+    // y deja de insistir tras un rato para no molestar. El pulso se reactiva solo
+    // si más tarde hay inactividad en una conversación abierta.
+    setTimeout(function () { startAttention(); }, 2500);
+    setTimeout(function () { if (!isOpen) stopAttention(); }, 17000);
   })();
 </script>
