@@ -1,0 +1,17 @@
+---
+// src/pages/en/proyectos/[slug].astro — Project detail (EN). Body in PageProyecto.
+import { getCollection } from 'astro:content';
+import PageProyecto from '../../../components/PageProyecto.astro';
+
+export async function getStaticPaths() {
+  const items = await getCollection('proyectos', (e) => e.id.startsWith('en/'));
+  return items.map((proyecto) => ({
+    params: { slug: proyecto.slug.replace(/^en\//, '') },
+    props: { proyecto },
+  }));
+}
+
+const { proyecto } = Astro.props;
+const { Content } = await proyecto.render();
+---
+<PageProyecto proyecto={proyecto}><Content slot="body" /></PageProyecto>

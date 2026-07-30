@@ -12,6 +12,9 @@ interface Props {
   imageAlt?: string;
   type?: string;
   noindex?: boolean;
+  // true cuando la página tiene equivalente en el otro idioma (mismo path sin
+  // el prefijo /en): habilita hreflang y hace que el switcher vaya al equivalente.
+  hasAlternate?: boolean;
 }
 
 const lang = getLang(Astro.currentLocale);
@@ -27,6 +30,7 @@ const {
   imageAlt = tr.meta.imageAlt,
   type = 'website',
   noindex = false,
+  hasAlternate = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
@@ -36,8 +40,8 @@ const ogLocale = lang === 'en' ? 'en_US' : 'es_CO';
 
 // Ruta base sin el prefijo /en, para calcular el enlace del switcher y hreflang.
 const basePath = Astro.url.pathname.replace(/^\/en(?=\/|$)/, '') || '/';
-// En la Fase 1 sólo el home tiene equivalente en ambos idiomas.
-const hasEquivalent = basePath === '/';
+// Cada página declara si tiene equivalente en el otro idioma (home, proyectos…).
+const hasEquivalent = hasAlternate;
 // El switcher va al equivalente si existe; si no, al home del otro idioma.
 const switchHref = hasEquivalent
   ? localePath(basePath, otherLang)
