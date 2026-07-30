@@ -333,3 +333,6 @@ footer.site .brand .n{font-family:var(--cond);font-weight:700;letter-spacing:.03
 .cert-body h3{font-family:var(--cond);font-weight:600;font-size:21px;letter-spacing:.01em;margin:0;color:var(--ink)}
 .cert-issuer{font-family:var(--cond);font-weight:600;font-size:13.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--teal-700);margin:3px 0 0}
 .cert-desc{color:var(--muted);margin:8px 0 0;font-size:14px;line-height:1.5}
+/* Tarjeta con sello oficial (imagen): el badge reemplaza al ícono+título. */
+.cert--img{align-items:center}
+.cert-badge{flex:none;width:auto;height:54px;max-width:190px;object-fit:contain}
