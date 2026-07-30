@@ -1,0 +1,9 @@
+---
+// src/pages/en/proyectos/index.astro — Projects listing (EN). Body in PageProyectos.
+import { getCollection } from 'astro:content';
+import PageProyectos from '../../../components/PageProyectos.astro';
+
+const items = (await getCollection('proyectos', (e) => e.id.startsWith('en/')))
+  .sort((a, b) => (Number(b.data.destacado) - Number(a.data.destacado)) || ((a.data.order ?? 99) - (b.data.order ?? 99)));
+---
+<PageProyectos items={items} />

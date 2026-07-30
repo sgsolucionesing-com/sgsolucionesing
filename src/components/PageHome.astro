@@ -59,7 +59,7 @@ const jsonld = {
   knowsAbout,
 };
 ---
-<BaseLayout title={m.homeTitle} description={m.homeDescription}>
+<BaseLayout title={m.homeTitle} description={m.homeDescription} hasAlternate={true}>
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonld)} />
 
   <Hero />
