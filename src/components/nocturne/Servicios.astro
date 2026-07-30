@@ -1,127 +1,29 @@
 ---
 // src/components/nocturne/Servicios.astro
+import { ui, getLang } from '../../i18n/ui';
+const lang = getLang(Astro.currentLocale);
+const t = ui[lang].servicios;
 ---
 <section class="sec" id="servicios">
   <div class="wrap">
     <div class="sec-head">
       <div>
-        <p class="kick rv">Qué hacemos</p>
-        <h2 class="rv">Del sensor <em>al indicador de gestión.</em></h2>
+        <p class="kick rv">{t.kick}</p>
+        <h2 class="rv" set:html={t.h2Html}></h2>
       </div>
-      <p class="lead rv">
-        Automatización, instrumentación, eficiencia energética, suministro de componentes y vigilancia
-        electrónica: cubrimos toda la cadena, desde el componente y el tablero eléctrico hasta el indicador de
-        gestión que ve la gerencia.
-      </p>
+      <p class="lead rv">{t.lead}</p>
     </div>
     <div class="svc-grid">
-      <article class="svc rv">
-        <div class="num">01</div>
-        <h3>Automatización y Control Industrial</h3>
-        <p>
-          Arquitectura de control, programación de PLC, HMI/SCADA, control batch, MES/MOM y networking
-          industrial. Migración de controladores, puesta en marcha (FAT/SAT) y tableros CCM y consolas de
-          operación.
-        </p>
-        <div class="tags">
-          <span class="tag">Allen Bradley</span>
-          <span class="tag">Siemens</span>
-          <span class="tag">SCADA</span>
-          <span class="tag">MIOBOX</span>
-        </div>
-      </article>
-      <article class="svc rv">
-        <div class="num">02</div>
-        <h3>Instrumentación Industrial</h3>
-        <p>
-          Selección e implementación de instrumentos, diseño de lazos de control y ajuste de transmisores de
-          temperatura, presión, caudal y humedad, con aseguramiento metrológico.
-        </p>
-        <div class="tags">
-          <span class="tag">Lazos de control</span>
-          <span class="tag">Transmisores</span>
-          <span class="tag">Metrología</span>
-        </div>
-      </article>
-      <article class="svc rv">
-        <div class="num">03</div>
-        <h3>Eficiencia Energética</h3>
-        <p>
-          Análisis de calidad de energía, monitoreo y telemedida, y proyectos de ahorro energético con
-          incorporación de energías renovables.
-        </p>
-        <div class="tags">
-          <span class="tag">Calidad de energía</span>
-          <span class="tag">Telemedida</span>
-          <span class="tag">Renovables</span>
-        </div>
-      </article>
-      <article class="svc rv">
-        <div class="num">04</div>
-        <h3>Montaje Eléctrico</h3>
-        <p>
-          Diseño de instalaciones eléctricas, estudios de factibilidad y montaje industrial y comercial, con
-          mantenimiento y cumplimiento normativo RETIE.
-        </p>
-        <div class="tags">
-          <span class="tag">RETIE</span>
-          <span class="tag">Montaje industrial</span>
-          <span class="tag">Mantenimiento</span>
-        </div>
-      </article>
-      <article class="svc rv">
-        <div class="num">05</div>
-        <h3>Mantenimiento Mecánico</h3>
-        <p>
-          Mantenimiento preventivo y correctivo, montaje y diagnóstico de equipos, soldadura y fabricación de
-          piezas para mantener la planta en operación.
-        </p>
-        <div class="tags">
-          <span class="tag">Preventivo</span>
-          <span class="tag">Correctivo</span>
-          <span class="tag">Soldadura</span>
-        </div>
-      </article>
-      <article class="svc rv">
-        <div class="num">06</div>
-        <h3>Diseño de Tableros Eléctricos</h3>
-        <p>
-          Tableros de distribución y transferencia automática, bancos de condensadores (1 a 1520 kvar),
-          integración de PLC/IO y arranque de variadores de ½ a 900 HP.
-        </p>
-        <div class="tags">
-          <span class="tag">Bancos de condensadores</span>
-          <span class="tag">Variadores ½–900 HP</span>
-          <span class="tag">PLC/IO</span>
-        </div>
-      </article>
-      <article class="svc rv">
-        <div class="num">07</div>
-        <h3>Suministro y Asesoría de Componentes</h3>
-        <p>
-          Como distribuidores multimarca, suministramos partes y componentes eléctricos, electrónicos, de
-          automatización y especializados. Sumamos valor asesorando su selección técnica —sensores, medidores,
-          instrumentos y más— para que cada componente calce con la solución.
-        </p>
-        <div class="tags">
-          <span class="tag">Distribuidor multimarca</span>
-          <span class="tag">Sensores y medidores</span>
-          <span class="tag">Asesoría técnica</span>
-        </div>
-      </article>
-      <article class="svc rv">
-        <div class="num">08</div>
-        <h3>Vigilancia Electrónica</h3>
-        <p>
-          Suministro, instalación y montaje de sistemas de vigilancia y seguridad electrónica —CCTV, control de
-          acceso y monitoreo— integrados a la infraestructura de la planta o la instalación.
-        </p>
-        <div class="tags">
-          <span class="tag">CCTV</span>
-          <span class="tag">Control de acceso</span>
-          <span class="tag">Monitoreo</span>
-        </div>
-      </article>
+      {t.items.map((svc, i) => (
+        <article class="svc rv">
+          <div class="num">{String(i + 1).padStart(2, '0')}</div>
+          <h3>{svc.title}</h3>
+          <p>{svc.desc}</p>
+          <div class="tags">
+            {svc.tags.map((tag) => <span class="tag">{tag}</span>)}
+          </div>
+        </article>
+      ))}
     </div>
   </div>
 </section>

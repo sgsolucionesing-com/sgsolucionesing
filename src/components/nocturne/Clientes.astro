@@ -2,6 +2,9 @@
 // src/components/nocturne/Clientes.astro
 // logo: nombre de archivo en public/assets/logos/ (logo oficial verificado).
 // Sin `logo` => se muestra como wordmark de texto (no se encontró un logo confiable).
+import { ui, getLang } from '../../i18n/ui';
+const lang = getLang(Astro.currentLocale);
+const t = ui[lang].clientes;
 const clientes = [
   { name: 'GELCO', logo: 'gelco.png' },
   { name: 'Ultracem', logo: 'ultracem.png' },
@@ -21,7 +24,7 @@ const clientes = [
 ---
 <section class="clientes">
   <div class="wrap">
-    <p class="kick rv">Confían en nosotros</p>
+    <p class="kick rv">{t.kick}</p>
     <div class="logos rv">
       {clientes.map((c) => (
         c.logo ? (

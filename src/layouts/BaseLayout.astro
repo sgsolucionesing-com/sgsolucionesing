@@ -1,8 +1,9 @@
 ---
 // src/layouts/BaseLayout.astro — Rediseño "Nocturne"
-// Layout único: todas las páginas del sitio (home, contacto, proyectos/*) usan este layout.
+// Layout único: todas las páginas del sitio usan este layout. Bilingüe ES/EN.
 import '../styles/nocturne.css';
 import ChatWidget from '../components/nocturne/ChatWidget.astro';
+import { ui, getLang, localePath, defaultLang } from '../i18n/ui';
 
 interface Props {
   title: string;
@@ -13,13 +14,17 @@ interface Props {
   noindex?: boolean;
 }
 
+const lang = getLang(Astro.currentLocale);
+const tr = ui[lang];
+const otherLang = lang === 'es' ? 'en' : 'es';
+
 const DEFAULT_IMAGE = '/assets/og-image.jpg';
 
 const {
   title,
-  description = 'Ingeniería en automatización industrial, Industria 4.0 / IoT, gestión de energía y desarrollo de software a la medida.',
+  description = tr.meta.defaultDescription,
   image = DEFAULT_IMAGE,
-  imageAlt = 'S&G Soluciones de Ingeniería — automatización industrial, energía y software.',
+  imageAlt = tr.meta.imageAlt,
   type = 'website',
   noindex = false,
 } = Astro.props;
@@ -27,10 +32,25 @@ const {
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = new URL(image, Astro.site).href;
 const imageIsDefault = image === DEFAULT_IMAGE;
+const ogLocale = lang === 'en' ? 'en_US' : 'es_CO';
+
+// Ruta base sin el prefijo /en, para calcular el enlace del switcher y hreflang.
+const basePath = Astro.url.pathname.replace(/^\/en(?=\/|$)/, '') || '/';
+// En la Fase 1 sólo el home tiene equivalente en ambos idiomas.
+const hasEquivalent = basePath === '/';
+// El switcher va al equivalente si existe; si no, al home del otro idioma.
+const switchHref = hasEquivalent
+  ? localePath(basePath, otherLang)
+  : otherLang === 'en'
+    ? '/en/'
+    : '/';
+
+// Helper local para los enlaces del nav (localiza los anchors del home).
+const L = (p: string) => localePath(p, lang);
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -38,6 +58,13 @@ const imageIsDefault = image === DEFAULT_IMAGE;
     <meta name="description" content={description} />
 
     <link rel="canonical" href={canonical} />
+    {hasEquivalent && (
+      <>
+        <link rel="alternate" hreflang="es" href={new URL(localePath(basePath, 'es'), Astro.site).href} />
+        <link rel="alternate" hreflang="en" href={new URL(localePath(basePath, 'en'), Astro.site).href} />
+        <link rel="alternate" hreflang="x-default" href={new URL(localePath(basePath, defaultLang), Astro.site).href} />
+      </>
+    )}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="theme-color" content="#0d1417" />
     <meta name="author" content="S&G Soluciones de Ingeniería" />
@@ -45,7 +72,8 @@ const imageIsDefault = image === DEFAULT_IMAGE;
 
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content="S&G Soluciones de Ingeniería" />
-    <meta property="og:locale" content="es_CO" />
+    <meta property="og:locale" content={ogLocale} />
+    {hasEquivalent && <meta property="og:locale:alternate" content={lang === 'en' ? 'es_CO' : 'en_US'} />}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -66,27 +94,61 @@ const imageIsDefault = image === DEFAULT_IMAGE;
       rel="stylesheet"
     />
 
+    <!-- Detección de idioma + memoria de preferencia (sólo redirige en el home).
+         Nota SEO: el auto-redirect por idioma del navegador es una elección de
+         producto (sugerir el idioma probable). Google lo desaconseja, pero el
+         riesgo se mitiga con hreflang recíproco y canonical self-referencial;
+         Googlebot indexa ambas versiones por esas señales. Se preservan el hash
+         (#ancla) y el querystring para no romper deep-links ni el tracking. -->
+    <script is:inline>
+      (function () {
+        try {
+          var KEY = 'sg-lang';
+          var stored = localStorage.getItem(KEY);
+          var path = location.pathname;
+          var isEn = /^\/en(\/|$)/.test(path);
+          var isHome = path === '/' || path === '/en' || path === '/en/';
+          var q = location.search + location.hash; // preservar ancla y campañas
+          if (stored) {
+            if (isHome) {
+              if (stored === 'en' && !isEn) { location.replace('/en/' + q); return; }
+              if (stored === 'es' && isEn) { location.replace('/' + q); return; }
+            }
+            return;
+          }
+          // Sin preferencia guardada: sugerimos por idioma del navegador, sólo en el home ES.
+          if (path === '/') {
+            var langs = navigator.languages || [navigator.language || ''];
+            if (langs[0] && /^en\b/i.test(langs[0])) { location.replace('/en/' + q); }
+          }
+        } catch (e) {}
+      })();
+    </script>
+
     <slot name="head" />
   </head>
   <body id="top">
     <nav class="nav" id="nav">
-      <a class="brand" href="/#top" aria-label="S&amp;G Soluciones de Ingeniería">
+      <a class="brand" href={L('/#top')} aria-label="S&amp;G Soluciones de Ingeniería">
         <img class="mark" src="/assets/logo/icono.png" alt="" />
-        <span class="bt"><span class="n">S&amp;G</span><span class="d">Soluciones de Ingeniería</span></span>
+        <span class="bt"><span class="n">S&amp;G</span><span class="d">{tr.nav.tagline}</span></span>
       </a>
-      <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
+      <button class="nav-toggle" aria-label={tr.nav.openMenu} aria-expanded="false" aria-controls="nav-menu">
         <span class="bar"></span>
         <span class="bar"></span>
         <span class="bar"></span>
       </button>
       <div id="nav-menu">
         <div class="links">
-          <a href="/#servicios">Servicios</a>
-          <a href="/#casos">Casos</a>
-          <a href="/#nosotros">Nosotros</a>
-          <a href="/#contacto">Contacto</a>
+          <a href={L('/#servicios')}>{tr.nav.services}</a>
+          <a href={L('/#casos')}>{tr.nav.cases}</a>
+          <a href={L('/#nosotros')}>{tr.nav.about}</a>
+          <a href={L('/#contacto')}>{tr.nav.contact}</a>
         </div>
-        <a class="cta" href="/#contacto">Cotiza tu proyecto</a>
+        <a class="nav-lang" href={switchHref} data-setlang={otherLang} aria-label={tr.nav.switchLangAria} rel="alternate">
+          {tr.nav.switchLang}
+        </a>
+        <a class="cta" href={L('/#contacto')}>{tr.nav.cta}</a>
       </div>
     </nav>
 
@@ -95,7 +157,7 @@ const imageIsDefault = image === DEFAULT_IMAGE;
     <footer class="site">
       <div class="wrap">
         <span class="brand"><img class="mark" src="/assets/logo/icono.png" alt="" /><span class="n">S&amp;G Soluciones de Ingeniería</span></span>
-        <span>© 2026 · Barranquilla, Colombia · Automatización · Energía · Software</span>
+        <span>{tr.footer.copyright}</span>
       </div>
     </footer>
 
@@ -108,6 +170,13 @@ const imageIsDefault = image === DEFAULT_IMAGE;
         if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
       }), { threshold: .15 });
       document.querySelectorAll('.rv:not(.in)').forEach(el => io.observe(el));
+
+      // Recordar la elección explícita de idioma al usar el switcher.
+      document.querySelectorAll('[data-setlang]').forEach((el) => {
+        el.addEventListener('click', () => {
+          try { localStorage.setItem('sg-lang', el.getAttribute('data-setlang')); } catch (e) {}
+        });
+      });
 
       const navToggle = document.querySelector('.nav-toggle');
       const navMenu = document.getElementById('nav-menu');
