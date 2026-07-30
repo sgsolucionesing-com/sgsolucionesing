@@ -1,0 +1,72 @@
+---
+// src/components/PageHome.astro
+// Home compartido por / (español) y /en/ (inglés). El idioma se resuelve por
+// Astro.currentLocale, así que ambas rutas renderizan el mismo componente.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from './nocturne/Hero.astro';
+import Servicios from './nocturne/Servicios.astro';
+import Casos from './nocturne/Casos.astro';
+import Clientes from './nocturne/Clientes.astro';
+import Nosotros from './nocturne/Nosotros.astro';
+import Testimonios from './nocturne/Testimonios.astro';
+import Contacto from './nocturne/Contacto.astro';
+import { ui, getLang } from '../i18n/ui';
+
+const lang = getLang(Astro.currentLocale);
+const m = ui[lang].meta;
+
+const areaServed = lang === 'en' ? 'Colombia and Latin America' : 'Colombia y Latinoamérica';
+const knowsAbout = lang === 'en'
+  ? [
+      'Industrial automation',
+      'Industry 4.0',
+      'Industrial IoT',
+      'Energy management',
+      'SCADA',
+      'Electrical and automation component supply',
+      'Electronic surveillance',
+      'Industrial software development',
+    ]
+  : [
+      'Automatización industrial',
+      'Industria 4.0',
+      'IoT industrial',
+      'Gestión de energía',
+      'SCADA',
+      'Suministro de componentes eléctricos y de automatización',
+      'Vigilancia electrónica',
+      'Desarrollo de software industrial',
+    ];
+
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfessionalService',
+  name: 'S&G Soluciones de Ingeniería',
+  url: 'https://www.sgsolucionesing.com',
+  logo: 'https://www.sgsolucionesing.com/logo.png',
+  image: 'https://www.sgsolucionesing.com/assets/img/pruebas-1.jpg',
+  description: m.jsonldDescription,
+  telephone: '+573243025107',
+  email: 'comercial.proyectos@sgsolucionesing.com',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Carrera 44 #69-80',
+    addressLocality: 'Barranquilla',
+    addressRegion: 'Atlántico',
+    addressCountry: 'CO',
+  },
+  areaServed,
+  knowsAbout,
+};
+---
+<BaseLayout title={m.homeTitle} description={m.homeDescription}>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonld)} />
+
+  <Hero />
+  <Servicios />
+  <Casos />
+  <Clientes />
+  <Nosotros />
+  <Testimonios />
+  <Contacto />
+</BaseLayout>

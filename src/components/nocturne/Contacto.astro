@@ -1,40 +1,47 @@
 ---
 // src/components/nocturne/Contacto.astro
+import { ui, getLang } from '../../i18n/ui';
+const lang = getLang(Astro.currentLocale);
+const t = ui[lang].contacto;
 ---
 <section class="sec contact" id="contacto">
   <div class="wrap grid">
     <div>
-      <p class="kick rv">Contacto</p>
-      <h2 class="rv">Cuéntanos tu proceso.</h2>
-      <p class="sub rv">
-        Evaluamos tu planta y proponemos una ruta clara: qué medir, qué automatizar y qué integrar. Respuesta
-        en menos de 24 horas hábiles.
-      </p>
+      <p class="kick rv">{t.kick}</p>
+      <h2 class="rv">{t.h2}</h2>
+      <p class="sub rv">{t.sub}</p>
       <ul class="clist rv">
-        <li><span class="lb">Ubicación</span><span>Carrera 44 #69-80, Barranquilla, Atlántico, Colombia</span></li>
-        <li><span class="lb">Teléfono / WhatsApp</span><a href="https://wa.me/573243025107" target="_blank" rel="noopener noreferrer">+57 324 3025107</a></li>
-        <li><span class="lb">Correo</span><a href="mailto:comercial.proyectos@sgsolucionesing.com">comercial.proyectos@sgsolucionesing.com</a></li>
+        <li><span class="lb">{t.locLabel}</span><span>{t.locValue}</span></li>
+        <li><span class="lb">{t.phoneLabel}</span><a href="https://wa.me/573243025107" target="_blank" rel="noopener noreferrer">+57 324 3025107</a></li>
+        <li><span class="lb">{t.emailLabel}</span><a href="mailto:comercial.proyectos@sgsolucionesing.com">comercial.proyectos@sgsolucionesing.com</a></li>
       </ul>
     </div>
-    <form class="form rv" id="contact-form" novalidate>
+    <form
+      class="form rv"
+      id="contact-form"
+      novalidate
+      data-msg-sending={t.formSending}
+      data-msg-ok={t.formOk}
+      data-msg-err={t.formErr}
+    >
       <div class="fld">
-        <label for="nombre">Nombre y empresa</label>
+        <label for="nombre">{t.formName}</label>
         <input type="text" id="nombre" name="nombre" minlength="2" maxlength="120" required />
       </div>
       <div class="fld">
-        <label for="correo">Correo</label>
+        <label for="correo">{t.formEmail}</label>
         <input type="email" id="correo" name="correo" required />
       </div>
       <div class="fld">
-        <label for="mensaje">¿Qué necesitas resolver?</label>
+        <label for="mensaje">{t.formMsg}</label>
         <textarea id="mensaje" name="mensaje" minlength="10" maxlength="3000" required></textarea>
       </div>
       <!-- Honeypot: campo invisible para humanos, los bots suelen completarlo. -->
       <div class="fld hp" aria-hidden="true">
-        <label for="empresa_web">No completar</label>
+        <label for="empresa_web">{t.formHoneypot}</label>
         <input type="text" id="empresa_web" name="empresa_web" tabindex="-1" autocomplete="off" />
       </div>
-      <button type="submit" class="btn-t">Enviar solicitud <span class="arrow"></span></button>
+      <button type="submit" class="btn-t">{t.formSubmit} <span class="arrow"></span></button>
       <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
     </form>
   </div>
@@ -44,6 +51,11 @@
   const form = document.getElementById('contact-form') as HTMLFormElement | null;
   const msg = document.getElementById('form-msg');
   const submitBtn = form?.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+  // Textos localizados inyectados desde Astro (ES/EN) vía data-attributes.
+  const MSG_SENDING = form?.dataset.msgSending ?? 'Enviando…';
+  const MSG_OK = form?.dataset.msgOk ?? '';
+  const MSG_ERR = form?.dataset.msgErr ?? '';
 
   function setMessage(text: string, kind: 'ok' | 'error' | '') {
     if (!msg) return;
@@ -60,7 +72,7 @@
 
     submitBtn.disabled = true;
     const originalLabel = submitBtn.innerHTML;
-    submitBtn.textContent = 'Enviando…';
+    submitBtn.textContent = MSG_SENDING;
     setMessage('', '');
 
     try {
@@ -72,19 +84,13 @@
       const json = await res.json().catch(() => ({ ok: false }));
 
       if (res.ok && json.ok) {
-        setMessage('Gracias, te respondemos en menos de 24 h hábiles.', 'ok');
+        setMessage(MSG_OK, 'ok');
         form.reset();
       } else {
-        setMessage(
-          'No pudimos enviar tu mensaje, escríbenos por WhatsApp mientras tanto: https://wa.me/573243025107',
-          'error'
-        );
+        setMessage(MSG_ERR, 'error');
       }
     } catch {
-      setMessage(
-        'No pudimos enviar tu mensaje, escríbenos por WhatsApp mientras tanto: https://wa.me/573243025107',
-        'error'
-      );
+      setMessage(MSG_ERR, 'error');
     } finally {
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalLabel;

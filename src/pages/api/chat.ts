@@ -82,7 +82,7 @@ const EMAIL_RE = /[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}/;
 // Celular colombiano: opcional +57, luego 3XX seguido de 7 dígitos más (con
 // separadores opcionales de espacio, punto o guión).
 const PHONE_RE = /(?:\+?57[\s.-]?)?3\d{2}[\s.-]?\d{3}[\s.-]?\d{4}/;
-const NAME_RE = /\b(?:me llamo|mi nombre es|soy)\s+([a-záéíóúñ]+(?:\s+[a-záéíóúñ]+){0,2})/i;
+const NAME_RE = /\b(?:me llamo|mi nombre es|soy|my name is|i'm|i am)\s+([a-záéíóúñ]+(?:\s+[a-záéíóúñ]+){0,2})/i;
 
 function textResponse(text: string, status = 200): Response {
   return new Response(text, {
