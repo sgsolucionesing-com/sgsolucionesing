@@ -1,0 +1,100 @@
+---
+// src/components/PageProyectos.astro
+// Listado de proyectos compartido por /proyectos (ES) y /en/proyectos (EN).
+// Recibe `items` ya filtrados por idioma; el idioma se resuelve por currentLocale.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { ui, getLang, localePath, sectorLabel } from '../i18n/ui';
+
+interface Props {
+  items: any[];
+}
+const { items } = Astro.props;
+
+const lang = getLang(Astro.currentLocale);
+const t = ui[lang].proyectos;
+const site = 'https://www.sgsolucionesing.com';
+const canonical = new URL(Astro.url.pathname, site).href;
+
+// URL base (sin prefijo /en) de una entrada, para armar el href localizado.
+const baseSlug = (c: any) => (c.slug || c.id.split('/').pop().replace(/\.mdx?$/, '')).replace(/^en\//, '');
+---
+<BaseLayout title={t.metaTitle} description={t.metaDesc} image="/assets/img/tablero-1.jpg" hasAlternate={true}>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: t.metaTitle,
+    description: t.metaDesc,
+    url: canonical,
+  })} />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: t.home, item: new URL(localePath('/', lang), site).href },
+      { '@type': 'ListItem', position: 2, name: t.crumb, item: canonical },
+    ],
+  })} />
+
+  <header class="phead">
+    <div class="bg"><img src="/assets/img/tablero-1.jpg" alt="" aria-hidden="true" fetchpriority="high" /></div>
+    <div class="wrap">
+      <span class="kick rv in">{t.kick}</span>
+      <h1 class="rv in d1" set:html={t.h1Html}></h1>
+      <p class="rv in d2">{t.lead}</p>
+      <div class="stats rv in d3">
+        <div class="stat"><div class="n">{items.length}</div><div class="l">{t.statCases}</div></div>
+        <div class="stat"><div class="n">+14</div><div class="l">{t.statClients}</div></div>
+        <div class="stat"><div class="n">8</div><div class="l">{t.statLines}</div></div>
+        <div class="stat"><div class="n">RA Bronze</div><div class="l">{t.statPartner}</div></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <section class="cases">
+      {items.map((c) => (
+        <article class="case rv">
+          <figure class="fig">
+            <span class="mk2"></span>
+            <img src={c.data.coverImage} alt={c.data.title} loading="lazy" decoding="async" />
+            {c.data.kpis?.[0] && <span class="tagline">{c.data.kpis[0].value}</span>}
+            <span class="mk"></span>
+          </figure>
+          <div class="d1">
+            <p class="meta">{[sectorLabel(c.data.sector, lang), c.data.ubicacion, c.data.fecha].filter(Boolean).join(' · ')}</p>
+            <h2>{c.data.title}</h2>
+            <p class="resumen">{c.data.resumen}</p>
+            {c.data.kpis?.length > 0 && (
+              <div class="kpis">
+                {c.data.kpis.slice(0, 3).map((k) => (
+                  <div>
+                    <div class="kn">{k.value}</div>
+                    <div class="kl">{k.label}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {c.data.tecnologias?.length > 0 && (
+              <div class="tags">
+                {c.data.tecnologias.map((tec) => <span class="tag">{tec}</span>)}
+              </div>
+            )}
+            <a class="verfull" href={localePath(`/proyectos/${baseSlug(c)}`, lang)}>{t.viewFull} <span class="arrow"></span></a>
+          </div>
+        </article>
+      ))}
+    </section>
+  </div>
+
+  <section class="close">
+    <div class="wrap">
+      <span class="kick rv">{t.nextKick}</span>
+      <h2 class="rv d1" set:html={t.nextH2Html}></h2>
+      <p class="rv d2">{t.nextSub}</p>
+      <div class="row rv d3">
+        <a href={localePath('/#contacto', lang)} class="btn-t">{t.ctaQuote} <span class="arrow"></span></a>
+        <a href={localePath('/', lang)} class="btn-o">{t.backHome}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
