@@ -1,13 +1,15 @@
 ---
 // src/components/nocturne/Casos.astro
 import { getCollection } from 'astro:content';
-import { ui, getLang } from '../../i18n/ui';
+import { ui, getLang, localePath } from '../../i18n/ui';
 const lang = getLang(Astro.currentLocale);
 const t = ui[lang].casos;
+const isEn = lang === 'en';
 
-const casos = (await getCollection('proyectos'))
+const casos = (await getCollection('proyectos', (e) => isEn ? e.id.startsWith('en/') : !e.id.startsWith('en/')))
   .sort((a, b) => (Number(b.data.destacado) - Number(a.data.destacado)) || ((a.data.order ?? 99) - (b.data.order ?? 99)))
   .slice(0, 3);
+const caseHref = (c) => localePath(`/proyectos/${(c.slug || '').replace(/^en\//, '')}`, lang);
 ---
 <section class="sec casos" id="casos">
   <div class="wrap">
@@ -21,7 +23,7 @@ const casos = (await getCollection('proyectos'))
     <div class="case-grid">
       {casos.map((c) => (
         <article class="case rv">
-          <a class="fig" href={`/proyectos/${c.slug}`}>
+          <a class="fig" href={caseHref(c)}>
             <img src={c.data.coverImage} alt={c.data.title} loading="lazy" decoding="async" />
             <span class="meta">{[c.data.sector, c.data.ubicacion, c.data.fecha].filter(Boolean).join(' · ')}</span>
           </a>
@@ -36,13 +38,13 @@ const casos = (await getCollection('proyectos'))
                 </div>
               ))}
             </div>
-            <a class="verlink" href={`/proyectos/${c.slug}`}>{t.viewCase} <span class="arrow"></span></a>
+            <a class="verlink" href={caseHref(c)}>{t.viewCase} <span class="arrow"></span></a>
           </div>
         </article>
       ))}
     </div>
     <div class="more">
-      <a class="btn-o" href="/proyectos">{t.viewAll} <span class="arrow"></span></a>
+      <a class="btn-o" href={localePath('/proyectos', lang)}>{t.viewAll} <span class="arrow"></span></a>
     </div>
   </div>
 </section>
