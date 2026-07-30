@@ -8,7 +8,7 @@ const t = ui[lang].certificaciones;
 // Sellos oficiales opcionales: colocá el archivo en public/assets/certificaciones/
 // y poné el nombre acá por índice (mismo orden que t.items). Vacío => badge con
 // ícono. Ej.: ['servimeters.png', 'bureau-veritas-iso9001.png', 'ra-bronze.png'].
-const seals = ['', '', ''];
+const seals = ['', '', 'ra-bronze.png'];
 
 // Ícono por índice (mdi): shield-check, check-decagram, medal.
 const iconPaths = [
@@ -24,19 +24,26 @@ const iconPaths = [
     <p class="lead rv">{t.lead}</p>
     <div class="cert-grid rv">
       {t.items.map((c, i) => (
-        <article class="cert">
-          <div class="cert-seal">
-            {seals[i] ? (
-              <img src={`/assets/certificaciones/${seals[i]}`} alt={`${c.title} — ${c.issuer}`} loading="lazy" decoding="async" />
-            ) : (
+        <article class={seals[i] ? 'cert cert--img' : 'cert'}>
+          {seals[i] ? (
+            <img
+              class="cert-badge"
+              src={`/assets/certificaciones/${seals[i]}`}
+              alt={`${c.title} — ${c.issuer}`}
+              loading="lazy"
+              decoding="async"
+            />
+          ) : (
+            <div class="cert-seal">
               <svg viewBox="0 0 24 24" width="42" height="42" aria-hidden="true" focusable="false">
                 <path fill="currentColor" d={iconPaths[i] || iconPaths[0]} />
               </svg>
-            )}
-          </div>
+            </div>
+          )}
           <div class="cert-body">
-            <h3>{c.title}</h3>
-            <p class="cert-issuer">{c.issuer}</p>
+            {/* El badge oficial ya incluye título y emisor: no los repetimos. */}
+            {!seals[i] && <h3>{c.title}</h3>}
+            {!seals[i] && <p class="cert-issuer">{c.issuer}</p>}
             <p class="cert-desc">{c.desc}</p>
           </div>
         </article>
