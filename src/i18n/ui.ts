@@ -180,7 +180,7 @@ export const ui = {
       title: 'Respaldo que da confianza.',
       lead: 'Nuestra capacidad técnica y nuestros procesos están respaldados por certificaciones de terceros.',
       items: [
-        { title: 'Tableristas certificados', issuer: 'Servimeters', desc: 'Diseño y fabricación de tableros eléctricos bajo certificación.' },
+        { title: 'Tableros certificados', issuer: 'Intertek', desc: 'Certificación de producto RETIE de nuestros tableros eléctricos de baja tensión (IEC 61439). Certificado EL-CS-250379.' },
         { title: 'ISO 9001', issuer: 'Bureau Veritas', desc: 'Sistema de gestión de calidad de nuestros procesos, certificado en 2026.' },
         { title: 'Bronze System Integrator', issuer: 'Rockwell Automation', desc: 'Integradores de sistemas reconocidos en el programa PartnerNetwork de Rockwell.' },
       ],
@@ -404,7 +404,7 @@ export const ui = {
       title: 'Backing you can trust.',
       lead: 'Our technical capability and processes are backed by third-party certifications.',
       items: [
-        { title: 'Certified panel builders', issuer: 'Servimeters', desc: 'Design and manufacturing of electrical panels under certification.' },
+        { title: 'Certified panels', issuer: 'Intertek', desc: 'RETIE product certification of our low-voltage electrical panels (IEC 61439). Certificate EL-CS-250379.' },
         { title: 'ISO 9001', issuer: 'Bureau Veritas', desc: 'Quality management system certified in 2026 across our processes.' },
         { title: 'Bronze System Integrator', issuer: 'Rockwell Automation', desc: "Recognized system integrators in Rockwell's PartnerNetwork program." },
       ],
