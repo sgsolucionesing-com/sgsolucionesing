@@ -20,5 +20,14 @@ export default defineConfig({
   output: 'static',
   adapter: node({ mode: 'standalone' }),
 
+  // Sitio bilingüe: español (por defecto, sin prefijo en la URL) e inglés en /en/.
+  // La detección por idioma del navegador y el recuerdo de preferencia se hacen
+  // del lado del cliente (ver BaseLayout), porque las páginas son estáticas.
+  i18n: {
+    defaultLocale: 'es',
+    locales: ['es', 'en'],
+    routing: { prefixDefaultLocale: false }
+  },
+
   integrations: [tailwind(), icon(), mdx(), sitemap()]
 });
