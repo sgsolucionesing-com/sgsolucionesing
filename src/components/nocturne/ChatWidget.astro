@@ -1,11 +1,26 @@
 ---
-// Widget de chat flotante con IA que reemplaza al botón de WhatsApp
-// (WhatsAppChat.astro). El chat incluye un enlace directo a WhatsApp adentro
-// del panel, así que cubre el mismo caso de uso y suma atención con IA,
-// streaming de respuestas y captura de leads.
+// Widget de chat flotante con IA. Bilingüe ES/EN: los textos estáticos se
+// renderizan desde el diccionario y los dinámicos (usados por el script del
+// cliente) se inyectan en window.__CHAT_I18N.
+import { ui, getLang } from '../../i18n/ui';
+const lang = getLang(Astro.currentLocale);
+const c = ui[lang].chat;
 const WHATSAPP_NUMBER = '573243025107';
-const WHATSAPP_DEFAULT_TEXT = 'Hola S&G, vengo del chat del sitio web.';
-const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(WHATSAPP_DEFAULT_TEXT)}`;
+const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(c.waDefaultText)}`;
+// Textos que consume el script del cliente (greeting, typing, resumen a WhatsApp…).
+const chatI18n = {
+  greeting: c.greeting,
+  typingAria: c.typingAria,
+  inactivity: c.inactivity,
+  waIntro: c.waIntro,
+  waData: c.waData,
+  waName: c.waName,
+  waEmail: c.waEmail,
+  waPhone: c.waPhone,
+  fallbackEmpty: c.fallbackEmpty,
+  fallbackError: c.fallbackError,
+  fallbackErrorTail: c.fallbackErrorTail,
+};
 ---
 
 <div class="chat-widget" id="chat-widget">
@@ -13,34 +28,34 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
     class="chat-panel"
     id="chat-panel"
     role="dialog"
-    aria-label="Chat con S&amp;G Soluciones de Ingeniería"
+    aria-label={c.dialogAria}
     aria-hidden="true"
   >
     <header class="chat-head">
       <span class="chat-head-dot" aria-hidden="true"></span>
       <div class="chat-head-info">
-        <span class="chat-head-name">Sofía · S&amp;G</span>
-        <span class="chat-head-status">Agente comercial · En línea</span>
+        <span class="chat-head-name">{c.headName}</span>
+        <span class="chat-head-status">{c.headStatus}</span>
       </div>
-      <button class="chat-close" id="chat-close" type="button" aria-label="Cerrar chat">&times;</button>
+      <button class="chat-close" id="chat-close" type="button" aria-label={c.closeAria}>&times;</button>
     </header>
 
     <div class="chat-messages" id="chat-messages" role="log" aria-live="polite" aria-relevant="additions"></div>
 
-    <p class="chat-typing" id="chat-typing" hidden>Escribiendo…</p>
+    <p class="chat-typing" id="chat-typing" hidden>{c.typing}</p>
 
     <form class="chat-form" id="chat-form">
-      <label class="chat-sr-only" for="chat-input">Escribí tu mensaje</label>
+      <label class="chat-sr-only" for="chat-input">{c.inputLabel}</label>
       <input
         class="chat-input"
         id="chat-input"
         type="text"
         maxlength="2000"
         autocomplete="off"
-        placeholder="Escribí tu consulta…"
+        placeholder={c.placeholder}
         required
       />
-      <button class="chat-send" id="chat-send" type="submit" aria-label="Enviar mensaje">
+      <button class="chat-send" id="chat-send" type="submit" aria-label={c.sendAria}>
         <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
           <path fill="currentColor" d="M3 11.5 20.5 4 13 21.5l-2.4-6.6z" />
         </svg>
@@ -49,15 +64,15 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
 
     <div class="chat-foot">
       <a class="chat-wa-link" id="chat-wa-link" href={waDefaultLink} target="_blank" rel="noopener noreferrer">
-        Hablar por WhatsApp
+        {c.waButton}
       </a>
       <p class="chat-privacy">
-        Al chatear aceptás el tratamiento de tus datos según la Ley 1581. No compartimos tu información.
+        {c.privacy}
       </p>
     </div>
   </section>
 
-  <button class="chat-fab" id="chat-fab" type="button" aria-expanded="false" aria-controls="chat-panel" aria-label="Abrir chat con S&G">
+  <button class="chat-fab" id="chat-fab" type="button" aria-expanded="false" aria-controls="chat-panel" aria-label={c.openAria}>
     <svg class="chat-fab-icon" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" focusable="false">
       <path
         fill="currentColor"
@@ -66,6 +81,8 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
     </svg>
   </button>
 </div>
+
+<script is:inline set:html={`window.__CHAT_I18N=${JSON.stringify(chatI18n)};`}></script>
 
 <style>
   .chat-widget {
@@ -402,7 +419,9 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
   (function () {
     var STORAGE_KEY = 'sg-chat-session-id';
     var WHATSAPP_NUMBER = '573243025107';
-    var GREETING = '¡Hola! Soy Sofía, del equipo de S&G. Contame qué proceso querés automatizar, medir o mejorar y te oriento con gusto. 😊';
+    // Textos localizados inyectados desde Astro (ES/EN); con fallback en español.
+    var I18N = window.__CHAT_I18N || {};
+    var GREETING = I18N.greeting || '¡Hola! Soy Sofía, del equipo de S&G. Contame qué proceso querés automatizar, medir o mejorar y te oriento con gusto. 😊';
 
     var widget = document.getElementById('chat-widget');
     var fab = document.getElementById('chat-fab');
@@ -444,8 +463,8 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
       var joined = userHistory.join(' ');
       var email = (joined.match(/[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}/) || [])[0];
       var phone = (joined.match(/(?:\+?57[\s.-]?)?3\d{2}[\s.-]?\d{3}[\s.-]?\d{4}/) || [])[0];
-      var nameM = joined.match(/\b(?:me llamo|mi nombre es|soy)\s+([A-Za-zÁÉÍÓÚÑáéíóúñ]+(?:\s+[A-Za-zÁÉÍÓÚÑáéíóúñ]+){0,2})/i);
-      var text = 'Hola, vengo del chat de la web de S&G. Este es el resumen de mi consulta para que puedan retomarla:';
+      var nameM = joined.match(/\b(?:me llamo|mi nombre es|soy|my name is|i'm|i am)\s+([A-Za-zÁÉÍÓÚÑáéíóúñ]+(?:\s+[A-Za-zÁÉÍÓÚÑáéíóúñ]+){0,2})/i);
+      var text = I18N.waIntro || 'Hola, vengo del chat de la web de S&G. Este es el resumen de mi consulta para que puedan retomarla:';
       if (userHistory.length) {
         // Incluimos toda la consulta del cliente (no solo los últimos mensajes),
         // en viñetas, con un tope amplio para no exceder el límite del enlace.
@@ -454,10 +473,10 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
         text += '\n\n' + recap;
       }
       var info = [];
-      if (nameM) info.push('Nombre: ' + nameM[1]);
-      if (email) info.push('Correo: ' + email);
-      if (phone) info.push('Tel: ' + phone);
-      if (info.length) text += '\n\nMis datos: ' + info.join(' · ');
+      if (nameM) info.push((I18N.waName || 'Nombre') + ': ' + nameM[1]);
+      if (email) info.push((I18N.waEmail || 'Correo') + ': ' + email);
+      if (phone) info.push((I18N.waPhone || 'Tel') + ': ' + phone);
+      if (info.length) text += '\n\n' + (I18N.waData || 'Mis datos') + ': ' + info.join(' · ');
       return text;
     }
 
@@ -509,7 +528,7 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
     function addTyping() {
       var bubble = document.createElement('div');
       bubble.className = 'chat-bubble chat-bubble--bot chat-bubble--typing';
-      bubble.setAttribute('aria-label', 'Sofía está escribiendo');
+      bubble.setAttribute('aria-label', I18N.typingAria || 'Sofía está escribiendo');
       bubble.innerHTML = '<span></span><span></span><span></span>';
       messagesEl.appendChild(bubble);
       messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -591,7 +610,8 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
       nudged = true;
       addBubble(
         'bot',
-        'Veo que quedamos en pausa. ¿Seguimos por acá o preferís que Sandra, nuestro contacto comercial, retome por WhatsApp con el resumen de la charla? Escribime cuando gustes, o contactala directo al +57 324 3025107. 😊'
+        I18N.inactivity ||
+          'Veo que quedamos en pausa. ¿Seguimos por acá o preferís que Sandra, nuestro contacto comercial, retome por WhatsApp con el resumen de la charla? Escribime cuando gustes, o contactala directo al +57 324 3025107. 😊'
       );
       updateWaLink('');
       playChime('reply');
@@ -730,8 +750,8 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
 
         botBubble.innerHTML = formatBotHtml(
           accumulated ||
-            'No pude generar una respuesta. Escribinos por WhatsApp y te ayudamos enseguida: https://wa.me/' +
-              WHATSAPP_NUMBER
+            (I18N.fallbackEmpty || 'No pude generar una respuesta. Escribinos por WhatsApp y te ayudamos enseguida: ') +
+              'https://wa.me/' + WHATSAPP_NUMBER
         );
         messagesEl.scrollTop = messagesEl.scrollHeight;
       } catch (err) {
@@ -740,9 +760,9 @@ const waDefaultLink = `https://api.whatsapp.com/send?phone=${WHATSAPP_NUMBER}&te
         }
         if (!botBubble) botBubble = addBubble('bot', '');
         botBubble.innerHTML = formatBotHtml(
-          'Ahora mismo no puedo responder por acá. Escribinos por WhatsApp: https://wa.me/' +
-            WHATSAPP_NUMBER +
-            ' y te atendemos enseguida.'
+          (I18N.fallbackError || 'Ahora mismo no puedo responder por acá. Escribinos por WhatsApp: ') +
+            'https://wa.me/' + WHATSAPP_NUMBER +
+            (I18N.fallbackErrorTail || ' y te atendemos enseguida.')
         );
       } finally {
         setSending(false);

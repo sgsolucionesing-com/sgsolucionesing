@@ -1,5 +1,8 @@
 ---
 // src/components/nocturne/Testimonios.astro
+import { ui, getLang } from '../../i18n/ui';
+const lang = getLang(Astro.currentLocale);
+const t = ui[lang].testimonios;
 ---
 <section class="sec quote">
   <div class="bg" aria-hidden="true">
@@ -8,21 +11,17 @@
   <div class="wrap">
     <div class="mark">&quot;</div>
     <div class="qtrack" id="qtrack">
-      <div class="qitem on" data-name="Jefe de Mantenimiento" data-org="Planta de alimentos · Barranquilla" data-logo="">
-        <blockquote>Pasamos de perseguir fallas a operar con datos. Hoy vemos cada consumo y anticipamos las paradas antes de que ocurran.</blockquote>
-      </div>
-      <div class="qitem" data-name="Coordinador de Energía" data-org="Cementera · Barranquilla" data-logo="">
-        <blockquote>El factor de potencia se estabilizó y las penalizaciones desaparecieron. La inversión se pagó sola en meses.</blockquote>
-      </div>
-      <div class="qitem" data-name="Gerente de Planta" data-org="Industria · Costa Caribe" data-logo="">
-        <blockquote>Por fin tenemos trazabilidad del consumo por área. Las decisiones ahora se toman con datos, no con supuestos.</blockquote>
-      </div>
+      {t.items.map((it, i) => (
+        <div class={i === 0 ? 'qitem on' : 'qitem'} data-name={it.name} data-org={it.org} data-logo="">
+          <blockquote>{it.quote}</blockquote>
+        </div>
+      ))}
     </div>
     <figure class="qmeta">
       <img class="qlogo" id="qlogo" alt="" />
       <figcaption id="qcap"></figcaption>
     </figure>
-    <div class="qdots" id="qdots" role="tablist" aria-label="Testimonios"></div>
+    <div class="qdots" id="qdots" role="tablist" aria-label={t.ariaLabel} data-dotlabel={t.dotLabel}></div>
   </div>
 </section>
 
@@ -31,8 +30,9 @@
     const items=[...document.querySelectorAll('#qtrack .qitem')];
     if(!items.length)return;
     const logo=document.getElementById('qlogo'),cap=document.getElementById('qcap'),dots=document.getElementById('qdots');
+    const dotLabel=dots.dataset.dotlabel||'';
     let i=0,timer;
-    items.forEach((_,n)=>{const b=document.createElement('button');b.className='qdot'+(n===0?' on':'');b.setAttribute('role','tab');b.setAttribute('aria-label','Testimonio '+(n+1));b.onclick=()=>{go(n);reset();};dots.appendChild(b);});
+    items.forEach((_,n)=>{const b=document.createElement('button');b.className='qdot'+(n===0?' on':'');b.setAttribute('role','tab');b.setAttribute('aria-label',dotLabel+' '+(n+1));b.onclick=()=>{go(n);reset();};dots.appendChild(b);});
     const dotEls=[...dots.children];
     function render(){const f=items[i];const src=f.dataset.logo;if(src){logo.src=src;logo.style.display='';}else{logo.removeAttribute('src');logo.style.display='none';}cap.innerHTML='— '+f.dataset.name+'<b>'+f.dataset.org+'</b>';}
     function go(n){items[i].classList.remove('on');dotEls[i].classList.remove('on');i=(n+items.length)%items.length;items[i].classList.add('on');dotEls[i].classList.add('on');render();}

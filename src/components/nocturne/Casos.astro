@@ -1,6 +1,9 @@
 ---
 // src/components/nocturne/Casos.astro
 import { getCollection } from 'astro:content';
+import { ui, getLang } from '../../i18n/ui';
+const lang = getLang(Astro.currentLocale);
+const t = ui[lang].casos;
 
 const casos = (await getCollection('proyectos'))
   .sort((a, b) => (Number(b.data.destacado) - Number(a.data.destacado)) || ((a.data.order ?? 99) - (b.data.order ?? 99)))
@@ -10,13 +13,10 @@ const casos = (await getCollection('proyectos'))
   <div class="wrap">
     <div class="sec-head">
       <div>
-        <p class="kick rv">Casos de éxito</p>
-        <h2 class="rv">Proyectos entregados en planta.</h2>
+        <p class="kick rv">{t.kick}</p>
+        <h2 class="rv">{t.h2}</h2>
       </div>
-      <p class="lead rv">
-        Cada intervención parte de un diagnóstico y termina en cifras: más disponibilidad, energía bajo
-        control y procesos visibles.
-      </p>
+      <p class="lead rv">{t.lead}</p>
     </div>
     <div class="case-grid">
       {casos.map((c) => (
@@ -36,13 +36,13 @@ const casos = (await getCollection('proyectos'))
                 </div>
               ))}
             </div>
-            <a class="verlink" href={`/proyectos/${c.slug}`}>Ver caso <span class="arrow"></span></a>
+            <a class="verlink" href={`/proyectos/${c.slug}`}>{t.viewCase} <span class="arrow"></span></a>
           </div>
         </article>
       ))}
     </div>
     <div class="more">
-      <a class="btn-o" href="/proyectos">Ver todos los casos <span class="arrow"></span></a>
+      <a class="btn-o" href="/proyectos">{t.viewAll} <span class="arrow"></span></a>
     </div>
   </div>
 </section>
