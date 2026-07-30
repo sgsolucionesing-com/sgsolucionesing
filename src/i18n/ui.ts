@@ -175,6 +175,15 @@ export const ui = {
         { n: 'MIOBOX', l: 'Plataforma IIoT propia' },
       ],
     },
+    certificaciones: {
+      kick: 'Certificaciones',
+      title: 'Respaldo que da confianza.',
+      lead: 'Nuestra capacidad técnica y nuestros procesos están respaldados por certificaciones de terceros.',
+      items: [
+        { title: 'Tableristas certificados', issuer: 'Servimeters', desc: 'Diseño y fabricación de tableros eléctricos bajo certificación.' },
+        { title: 'ISO 9001', issuer: 'Bureau Veritas', desc: 'Sistema de gestión de calidad de nuestros procesos, certificado en 2026.' },
+      ],
+    },
     testimonios: {
       ariaLabel: 'Testimonios',
       dotLabel: 'Testimonio',
@@ -387,6 +396,15 @@ export const ui = {
         { n: '8', l: 'Service lines' },
         { n: 'RA Bronze', l: 'Rockwell Automation partner' },
         { n: 'MIOBOX', l: 'Our own IIoT platform' },
+      ],
+    },
+    certificaciones: {
+      kick: 'Certifications',
+      title: 'Backing you can trust.',
+      lead: 'Our technical capability and processes are backed by third-party certifications.',
+      items: [
+        { title: 'Certified panel builders', issuer: 'Servimeters', desc: 'Design and manufacturing of electrical panels under certification.' },
+        { title: 'ISO 9001', issuer: 'Bureau Veritas', desc: 'Quality management system certified in 2026 across our processes.' },
       ],
     },
     testimonios: {
