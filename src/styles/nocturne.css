@@ -335,4 +335,4 @@ footer.site .brand .n{font-family:var(--cond);font-weight:700;letter-spacing:.03
 .cert-desc{color:var(--muted);margin:8px 0 0;font-size:14px;line-height:1.5}
 /* Tarjeta con sello oficial (imagen): el badge reemplaza al ícono+título. */
 .cert--img{align-items:center}
-.cert-badge{flex:none;width:auto;height:54px;max-width:190px;object-fit:contain}
+.cert-badge{flex:none;width:auto;height:auto;max-height:62px;max-width:180px;object-fit:contain}
