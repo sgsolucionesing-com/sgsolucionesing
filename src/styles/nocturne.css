@@ -321,3 +321,15 @@ footer.site .brand .n{font-family:var(--cond);font-weight:700;letter-spacing:.03
 .clientes .logo-img{height:clamp(28px,3.2vw,38px);width:auto;max-width:150px;object-fit:contain;filter:grayscale(1) opacity(.65);transition:filter .18s;display:block}
 .clientes .logo-img:hover{filter:none;opacity:1}
 @media(max-width:640px){.clientes .logos{gap:16px 28px}.clientes .logo-img{height:clamp(24px,7vw,32px)}}
+
+/* --- Certificaciones (sellos de respaldo) --- */
+.certs{padding:clamp(48px,6vw,84px) 0;border-top:1px solid var(--line)}
+.certs .lead{max-width:60ch;color:var(--muted);margin:10px 0 0}
+.cert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:32px}
+.cert{display:flex;gap:16px;align-items:flex-start;padding:22px 24px;background:#fff;border:1px solid var(--line);border-radius:12px;transition:border-color .18s,box-shadow .18s}
+.cert:hover{border-color:var(--teal);box-shadow:0 8px 24px rgba(13,20,23,.08)}
+.cert-seal{flex:none;width:64px;height:64px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(0,167,157,.10);color:var(--teal-700)}
+.cert-seal img{max-width:60px;max-height:60px;object-fit:contain}
+.cert-body h3{font-family:var(--cond);font-weight:600;font-size:21px;letter-spacing:.01em;margin:0;color:var(--ink)}
+.cert-issuer{font-family:var(--cond);font-weight:600;font-size:13.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--teal-700);margin:3px 0 0}
+.cert-desc{color:var(--muted);margin:8px 0 0;font-size:14px;line-height:1.5}
