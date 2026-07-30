@@ -182,6 +182,7 @@ export const ui = {
       items: [
         { title: 'Tableristas certificados', issuer: 'Servimeters', desc: 'Diseño y fabricación de tableros eléctricos bajo certificación.' },
         { title: 'ISO 9001', issuer: 'Bureau Veritas', desc: 'Sistema de gestión de calidad de nuestros procesos, certificado en 2026.' },
+        { title: 'Bronze System Integrator', issuer: 'Rockwell Automation', desc: 'Integradores de sistemas reconocidos en el programa PartnerNetwork de Rockwell.' },
       ],
     },
     testimonios: {
@@ -405,6 +406,7 @@ export const ui = {
       items: [
         { title: 'Certified panel builders', issuer: 'Servimeters', desc: 'Design and manufacturing of electrical panels under certification.' },
         { title: 'ISO 9001', issuer: 'Bureau Veritas', desc: 'Quality management system certified in 2026 across our processes.' },
+        { title: 'Bronze System Integrator', issuer: 'Rockwell Automation', desc: "Recognized system integrators in Rockwell's PartnerNetwork program." },
       ],
     },
     testimonios: {
