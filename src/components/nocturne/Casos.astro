@@ -2,6 +2,7 @@
 // src/components/nocturne/Casos.astro
 import { getCollection } from 'astro:content';
 import { ui, getLang, localePath } from '../../i18n/ui';
+import { imgSize } from '../../lib/imageSize';
 const lang = getLang(Astro.currentLocale);
 const t = ui[lang].casos;
 const isEn = lang === 'en';
@@ -24,7 +25,7 @@ const caseHref = (c) => localePath(`/proyectos/${(c.slug || '').replace(/^en\//,
       {casos.map((c) => (
         <article class="case rv">
           <a class="fig" href={caseHref(c)}>
-            <img src={c.data.coverImage} alt={c.data.title} loading="lazy" decoding="async" />
+            <img src={c.data.coverImage} alt={c.data.title} loading="lazy" decoding="async" {...imgSize(c.data.coverImage)} />
             <span class="meta">{[c.data.sector, c.data.ubicacion, c.data.fecha].filter(Boolean).join(' · ')}</span>
           </a>
           <div class="body">

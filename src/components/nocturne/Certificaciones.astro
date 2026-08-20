@@ -2,6 +2,7 @@
 // src/components/nocturne/Certificaciones.astro
 // Franja de certificaciones y credenciales (sellos de respaldo). Bilingüe ES/EN.
 import { ui, getLang } from '../../i18n/ui';
+import { imgSize } from '../../lib/imageSize';
 const lang = getLang(Astro.currentLocale);
 const t = ui[lang].certificaciones;
 
@@ -32,6 +33,7 @@ const iconPaths = [
               alt={`${c.title} — ${c.issuer}`}
               loading="lazy"
               decoding="async"
+              {...imgSize(`/assets/certificaciones/${seals[i]}`)}
             />
           ) : (
             <div class="cert-seal">

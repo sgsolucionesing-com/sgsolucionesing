@@ -1,12 +1,13 @@
 ---
 // src/components/nocturne/Testimonios.astro
 import { ui, getLang } from '../../i18n/ui';
+import { imgSize } from '../../lib/imageSize';
 const lang = getLang(Astro.currentLocale);
 const t = ui[lang].testimonios;
 ---
 <section class="sec quote">
   <div class="bg" aria-hidden="true">
-    <img src="/assets/img/portada-principal.jpg" alt="" loading="lazy" decoding="async" />
+    <img src="/assets/img/portada-principal.jpg" alt="" loading="lazy" decoding="async" {...imgSize("/assets/img/portada-principal.jpg")} />
   </div>
   <div class="wrap">
     <div class="mark">&quot;</div>

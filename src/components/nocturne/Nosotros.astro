@@ -1,6 +1,7 @@
 ---
 // src/components/nocturne/Nosotros.astro
 import { ui, getLang } from '../../i18n/ui';
+import { imgSize } from '../../lib/imageSize';
 const lang = getLang(Astro.currentLocale);
 const t = ui[lang].nosotros;
 ---
@@ -8,7 +9,7 @@ const t = ui[lang].nosotros;
   <div class="wrap about">
     <figure class="fig rv">
       <span class="mk2"></span>
-      <img src="/assets/img/about.jpg" alt={t.imgAlt} loading="lazy" decoding="async" />
+      <img src="/assets/img/about.jpg" alt={t.imgAlt} loading="lazy" decoding="async" {...imgSize("/assets/img/about.jpg")} />
       <span class="mk"></span>
     </figure>
     <div>

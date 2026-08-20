@@ -1,12 +1,13 @@
 ---
 // src/components/nocturne/Hero.astro
 import { ui, getLang } from '../../i18n/ui';
+import { imgSize } from '../../lib/imageSize';
 const lang = getLang(Astro.currentLocale);
 const t = ui[lang].hero;
 ---
 <header class="hero">
   <div class="bg">
-    <img src="/assets/img/pruebas-1.jpg" alt="" fetchpriority="high" />
+    <img src="/assets/img/pruebas-1.jpg" alt="" fetchpriority="high" {...imgSize("/assets/img/pruebas-1.jpg")} />
   </div>
   <div class="inner">
     <p class="kick rv in">{t.kick}</p>

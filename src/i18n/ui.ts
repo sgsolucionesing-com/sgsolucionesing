@@ -25,6 +25,29 @@ export function sectorLabel(sector: string, lang: Lang): string {
   return map[sector] ?? sector;
 }
 
+export const BRAND = 'S&G Soluciones de Ingeniería';
+const BRAND_SHORT = 'S&G Ingeniería';
+
+// Google recorta el <title> alrededor de los 580 px, unos 60 caracteres. El
+// sufijo de marca completo se come 31 de esos, así que en la mayoría de las
+// páginas el nombre real quedaba cortado con puntos suspensivos.
+const TITLE_BUDGET = 60;
+
+/**
+ * Compone el <title> agregando la marca sólo mientras entre en el presupuesto:
+ * primero el nombre completo, luego la forma corta, y si el título por sí solo
+ * ya lo llena, se devuelve tal cual. Perder el sufijo no pierde la marca —
+ * Google la infiere de og:site_name y del JSON-LD de la organización—, pero
+ * perder el final del título sí pierde las palabras que posicionan.
+ */
+export function pageTitle(base: string): string {
+  const full = `${base} | ${BRAND}`;
+  if (full.length <= TITLE_BUDGET) return full;
+  const short = `${base} | ${BRAND_SHORT}`;
+  if (short.length <= TITLE_BUDGET) return short;
+  return base;
+}
+
 export const ui = {
   es: {
     nav: {
@@ -40,11 +63,24 @@ export const ui = {
     },
     footer: {
       copyright: '© 2026 · Barranquilla, Colombia · Automatización · Energía · Software',
+      servicesTitle: 'Servicios',
+      companyTitle: 'Empresa',
+      contactTitle: 'Contacto',
+      linkCases: 'Casos de éxito',
+      linkAbout: 'Nosotros',
+      linkContact: 'Contacto',
+      addressLabel: 'Dirección',
+      hoursLabel: 'Horario',
+      hours: 'Lun a vie 8:00–17:00 · Sáb 8:00–12:00',
+      blurb:
+        'Ingeniería en automatización industrial, instrumentación, eficiencia energética y software a la medida. Con base en Barranquilla, atendemos Colombia y Latinoamérica.',
     },
     meta: {
-      homeTitle: 'S&G Soluciones de Ingeniería | Automatización industrial, IoT y software',
+      // El nombre de marca va al final: los términos que la gente busca —lo que
+      // hacemos— tienen que caer antes del recorte del SERP.
+      homeTitle: 'Automatización Industrial, IoT y Energía',
       homeDescription:
-        'Automatización industrial, Industria 4.0/IoT, eficiencia energética, suministro de componentes y desarrollo de software para la industria. Con base en la costa Caribe (Barranquilla), atendemos Colombia y Latinoamérica.',
+        'Automatización industrial, Industria 4.0/IoT, eficiencia energética y software a la medida para la industria. Con base en Barranquilla, atendemos toda Colombia.',
       jsonldDescription:
         'Empresa de ingeniería especializada en automatización industrial, Industria 4.0/IoT, gestión y calidad de energía, suministro de componentes (distribuidor multimarca), vigilancia electrónica y desarrollo de software a la medida. Con base en Barranquilla, costa Caribe, atendemos a la industria de Colombia y Latinoamérica.',
       defaultDescription:
@@ -75,7 +111,7 @@ export const ui = {
       viewAll: 'Ver todos los casos',
     },
     proyectos: {
-      metaTitle: 'Casos de Éxito | S&G Soluciones de Ingeniería',
+      metaTitle: 'Casos de Éxito',
       metaDesc: 'Casos reales de automatización industrial, IoT e Industria 4.0: monitoreo predictivo, bancos de condensadores, tableros inteligentes y más resultados medibles.',
       kick: 'Casos de éxito',
       h1Html: 'Proyectos que se miden <em>en indicadores.</em>',
@@ -117,52 +153,33 @@ export const ui = {
       'Farmacéutico': 'Farmacéutico',
       'Otros': 'Otros',
     },
+    // Textos del hub /servicios y de cada página de detalle /servicios/<slug>.
+    // El contenido de cada servicio vive en src/data/servicios.ts.
+    serviciosPage: {
+      metaTitle: 'Servicios de Ingeniería Industrial',
+      metaDesc:
+        'Automatización y control, instrumentación, eficiencia energética, montaje eléctrico, tableros, mantenimiento, suministro de componentes y vigilancia electrónica.',
+      kick: 'Qué hacemos',
+      h1Html: 'Ocho líneas, <em>una sola cadena.</em>',
+      lead: 'Desde el componente y el tablero eléctrico hasta el indicador de gestión que ve la gerencia. Cada línea de servicio resuelve una parte del problema, y todas se integran entre sí porque las ejecuta el mismo equipo.',
+      crumb: 'Servicios',
+      home: 'Inicio',
+      viewService: 'Ver servicio',
+      seeAll: 'Ver todos los servicios',
+      scopeTitle: 'Qué incluye',
+      deliverablesTitle: 'Qué recibes',
+      faqTitle: 'Preguntas frecuentes',
+      casesTitle: 'Casos de éxito de esta línea',
+      casesLead: 'Trabajo entregado en planta dentro de este servicio.',
+      relatedTitle: 'Otras líneas de servicio',
+      ctaTitle: '¿Tienes un proyecto de este tipo?',
+      ctaLead: 'Cuéntanos qué necesitas resolver y te respondemos con una ruta clara para tu planta.',
+      ctaButton: 'Cotiza tu proyecto',
+    },
     servicios: {
       kick: 'Qué hacemos',
       h2Html: 'Del sensor <em>al indicador de gestión.</em>',
       lead: 'Automatización, instrumentación, eficiencia energética, suministro de componentes y vigilancia electrónica: cubrimos toda la cadena, desde el componente y el tablero eléctrico hasta el indicador de gestión que ve la gerencia.',
-      items: [
-        {
-          title: 'Automatización y Control Industrial',
-          desc: 'Arquitectura de control, programación de PLC, HMI/SCADA, control batch, MES/MOM y networking industrial. Migración de controladores, puesta en marcha (FAT/SAT) y tableros CCM y consolas de operación.',
-          tags: ['Allen Bradley', 'Siemens', 'SCADA', 'MIOBOX'],
-        },
-        {
-          title: 'Instrumentación Industrial',
-          desc: 'Selección e implementación de instrumentos, diseño de lazos de control y ajuste de transmisores de temperatura, presión, caudal y humedad, con aseguramiento metrológico.',
-          tags: ['Lazos de control', 'Transmisores', 'Metrología'],
-        },
-        {
-          title: 'Eficiencia Energética',
-          desc: 'Análisis de calidad de energía, monitoreo y telemedida, y proyectos de ahorro energético con incorporación de energías renovables.',
-          tags: ['Calidad de energía', 'Telemedida', 'Renovables'],
-        },
-        {
-          title: 'Montaje Eléctrico',
-          desc: 'Diseño de instalaciones eléctricas, estudios de factibilidad y montaje industrial y comercial, con mantenimiento y cumplimiento normativo RETIE.',
-          tags: ['RETIE', 'Montaje industrial', 'Mantenimiento'],
-        },
-        {
-          title: 'Mantenimiento Mecánico',
-          desc: 'Mantenimiento preventivo y correctivo, montaje y diagnóstico de equipos, soldadura y fabricación de piezas para mantener la planta en operación.',
-          tags: ['Preventivo', 'Correctivo', 'Soldadura'],
-        },
-        {
-          title: 'Diseño de Tableros Eléctricos',
-          desc: 'Tableros de distribución y transferencia automática, bancos de condensadores (1 a 1520 kvar), integración de PLC/IO y arranque de variadores de ½ a 900 HP.',
-          tags: ['Bancos de condensadores', 'Variadores ½–900 HP', 'PLC/IO'],
-        },
-        {
-          title: 'Suministro y Asesoría de Componentes',
-          desc: 'Como distribuidores multimarca, suministramos partes y componentes eléctricos, electrónicos, de automatización y especializados. Sumamos valor asesorando su selección técnica —sensores, medidores, instrumentos y más— para que cada componente calce con la solución.',
-          tags: ['Distribuidor multimarca', 'Sensores y medidores', 'Asesoría técnica'],
-        },
-        {
-          title: 'Vigilancia Electrónica',
-          desc: 'Suministro, instalación y montaje de sistemas de vigilancia y seguridad electrónica —CCTV, control de acceso y monitoreo— integrados a la infraestructura de la planta o la instalación.',
-          tags: ['CCTV', 'Control de acceso', 'Monitoreo'],
-        },
-      ],
     },
     nosotros: {
       kick: 'Quiénes somos',
@@ -264,11 +281,24 @@ export const ui = {
     },
     footer: {
       copyright: '© 2026 · Barranquilla, Colombia · Automation · Energy · Software',
+      servicesTitle: 'Services',
+      companyTitle: 'Company',
+      contactTitle: 'Contact',
+      linkCases: 'Case studies',
+      linkAbout: 'About',
+      linkContact: 'Contact',
+      addressLabel: 'Address',
+      hoursLabel: 'Hours',
+      hours: 'Mon–Fri 8:00–17:00 · Sat 8:00–12:00',
+      blurb:
+        'Engineering in industrial automation, instrumentation, energy efficiency and custom software. Based in Barranquilla, serving Colombia and Latin America.',
     },
     meta: {
-      homeTitle: 'S&G Soluciones de Ingeniería | Industrial automation, IoT & software',
+      // Brand name goes last: the terms people actually search for have to land
+      // before the SERP truncation.
+      homeTitle: 'Industrial Automation, IoT & Energy',
       homeDescription:
-        "Industrial automation, Industry 4.0/IoT, energy efficiency, component supply and custom software for industry. Based on Colombia's Caribbean coast (Barranquilla), we serve Colombia and Latin America.",
+        'Industrial automation, Industry 4.0/IoT, energy efficiency and custom software for industry. Based in Barranquilla, we serve Colombia and Latin America.',
       jsonldDescription:
         'Engineering company specialized in industrial automation, Industry 4.0/IoT, energy management and power quality, component supply (multi-brand distributor), electronic surveillance and custom software development. Based in Barranquilla, on the Caribbean coast, we serve industry across Colombia and Latin America.',
       defaultDescription:
@@ -299,7 +329,7 @@ export const ui = {
       viewAll: 'View all case studies',
     },
     proyectos: {
-      metaTitle: 'Case Studies | S&G Soluciones de Ingeniería',
+      metaTitle: 'Case Studies',
       metaDesc: 'Real cases of industrial automation, IoT and Industry 4.0: predictive monitoring, capacitor banks, smart panels and more measurable results.',
       kick: 'Case studies',
       h1Html: 'Projects measured <em>in indicators.</em>',
@@ -341,52 +371,33 @@ export const ui = {
       'Farmacéutico': 'Pharmaceutical',
       'Otros': 'Other',
     },
+    // Copy for the /en/servicios hub and each /en/servicios/<slug> detail page.
+    // Each service's own content lives in src/data/servicios.ts.
+    serviciosPage: {
+      metaTitle: 'Industrial Engineering Services',
+      metaDesc:
+        'Automation and control, instrumentation, energy efficiency, electrical installation, panels, maintenance, component supply and electronic surveillance.',
+      kick: 'What we do',
+      h1Html: 'Eight service lines, <em>one single chain.</em>',
+      lead: 'From the component and the electrical panel to the management KPI leadership sees. Each service line solves one part of the problem, and they all integrate because the same team delivers them.',
+      crumb: 'Services',
+      home: 'Home',
+      viewService: 'View service',
+      seeAll: 'View all services',
+      scopeTitle: 'What it covers',
+      deliverablesTitle: 'What you receive',
+      faqTitle: 'Frequently asked questions',
+      casesTitle: 'Case studies in this line',
+      casesLead: 'Work delivered on the plant floor within this service.',
+      relatedTitle: 'Other service lines',
+      ctaTitle: 'Have a project like this?',
+      ctaLead: 'Tell us what you need to solve and we will come back with a clear route for your plant.',
+      ctaButton: 'Get a quote',
+    },
     servicios: {
       kick: 'What we do',
       h2Html: 'From the sensor <em>to the management KPI.</em>',
       lead: 'Automation, instrumentation, energy efficiency, component supply and electronic surveillance: we cover the whole chain, from the component and the electrical panel to the management KPI leadership sees.',
-      items: [
-        {
-          title: 'Industrial Automation & Control',
-          desc: 'Control architecture, PLC programming, HMI/SCADA, batch control, MES/MOM and industrial networking. Controller migration, commissioning (FAT/SAT), MCC panels and operator consoles.',
-          tags: ['Allen Bradley', 'Siemens', 'SCADA', 'MIOBOX'],
-        },
-        {
-          title: 'Industrial Instrumentation',
-          desc: 'Instrument selection and implementation, control-loop design and calibration of temperature, pressure, flow and humidity transmitters, with metrological assurance.',
-          tags: ['Control loops', 'Transmitters', 'Metrology'],
-        },
-        {
-          title: 'Energy Efficiency',
-          desc: 'Power-quality analysis, monitoring and telemetering, and energy-saving projects incorporating renewable energy.',
-          tags: ['Power quality', 'Telemetering', 'Renewables'],
-        },
-        {
-          title: 'Electrical Installation',
-          desc: 'Electrical installation design, feasibility studies and industrial and commercial assembly, with maintenance and RETIE code compliance.',
-          tags: ['RETIE', 'Industrial assembly', 'Maintenance'],
-        },
-        {
-          title: 'Mechanical Maintenance',
-          desc: 'Preventive and corrective maintenance, equipment assembly and diagnosis, welding and part fabrication to keep the plant running.',
-          tags: ['Preventive', 'Corrective', 'Welding'],
-        },
-        {
-          title: 'Electrical Panel Design',
-          desc: 'Distribution and automatic transfer panels, capacitor banks (1 to 1520 kvar), PLC/IO integration and variable-speed drives from ½ to 900 HP.',
-          tags: ['Capacitor banks', 'Drives ½–900 HP', 'PLC/IO'],
-        },
-        {
-          title: 'Component Supply & Advisory',
-          desc: 'As a multi-brand distributor, we supply electrical, electronic, automation and specialized parts and components. We add value by advising on their technical selection —sensors, meters, instruments and more— so every component fits the solution.',
-          tags: ['Multi-brand distributor', 'Sensors & meters', 'Technical advisory'],
-        },
-        {
-          title: 'Electronic Surveillance',
-          desc: 'Supply, installation and assembly of electronic surveillance and security systems —CCTV, access control and monitoring— integrated with the plant or facility infrastructure.',
-          tags: ['CCTV', 'Access control', 'Monitoring'],
-        },
-      ],
     },
     nosotros: {
       kick: 'About us',

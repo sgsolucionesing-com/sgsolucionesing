@@ -1,0 +1,27 @@
+---
+// src/pages/servicios/[slug].astro — Detalle de servicio (ES). Cuerpo en PageServicio.
+import { getCollection } from 'astro:content';
+import PageServicio from '../../components/PageServicio.astro';
+import { servicios } from '../../data/servicios';
+
+export async function getStaticPaths() {
+  // Casos en español: los que NO viven bajo el subdirectorio en/.
+  const proyectos = await getCollection('proyectos', (e) => !e.id.startsWith('en/'));
+  const bySlug = new Map(
+    proyectos.map((e) => [e.slug || e.id.split('/').pop()?.replace(/\.mdx?$/, ''), e])
+  );
+
+  return servicios.map((servicio) => ({
+    params: { slug: servicio.slug },
+    props: {
+      servicio,
+      // Un slug que no resuelve se descarta en lugar de romper el build: la
+      // sección de casos simplemente muestra los que sí existen.
+      casos: servicio.casos.map((s) => bySlug.get(s)).filter(Boolean),
+    },
+  }));
+}
+
+const { servicio, casos } = Astro.props;
+---
+<PageServicio servicio={servicio} casos={casos} />

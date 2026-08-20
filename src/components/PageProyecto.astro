@@ -3,7 +3,8 @@
 // Detalle de proyecto compartido por /proyectos/[slug] (ES) y /en/proyectos/[slug] (EN).
 // El cuerpo MDX se pasa por el slot "body". El idioma se resuelve por currentLocale.
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { ui, getLang, localePath, sectorLabel } from '../i18n/ui';
+import { ui, getLang, localePath, sectorLabel, pageTitle } from '../i18n/ui';
+import { imgSize } from '../lib/imageSize';
 
 interface Props {
   proyecto: any;
@@ -16,13 +17,13 @@ const t = ui[lang].proyectos;
 const site = 'https://www.sgsolucionesing.com';
 
 const sector = sectorLabel(data.sector, lang);
-const pageTitle = `${data.title} | S&G Soluciones de Ingeniería`;
+const docTitle = pageTitle(data.title);
 const pageDescription = data.resumen;
 const coverImageUrl = new URL(data.coverImage, site).href;
 const logoUrl = new URL('/logo.png', site).href;
 const canonicalUrl = new URL(Astro.url.pathname, site).href;
 ---
-<BaseLayout title={pageTitle} description={pageDescription} image={data.coverImage} type="article" hasAlternate={true}>
+<BaseLayout title={docTitle} description={pageDescription} image={data.coverImage} type="article" hasAlternate={true}>
   <script type="application/ld+json" slot="head" set:html={JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -51,7 +52,7 @@ const canonicalUrl = new URL(Astro.url.pathname, site).href;
   })} />
 
   <header class="phead">
-    <div class="bg"><img src={data.coverImage} alt="" aria-hidden="true" fetchpriority="high" /></div>
+    <div class="bg"><img src={data.coverImage} alt="" aria-hidden="true" fetchpriority="high" {...imgSize(data.coverImage)} /></div>
     <div class="wrap">
       <a class="crumb" href={localePath('/proyectos', lang)}><span class="back"></span> {t.crumb}</a>
       <div class="metaline rv in">{[sector, data.ubicacion, data.fecha].filter(Boolean).join(' · ')}</div>
@@ -99,7 +100,7 @@ const canonicalUrl = new URL(Astro.url.pathname, site).href;
         <div class="gal-grid">
           {data.gallery.map((image, index) => (
             <div class="g-item" data-index={index}>
-              <img src={image} alt={`${data.title} - ${t.imageWord} ${index + 1}`} loading="lazy" decoding="async" />
+              <img src={image} alt={`${data.title} - ${t.imageWord} ${index + 1}`} loading="lazy" decoding="async" {...imgSize(image)} />
             </div>
           ))}
         </div>

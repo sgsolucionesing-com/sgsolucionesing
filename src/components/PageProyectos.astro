@@ -3,7 +3,8 @@
 // Listado de proyectos compartido por /proyectos (ES) y /en/proyectos (EN).
 // Recibe `items` ya filtrados por idioma; el idioma se resuelve por currentLocale.
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { ui, getLang, localePath, sectorLabel } from '../i18n/ui';
+import { ui, getLang, localePath, sectorLabel, pageTitle } from '../i18n/ui';
+import { imgSize } from '../lib/imageSize';
 
 interface Props {
   items: any[];
@@ -18,7 +19,7 @@ const canonical = new URL(Astro.url.pathname, site).href;
 // URL base (sin prefijo /en) de una entrada, para armar el href localizado.
 const baseSlug = (c: any) => (c.slug || c.id.split('/').pop().replace(/\.mdx?$/, '')).replace(/^en\//, '');
 ---
-<BaseLayout title={t.metaTitle} description={t.metaDesc} image="/assets/img/tablero-1.jpg" hasAlternate={true}>
+<BaseLayout title={pageTitle(t.metaTitle)} description={t.metaDesc} image="/assets/img/tablero-1.jpg" hasAlternate={true}>
   <script type="application/ld+json" slot="head" set:html={JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
@@ -36,7 +37,7 @@ const baseSlug = (c: any) => (c.slug || c.id.split('/').pop().replace(/\.mdx?$/,
   })} />
 
   <header class="phead">
-    <div class="bg"><img src="/assets/img/tablero-1.jpg" alt="" aria-hidden="true" fetchpriority="high" /></div>
+    <div class="bg"><img src="/assets/img/tablero-1.jpg" alt="" aria-hidden="true" fetchpriority="high" {...imgSize("/assets/img/tablero-1.jpg")} /></div>
     <div class="wrap">
       <span class="kick rv in">{t.kick}</span>
       <h1 class="rv in d1" set:html={t.h1Html}></h1>
@@ -56,7 +57,7 @@ const baseSlug = (c: any) => (c.slug || c.id.split('/').pop().replace(/\.mdx?$/,
         <article class="case rv">
           <figure class="fig">
             <span class="mk2"></span>
-            <img src={c.data.coverImage} alt={c.data.title} loading="lazy" decoding="async" />
+            <img src={c.data.coverImage} alt={c.data.title} loading="lazy" decoding="async" {...imgSize(c.data.coverImage)} />
             {c.data.kpis?.[0] && <span class="tagline">{c.data.kpis[0].value}</span>}
             <span class="mk"></span>
           </figure>

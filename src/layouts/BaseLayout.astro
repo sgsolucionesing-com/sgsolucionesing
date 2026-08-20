@@ -4,6 +4,8 @@
 import '../styles/nocturne.css';
 import ChatWidget from '../components/nocturne/ChatWidget.astro';
 import { ui, getLang, localePath, defaultLang } from '../i18n/ui';
+import { servicios } from '../data/servicios';
+import { imgSize } from '../lib/imageSize';
 
 interface Props {
   title: string;
@@ -70,6 +72,8 @@ const L = (p: string) => localePath(p, lang);
       </>
     )}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/assets/logo/icono.png" />
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
     <meta name="theme-color" content="#0d1417" />
     <meta name="author" content="S&G Soluciones de Ingeniería" />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
@@ -93,10 +97,26 @@ const L = (p: string) => localePath(p, lang);
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    {/*
+      La hoja de Google Fonts se carga sin bloquear el render: `media="print"`
+      hace que el navegador la baje con baja prioridad y no espere por ella para
+      pintar, y el onload la promueve a `all` en cuanto llegó. Como las familias
+      se declaran con `display=swap`, el texto se ve desde el primer frame con la
+      fuente de sistema y se recompone al llegar Barlow. Esto quita a la fuente
+      del camino crítico del LCP. El <noscript> cubre a quien tenga JS apagado.
+    */}
     <link
       href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all';this.onload=null;"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
 
     <!-- Detección de idioma + memoria de preferencia (sólo redirige en el home).
          Nota SEO: el auto-redirect por idioma del navegador es una elección de
@@ -134,7 +154,7 @@ const L = (p: string) => localePath(p, lang);
   <body id="top">
     <nav class="nav" id="nav">
       <a class="brand" href={L('/#top')} aria-label="S&amp;G Soluciones de Ingeniería">
-        <img class="mark" src="/assets/logo/icono.png" alt="" />
+        <img class="mark" src="/assets/logo/icono.png" alt="" {...imgSize("/assets/logo/icono.png")} />
         <span class="bt"><span class="n">S&amp;G</span><span class="d">{tr.nav.tagline}</span></span>
       </a>
       <button class="nav-toggle" aria-label={tr.nav.openMenu} aria-expanded="false" aria-controls="nav-menu">
@@ -144,8 +164,8 @@ const L = (p: string) => localePath(p, lang);
       </button>
       <div id="nav-menu">
         <div class="links">
-          <a href={L('/#servicios')}>{tr.nav.services}</a>
-          <a href={L('/#casos')}>{tr.nav.cases}</a>
+          <a href={L('/servicios')}>{tr.nav.services}</a>
+          <a href={L('/proyectos')}>{tr.nav.cases}</a>
           <a href={L('/#nosotros')}>{tr.nav.about}</a>
           <a href={L('/#contacto')}>{tr.nav.contact}</a>
         </div>
@@ -160,8 +180,44 @@ const L = (p: string) => localePath(p, lang);
 
     <footer class="site">
       <div class="wrap">
-        <span class="brand"><img class="mark" src="/assets/logo/icono.png" alt="" /><span class="n">S&amp;G Soluciones de Ingeniería</span></span>
-        <span>{tr.footer.copyright}</span>
+        <div class="fcols">
+          <div class="fcol fcol-brand">
+            <span class="brand"><img class="mark" src="/assets/logo/icono.png" alt="" {...imgSize("/assets/logo/icono.png")} /><span class="n">S&amp;G Soluciones de Ingeniería</span></span>
+            <p class="fblurb">{tr.footer.blurb}</p>
+          </div>
+
+          <nav class="fcol" aria-label={tr.footer.servicesTitle}>
+            <p class="ftitle">{tr.footer.servicesTitle}</p>
+            <ul>
+              {servicios.map((s) => (
+                <li><a href={L(`/servicios/${s.slug}`)}>{s[lang].title}</a></li>
+              ))}
+            </ul>
+          </nav>
+
+          <nav class="fcol" aria-label={tr.footer.companyTitle}>
+            <p class="ftitle">{tr.footer.companyTitle}</p>
+            <ul>
+              <li><a href={L('/servicios')}>{tr.nav.services}</a></li>
+              <li><a href={L('/proyectos')}>{tr.footer.linkCases}</a></li>
+              <li><a href={L('/#nosotros')}>{tr.footer.linkAbout}</a></li>
+              <li><a href={L('/#contacto')}>{tr.footer.linkContact}</a></li>
+            </ul>
+          </nav>
+
+          <div class="fcol">
+            <p class="ftitle">{tr.footer.contactTitle}</p>
+            <ul class="fcontact">
+              <li><a href="tel:+573243025107">+57 324 302 5107</a></li>
+              <li><a href="mailto:comercial.proyectos@sgsolucionesing.com">comercial.proyectos@sgsolucionesing.com</a></li>
+              <li><span class="lb">{tr.footer.addressLabel}</span> Carrera 44 #69-80, Barranquilla, Colombia</li>
+              <li><span class="lb">{tr.footer.hoursLabel}</span> {tr.footer.hours}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="fbottom">
+          <span>{tr.footer.copyright}</span>
+        </div>
       </div>
     </footer>
 
