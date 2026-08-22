@@ -1,0 +1,194 @@
+---
+// src/components/PageServicio.astro
+// Detalle de una línea de servicio, compartido por /servicios/<slug> (ES) y
+// /en/servicios/<slug> (EN). Recibe el servicio y los casos ya resueltos contra
+// la colección `proyectos` en el idioma que corresponde.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { ui, getLang, localePath, sectorLabel, pageTitle } from '../i18n/ui';
+import { servicios, type Servicio } from '../data/servicios';
+import { imgSize } from '../lib/imageSize';
+
+interface Props {
+  servicio: Servicio;
+  /** Entradas de `proyectos` que ejemplifican este servicio, en el idioma actual. */
+  casos: any[];
+}
+const { servicio, casos } = Astro.props;
+
+const lang = getLang(Astro.currentLocale);
+const t = ui[lang].serviciosPage;
+const c = servicio[lang];
+const site = 'https://www.sgsolucionesing.com';
+const canonical = new URL(Astro.url.pathname, site).href;
+
+// Otras líneas de servicio, para enlazado interno entre páginas hermanas.
+const otras = servicios.filter((s) => s.slug !== servicio.slug);
+
+// URL base (sin prefijo /en) de una entrada de proyecto, para armar el href localizado.
+const baseSlug = (e: any) =>
+  (e.slug || e.id.split('/').pop().replace(/\.mdx?$/, '')).replace(/^en\//, '');
+
+const serviceLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: c.title,
+  serviceType: c.title,
+  description: c.metaDescription,
+  url: canonical,
+  image: new URL(servicio.image, site).href,
+  provider: {
+    '@type': 'ProfessionalService',
+    name: 'S&G Soluciones de Ingeniería',
+    url: site,
+    telephone: '+573243025107',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'Carrera 44 #69-80',
+      addressLocality: 'Barranquilla',
+      addressRegion: 'Atlántico',
+      addressCountry: 'CO',
+    },
+  },
+  areaServed: [
+    { '@type': 'Country', name: 'Colombia' },
+    { '@type': 'City', name: 'Barranquilla' },
+  ],
+  availableLanguage: ['es', 'en'],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: c.title,
+    itemListElement: c.alcance.map((b) => ({
+      '@type': 'Offer',
+      itemOffered: { '@type': 'Service', name: b.title, description: b.desc },
+    })),
+  },
+};
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: c.faq.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
+const breadcrumb = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: t.home, item: new URL(localePath('/', lang), site).href },
+    { '@type': 'ListItem', position: 2, name: t.crumb, item: new URL(localePath('/servicios', lang), site).href },
+    { '@type': 'ListItem', position: 3, name: c.title, item: canonical },
+  ],
+};
+---
+<BaseLayout
+  title={pageTitle(c.metaTitle)}
+  description={c.metaDescription}
+  image={servicio.image}
+  hasAlternate={true}
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(serviceLd)} />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqLd)} />
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(breadcrumb)} />
+
+  <header class="phead">
+    <div class="bg">
+      <img src={servicio.image} alt="" aria-hidden="true" fetchpriority="high" {...imgSize(servicio.image)} />
+    </div>
+    <div class="wrap">
+      <a class="crumb" href={localePath('/servicios', lang)}><span class="back"></span> {t.crumb}</a>
+      <h1 class="rv in d1">{c.h1}</h1>
+      <p class="resumen rv in d2">{c.lead}</p>
+    </div>
+  </header>
+
+  <section class="sec">
+    <div class="wrap">
+      <h2 class="rv svc-h2">{t.scopeTitle}</h2>
+      <div class="svc-scope">
+        {c.alcance.map((b) => (
+          <article class="scope-item rv">
+            <h3>{b.title}</h3>
+            <p>{b.desc}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec alt">
+    <div class="wrap">
+      <h2 class="rv svc-h2">{t.deliverablesTitle}</h2>
+      <ul class="svc-deliver rv">
+        {c.entregables.map((e) => <li>{e}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  {casos.length > 0 && (
+    <section class="sec">
+      <div class="wrap">
+        <h2 class="rv svc-h2">{t.casesTitle}</h2>
+        <p class="svc-lead rv">{t.casesLead}</p>
+        <div class="svc-cases">
+          {casos.map((e) => (
+            <a class="svc-case rv" href={localePath(`/proyectos/${baseSlug(e)}`, lang)}>
+              <div class="ph">
+                <img
+                  src={e.data.coverImage}
+                  alt={e.data.title}
+                  loading="lazy"
+                  decoding="async"
+                  {...imgSize(e.data.coverImage)}
+                />
+              </div>
+              <div class="tx">
+                <span class="sector">{sectorLabel(e.data.sector, lang)}</span>
+                <h3>{e.data.title}</h3>
+                <p>{e.data.resumen}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="sec alt">
+    <div class="wrap">
+      <h2 class="rv svc-h2">{t.faqTitle}</h2>
+      <div class="svc-faq">
+        {c.faq.map((f) => (
+          <article class="faq-item rv">
+            <h3>{f.q}</h3>
+            <p>{f.a}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <h2 class="rv svc-h2">{t.relatedTitle}</h2>
+      <ul class="svc-related rv">
+        {otras.map((s) => (
+          <li>
+            <a href={localePath(`/servicios/${s.slug}`, lang)}>{s[lang].title}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="svc-cta">
+    <div class="wrap">
+      <h2 class="rv">{t.ctaTitle}</h2>
+      <p class="rv d1">{t.ctaLead}</p>
+      <a class="cta rv d2" href={localePath('/#contacto', lang)}>{t.ctaButton}</a>
+    </div>
+  </section>
+</BaseLayout>

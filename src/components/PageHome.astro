@@ -11,7 +11,8 @@ import Nosotros from './nocturne/Nosotros.astro';
 import Certificaciones from './nocturne/Certificaciones.astro';
 import Testimonios from './nocturne/Testimonios.astro';
 import Contacto from './nocturne/Contacto.astro';
-import { ui, getLang } from '../i18n/ui';
+import { ui, getLang, localePath, pageTitle } from '../i18n/ui';
+import { servicios } from '../data/servicios';
 
 const lang = getLang(Astro.currentLocale);
 const m = ui[lang].meta;
@@ -39,13 +40,51 @@ const knowsAbout = lang === 'en'
       'Desarrollo de software industrial',
     ];
 
+const SITE = 'https://www.sgsolucionesing.com';
+
+// Coordenadas de la sede, tomadas del mapa embebido en /contacto.
+const GEO = { lat: 11.0002399922035, lon: -74.7994586851977 };
+
+// Horario de atención publicado en /contacto.
+const horario = [
+  {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+    opens: '08:00',
+    closes: '17:00',
+  },
+  {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Saturday'],
+    opens: '08:00',
+    closes: '12:00',
+  },
+];
+
+// El catálogo sale de la misma fuente que las páginas de servicio, así que no
+// puede quedar desalineado con lo que el sitio realmente publica.
+const catalogo = {
+  '@type': 'OfferCatalog',
+  name: lang === 'en' ? 'Engineering services' : 'Servicios de ingeniería',
+  itemListElement: servicios.map((svc) => ({
+    '@type': 'Offer',
+    itemOffered: {
+      '@type': 'Service',
+      name: svc[lang].title,
+      description: svc[lang].metaDescription,
+      url: new URL(localePath(`/servicios/${svc.slug}`, lang), SITE).href,
+    },
+  })),
+};
+
 const jsonld = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
+  '@id': `${SITE}/#organization`,
   name: 'S&G Soluciones de Ingeniería',
-  url: 'https://www.sgsolucionesing.com',
-  logo: 'https://www.sgsolucionesing.com/logo.png',
-  image: 'https://www.sgsolucionesing.com/assets/img/pruebas-1.jpg',
+  url: SITE,
+  logo: `${SITE}/logo.png`,
+  image: `${SITE}/assets/img/pruebas-1.jpg`,
   description: m.jsonldDescription,
   telephone: '+573243025107',
   email: 'comercial.proyectos@sgsolucionesing.com',
@@ -56,11 +95,18 @@ const jsonld = {
     addressRegion: 'Atlántico',
     addressCountry: 'CO',
   },
+  geo: { '@type': 'GeoCoordinates', latitude: GEO.lat, longitude: GEO.lon },
+  hasMap: `https://www.google.com/maps/search/?api=1&query=${GEO.lat},${GEO.lon}`,
+  openingHoursSpecification: horario,
   areaServed,
   knowsAbout,
+  availableLanguage: ['es', 'en'],
+  hasOfferCatalog: catalogo,
+  // `sameAs` queda fuera a propósito: no hay perfiles sociales confirmados.
+  // Declarar uno equivocado es peor que no declarar ninguno.
 };
 ---
-<BaseLayout title={m.homeTitle} description={m.homeDescription} hasAlternate={true}>
+<BaseLayout title={pageTitle(m.homeTitle)} description={m.homeDescription} hasAlternate={true}>
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonld)} />
 
   <Hero />

@@ -170,8 +170,21 @@ h1,h2,h3,h4{font-family:var(--cond);font-weight:600;margin:0;letter-spacing:-0.0
 .form-msg{margin:14px 0 0;font-size:14px;line-height:1.5;min-height:1.2em}
 .form-msg.ok{color:var(--teal-300)}
 .form-msg.error{color:#ff9c8a}
-footer.site{background:#090e10;color:rgba(226,236,236,.6);padding:40px 0}
-footer.site .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center;font-size:13.5px}
+footer.site{background:#090e10;color:rgba(226,236,236,.6);padding:56px 0 34px}
+footer.site .wrap{font-size:13.5px}
+/* Cuatro columnas: marca + servicios + empresa + contacto. Los enlaces del pie
+   son el enlazado interno que aparece en TODAS las páginas del sitio. */
+footer.site .fcols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:40px 32px;align-items:start}
+footer.site .fcol ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+footer.site .ftitle{font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal-300);margin:0 0 16px}
+footer.site .fcol a{color:rgba(226,236,236,.72);line-height:1.45;transition:color .18s}
+footer.site .fcol a:hover{color:#fff}
+footer.site .fblurb{margin:16px 0 0;line-height:1.6;max-width:38ch;color:rgba(226,236,236,.55)}
+footer.site .fcontact li{line-height:1.5;color:rgba(226,236,236,.72)}
+footer.site .fcontact .lb{display:block;font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(226,236,236,.42);margin-bottom:2px}
+footer.site .fbottom{margin-top:44px;padding-top:22px;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media(max-width:1024px){footer.site .fcols{grid-template-columns:1fr 1fr}}
+@media(max-width:620px){footer.site .fcols{grid-template-columns:1fr;gap:34px}}
 footer.site .brand{display:flex;align-items:center;gap:10px;color:#fff}
 footer.site .mark{height:32px;width:auto;display:block}
 footer.site .brand .n{font-family:var(--cond);font-weight:700;letter-spacing:.03em;text-transform:uppercase;font-size:16px}
@@ -336,3 +349,84 @@ footer.site .brand .n{font-family:var(--cond);font-weight:700;letter-spacing:.03
 /* Tarjeta con sello oficial (imagen): el badge reemplaza al ícono+título. */
 .cert--img{align-items:center}
 .cert-badge{flex:none;width:auto;height:auto;max-height:62px;max-width:180px;object-fit:contain}
+
+/* ── Páginas de servicio ─────────────────────────────────────────────────────
+   Todo lo de esta sección va prefijado con .svc-* o scopeado bajo .sec.alt para
+   no pisar el listado de proyectos (.cases) ni las tarjetas del home (.casos),
+   que ya chocaron una vez por compartir nombre de clase. */
+
+/* Enlace "Ver servicio" al pie de cada tarjeta del grid. */
+.svc-link{display:inline-block;margin-top:20px;font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-700);border-bottom:1.5px solid var(--teal);padding-bottom:2px;transition:color .18s,border-color .18s}
+.svc-link:hover{color:var(--ink);border-color:var(--ink)}
+.svc h3 a,.svc h2 a{color:inherit;text-decoration:none}
+.svc h3 a:hover,.svc h2 a:hover{color:var(--teal-700)}
+/* En el hub las tarjetas encabezan con h2, porque el h1 es el título de la página. */
+.svc h2{font-size:26px;text-transform:uppercase;margin:6px 0 12px}
+
+.svc-all{margin-top:36px;display:flex;justify-content:center}
+.btn-ghost{display:inline-flex;align-items:center;height:50px;padding:0 28px;border:1.5px solid var(--ink);color:var(--ink);font-family:var(--cond);font-weight:600;font-size:17px;letter-spacing:.03em;text-transform:uppercase;transition:.18s}
+.btn-ghost:hover{border-color:var(--teal);color:var(--teal-700)}
+
+/* Banda alterna, para separar bloques largos dentro del detalle. */
+.sec.alt{background:var(--paper-2)}
+/* Un servicio sin casos publicados deja dos bandas alternas pegadas (p. ej.
+   vigilancia-electronica): sin esta línea se leen como un único bloque tintado
+   del doble de alto. */
+.sec.alt+.sec.alt{border-top:1px solid var(--line)}
+
+/* Párrafo de entrada de una sección del detalle. No se reutiliza `.lead`
+   porque esa clase sólo está definida bajo `.sec-head` y `.certs`, así que
+   aquí caería sin estilo. */
+.svc-lead{font-size:16.5px;line-height:1.6;color:var(--muted);max-width:60ch;margin:-14px 0 0}
+
+.svc-h2{font-size:clamp(28px,3.2vw,44px);line-height:1;text-transform:uppercase;margin:0 0 clamp(28px,3vw,44px)}
+
+/* Qué incluye */
+.svc-scope{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.scope-item{background:#fff;border:1px solid var(--line);padding:28px 26px;border-left:3px solid var(--teal)}
+.scope-item h3{font-size:19px;text-transform:uppercase;margin:0 0 10px;letter-spacing:.01em}
+.scope-item p{font-size:15.5px;line-height:1.6;color:var(--muted);margin:0}
+
+/* Qué recibes */
+.svc-deliver{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 32px}
+.svc-deliver li{position:relative;padding-left:28px;font-size:16px;line-height:1.6;color:var(--muted)}
+.svc-deliver li::before{content:"";position:absolute;left:0;top:.62em;width:14px;height:2px;background:var(--teal)}
+
+/* Casos de esta línea */
+.svc-cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:32px}
+.svc-case{display:block;background:#fff;border:1px solid var(--line);color:inherit;text-decoration:none;overflow:hidden;transition:transform .22s,box-shadow .22s,border-color .22s}
+.svc-case:hover{transform:translateY(-4px);box-shadow:0 22px 44px rgba(13,20,23,.1);border-color:transparent}
+.svc-case .ph{margin:0;overflow:hidden}
+.svc-case .ph img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;display:block;transition:transform .4s}
+.svc-case:hover .ph img{transform:scale(1.04)}
+.svc-case .tx{padding:22px 22px 26px}
+.svc-case .sector{font-family:var(--cond);font-weight:600;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-700)}
+.svc-case h3{font-size:19px;text-transform:uppercase;line-height:1.15;margin:8px 0 10px}
+.svc-case p{font-size:14.5px;line-height:1.55;color:var(--muted);margin:0}
+
+/* Preguntas frecuentes */
+.svc-faq{display:grid;gap:16px;max-width:80ch}
+.faq-item{background:#fff;border:1px solid var(--line);padding:26px 26px 24px}
+.faq-item h3{font-size:18.5px;line-height:1.3;margin:0 0 10px;text-transform:none;letter-spacing:0}
+.faq-item p{font-size:15.5px;line-height:1.65;color:var(--muted);margin:0}
+
+/* Otras líneas de servicio */
+.svc-related{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:10px}
+.svc-related a{display:inline-flex;align-items:center;height:42px;padding:0 18px;border:1px solid var(--line);background:#fff;font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink);transition:.18s}
+.svc-related a:hover{border-color:var(--teal);color:var(--teal-700)}
+
+/* Cierre con llamado a la acción */
+.svc-cta{background:var(--ink);color:#fff;padding:clamp(64px,7vw,104px) 0;text-align:center}
+.svc-cta h2{font-size:clamp(30px,3.6vw,48px);line-height:1;text-transform:uppercase;margin:0}
+.svc-cta p{font-size:16.5px;line-height:1.6;color:#aeb8ba;max-width:52ch;margin:18px auto 0}
+.svc-cta .cta{display:inline-flex;align-items:center;height:52px;padding:0 30px;margin-top:30px;background:var(--teal-700);color:#fff;font-family:var(--cond);font-weight:600;font-size:17px;letter-spacing:.04em;text-transform:uppercase;transition:background .18s,transform .18s}
+.svc-cta .cta:hover{background:var(--teal);transform:translateY(-2px)}
+
+@media (max-width:900px){
+  .svc-scope{grid-template-columns:1fr}
+  .svc-deliver{grid-template-columns:1fr}
+  .svc-cases{grid-template-columns:1fr}
+}
+@media (min-width:901px) and (max-width:1180px){
+  .svc-cases{grid-template-columns:repeat(2,minmax(0,1fr))}
+}

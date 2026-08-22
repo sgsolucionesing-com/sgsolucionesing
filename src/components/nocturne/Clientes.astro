@@ -3,6 +3,7 @@
 // logo: nombre de archivo en public/assets/logos/ (logo oficial verificado).
 // Sin `logo` => se muestra como wordmark de texto (no se encontró un logo confiable).
 import { ui, getLang } from '../../i18n/ui';
+import { imgSize } from '../../lib/imageSize';
 const lang = getLang(Astro.currentLocale);
 const t = ui[lang].clientes;
 const clientes = [
@@ -34,6 +35,7 @@ const clientes = [
             class="logo-img"
             loading="lazy"
             decoding="async"
+            {...imgSize(`/assets/logos/${c.logo}`)}
           />
         ) : (
           <span class="logo">{c.name}</span>

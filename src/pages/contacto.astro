@@ -2,23 +2,25 @@
 // src/pages/contacto.astro — Rediseño "Nocturne" (Fase 3)
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Contacto from '../components/nocturne/Contacto.astro';
+import { pageTitle } from '../i18n/ui';
+import { imgSize } from '../lib/imageSize';
 
-const pageTitle = 'Contacto | S&G Soluciones de Ingeniería';
+const docTitle = pageTitle('Contacto en Barranquilla');
 const pageDescription =
   'Ponte en contacto con nuestro equipo de expertos en soluciones de ingeniería, automatización industrial y desarrollo de software.';
 ---
 
-<BaseLayout title={pageTitle} description={pageDescription} image="/assets/img/pruebas-1.jpg">
+<BaseLayout title={docTitle} description={pageDescription} image="/assets/img/pruebas-1.jpg">
   <script type="application/ld+json" slot="head" set:html={JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'ContactPage',
-    name: pageTitle,
+    name: docTitle,
     description: pageDescription,
     url: 'https://www.sgsolucionesing.com/contacto',
   })} />
 
   <header class="phead">
-    <div class="bg"><img src="/assets/img/pruebas-1.jpg" alt="" aria-hidden="true" fetchpriority="high" /></div>
+    <div class="bg"><img src="/assets/img/pruebas-1.jpg" alt="" aria-hidden="true" fetchpriority="high" {...imgSize("/assets/img/pruebas-1.jpg")} /></div>
     <div class="wrap">
       <span class="kick rv in">Contacto</span>
       <h1 class="rv in d1">Hablemos de <em>tu proceso.</em></h1>

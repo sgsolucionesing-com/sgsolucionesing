@@ -1,8 +1,14 @@
 ---
 // src/components/nocturne/Servicios.astro
-import { ui, getLang } from '../../i18n/ui';
+// Sección "Servicios" del home. Las tarjetas se arman desde src/data/servicios.ts
+// —la misma fuente que alimenta /servicios y cada detalle— y enlazan a su página,
+// de modo que cada línea de servicio tenga una URL propia que pueda posicionar.
+import { ui, getLang, localePath } from '../../i18n/ui';
+import { servicios } from '../../data/servicios';
+
 const lang = getLang(Astro.currentLocale);
 const t = ui[lang].servicios;
+const tp = ui[lang].serviciosPage;
 ---
 <section class="sec" id="servicios">
   <div class="wrap">
@@ -14,16 +20,24 @@ const t = ui[lang].servicios;
       <p class="lead rv">{t.lead}</p>
     </div>
     <div class="svc-grid">
-      {t.items.map((svc, i) => (
-        <article class="svc rv">
-          <div class="num">{String(i + 1).padStart(2, '0')}</div>
-          <h3>{svc.title}</h3>
-          <p>{svc.desc}</p>
-          <div class="tags">
-            {svc.tags.map((tag) => <span class="tag">{tag}</span>)}
-          </div>
-        </article>
-      ))}
+      {servicios.map((svc, i) => {
+        const c = svc[lang];
+        const href = localePath(`/servicios/${svc.slug}`, lang);
+        return (
+          <article class="svc rv">
+            <div class="num">{String(i + 1).padStart(2, '0')}</div>
+            <h3><a href={href}>{c.title}</a></h3>
+            <p>{c.desc}</p>
+            <div class="tags">
+              {c.tags.map((tag) => <span class="tag">{tag}</span>)}
+            </div>
+            <a class="svc-link" href={href}>{tp.viewService}</a>
+          </article>
+        );
+      })}
+    </div>
+    <div class="svc-all rv">
+      <a class="btn-ghost" href={localePath('/servicios', lang)}>{tp.seeAll}</a>
     </div>
   </div>
 </section>
