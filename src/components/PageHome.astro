@@ -102,8 +102,10 @@ const jsonld = {
   knowsAbout,
   availableLanguage: ['es', 'en'],
   hasOfferCatalog: catalogo,
-  // `sameAs` queda fuera a propósito: no hay perfiles sociales confirmados.
-  // Declarar uno equivocado es peor que no declarar ninguno.
+  // Perfiles oficiales verificados uno por uno: sólo entra acá lo que se
+  // comprobó que pertenece a la empresa y que apunta de vuelta a este dominio.
+  // Un `sameAs` equivocado le enseña a Google una entidad que no somos.
+  sameAs: ['https://co.linkedin.com/company/sgsolucionesing'],
 };
 ---
 <BaseLayout title={pageTitle(m.homeTitle)} description={m.homeDescription} hasAlternate={true}>
