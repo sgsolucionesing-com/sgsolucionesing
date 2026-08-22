@@ -71,8 +71,14 @@ const L = (p: string) => localePath(p, lang);
         <link rel="alternate" hreflang="x-default" href={new URL(localePath(basePath, defaultLang), Astro.site).href} />
       </>
     )}
+    {/* Ícono de marca. El SVG es la fuente y escala a cualquier tamaño; el PNG
+        de 32 cubre a los navegadores que aún ignoran el favicon vectorial.
+        El de Apple va aparte porque iOS no respeta la transparencia: se sirve
+        con fondo sólido y su propio margen. */}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/assets/logo/icono.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
     <meta name="theme-color" content="#0d1417" />
     <meta name="author" content="S&G Soluciones de Ingeniería" />
