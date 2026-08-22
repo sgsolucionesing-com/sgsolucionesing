@@ -74,6 +74,7 @@ export const ui = {
       hours: 'Lun a vie 8:00–17:00 · Sáb 8:00–12:00',
       blurb:
         'Ingeniería en automatización industrial, instrumentación, eficiencia energética y software a la medida. Con base en Barranquilla, atendemos Colombia y Latinoamérica.',
+      socialLabel: 'Redes sociales',
     },
     meta: {
       // El nombre de marca va al final: los términos que la gente busca —lo que
@@ -292,6 +293,7 @@ export const ui = {
       hours: 'Mon–Fri 8:00–17:00 · Sat 8:00–12:00',
       blurb:
         'Engineering in industrial automation, instrumentation, energy efficiency and custom software. Based in Barranquilla, serving Colombia and Latin America.',
+      socialLabel: 'Social media',
     },
     meta: {
       // Brand name goes last: the terms people actually search for have to land

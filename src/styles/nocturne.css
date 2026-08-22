@@ -180,6 +180,14 @@ footer.site .ftitle{font-family:var(--cond);font-weight:600;font-size:13px;lette
 footer.site .fcol a{color:rgba(226,236,236,.72);line-height:1.45;transition:color .18s}
 footer.site .fcol a:hover{color:#fff}
 footer.site .fblurb{margin:16px 0 0;line-height:1.6;max-width:38ch;color:rgba(226,236,236,.55)}
+/* Perfiles oficiales. El área táctil es de 38px para que se pueda tocar
+   cómodamente en móvil, aunque el ícono dibuje 18. */
+/* Se cualifica con `ul` para ganarle en especificidad a `footer.site .fcol ul`,
+   que impone `display:grid` y dejaría los íconos apilados en vertical. */
+footer.site .fcol ul.fsocial{list-style:none;margin:20px 0 0;padding:0;display:flex;gap:10px}
+footer.site .fsocial a{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid rgba(255,255,255,.18);color:rgba(226,236,236,.72);transition:color .18s,border-color .18s,background .18s}
+footer.site .fsocial a:hover{color:#fff;border-color:var(--teal);background:rgba(0,167,157,.16)}
+footer.site .fsocial svg{display:block}
 footer.site .fcontact li{line-height:1.5;color:rgba(226,236,236,.72)}
 footer.site .fcontact .lb{display:block;font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(226,236,236,.42);margin-bottom:2px}
 footer.site .fbottom{margin-top:44px;padding-top:22px;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
