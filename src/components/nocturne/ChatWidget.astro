@@ -421,7 +421,7 @@ const chatI18n = {
     var WHATSAPP_NUMBER = '573243025107';
     // Textos localizados inyectados desde Astro (ES/EN); con fallback en español.
     var I18N = window.__CHAT_I18N || {};
-    var GREETING = I18N.greeting || '¡Hola! Soy Sofía, del equipo de S&G. Contame qué proceso querés automatizar, medir o mejorar y te oriento con gusto. 😊';
+    var GREETING = I18N.greeting || '¡Hola! Soy Sofía, del equipo de S&G. Cuéntame qué proceso quieres automatizar, medir o mejorar y te oriento con gusto. 😊';
 
     var widget = document.getElementById('chat-widget');
     var fab = document.getElementById('chat-fab');
@@ -611,7 +611,7 @@ const chatI18n = {
       addBubble(
         'bot',
         I18N.inactivity ||
-          'Veo que quedamos en pausa. ¿Seguimos por acá o preferís que Sandra, nuestro contacto comercial, retome por WhatsApp con el resumen de la charla? Escribime cuando gustes, o contactala directo al +57 324 3025107. 😊'
+          'Veo que quedamos en pausa. ¿Seguimos por aquí o prefieres que Sandra, nuestro contacto comercial, retome por WhatsApp con el resumen de la charla? Escríbeme cuando gustes, o contáctala directo al +57 324 3025107. 😊'
       );
       updateWaLink('');
       playChime('reply');
@@ -750,7 +750,7 @@ const chatI18n = {
 
         botBubble.innerHTML = formatBotHtml(
           accumulated ||
-            (I18N.fallbackEmpty || 'No pude generar una respuesta. Escribinos por WhatsApp y te ayudamos enseguida: ') +
+            (I18N.fallbackEmpty || 'No pude generar una respuesta. Escríbenos por WhatsApp y te ayudamos enseguida: ') +
               'https://wa.me/' + WHATSAPP_NUMBER
         );
         messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -760,7 +760,7 @@ const chatI18n = {
         }
         if (!botBubble) botBubble = addBubble('bot', '');
         botBubble.innerHTML = formatBotHtml(
-          (I18N.fallbackError || 'Ahora mismo no puedo responder por acá. Escribinos por WhatsApp: ') +
+          (I18N.fallbackError || 'Ahora mismo no puedo responder por aquí. Escríbenos por WhatsApp: ') +
             'https://wa.me/' + WHATSAPP_NUMBER +
             (I18N.fallbackErrorTail || ' y te atendemos enseguida.')
         );
