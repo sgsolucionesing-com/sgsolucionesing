@@ -4,28 +4,51 @@
 //   texto plano (chunked).
 // - GET  ?sessionId=... -> { messages: [...] } historial guardado de la sesión.
 //
-// Degradación segura: si falta OPENROUTER_API_KEY, si OpenRouter falla, o si
-// Postgres/Resend fallan, el endpoint NUNCA responde 500 sin cuerpo ni tira
+// Degradación segura: si falta la credencial del LLM, si el proveedor falla, o
+// si Postgres/Resend fallan, el endpoint NUNCA responde 500 sin cuerpo ni tira
 // una excepción sin manejar — siempre entrega un mensaje amable derivando a
 // WhatsApp para que el visitante nunca se quede sin respuesta.
+//
+// Configuración: ver .env.example. `LLM_MODELS` acepta una lista separada por
+// comas y se recorre en orden, de modo que si el proveedor retira o restringe
+// un modelo el chat sigue respondiendo con el siguiente.
 import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
 import { getConversation, saveConversation, markLeadNotified, type ChatMessage, type LeadInfo } from '../../lib/db';
 
 export const prerender = false;
 
-const OPENROUTER_BASE_URL =
-  import.meta.env.OPENROUTER_BASE_URL ?? process.env.OPENROUTER_BASE_URL ?? 'https://openrouter.ai/api/v1';
-const OPENROUTER_MODEL =
-  import.meta.env.OPENROUTER_MODEL ?? process.env.OPENROUTER_MODEL ?? 'openai/gpt-4o-mini';
-const OPENROUTER_API_KEY = import.meta.env.OPENROUTER_API_KEY ?? process.env.OPENROUTER_API_KEY;
-// Tope de tokens por respuesta. deepseek-v4-flash es un modelo de razonamiento:
-// consume tokens "pensando" (reasoning_content) antes de emitir la respuesta.
-// Si el tope es bajo, el razonamiento se lo come entero y la respuesta llega
-// vacía. Damos ventana amplia (configurable) para que siempre alcance a responder.
-const OPENROUTER_MAX_TOKENS = Number(
-  import.meta.env.OPENROUTER_MAX_TOKENS ?? process.env.OPENROUTER_MAX_TOKENS ?? 6000
-);
+// Configuración del proveedor LLM.
+//
+// Se leen primero las variables `LLM_*` y, si no están, las `OPENROUTER_*`
+// históricas. El prefijo genérico existe porque el gateway no tiene por qué
+// ser OpenRouter —hoy es el de opencode— y llamar `OPENROUTER_BASE_URL` a una
+// URL de opencode confunde a quien va a tocar la configuración. Las viejas se
+// siguen aceptando para no romper los despliegues que ya están andando.
+function envVar(...names: string[]): string | undefined {
+  for (const name of names) {
+    const value = import.meta.env[name] ?? process.env[name];
+    if (value !== undefined && String(value).trim() !== '') return String(value).trim();
+  }
+  return undefined;
+}
+
+const LLM_BASE_URL = envVar('LLM_BASE_URL', 'OPENROUTER_BASE_URL') ?? 'https://opencode.ai/zen/go/v1';
+const LLM_API_KEY = envVar('LLM_API_KEY', 'OPENROUTER_API_KEY');
+
+// Lista de modelos separada por comas: se intenta en orden y se pasa al
+// siguiente cuando el proveedor rechaza uno en particular (modelo retirado,
+// restringido por región, etc.). Así un cambio de catálogo del proveedor deja
+// el chat degradado, no muerto.
+const LLM_MODELS = (envVar('LLM_MODELS', 'LLM_MODEL', 'OPENROUTER_MODEL') ?? 'mimo-v2.5')
+  .split(',')
+  .map((m) => m.trim())
+  .filter(Boolean);
+
+// Tope de tokens por respuesta. Algunos modelos razonan antes de responder y
+// consumen tokens en ese paso: si el tope es bajo, el razonamiento se lo come
+// entero y la respuesta llega vacía. Ventana amplia y configurable.
+const LLM_MAX_TOKENS = Number(envVar('LLM_MAX_TOKENS', 'OPENROUTER_MAX_TOKENS') ?? 6000);
 
 const CONTACT_TO = import.meta.env.CONTACT_TO ?? process.env.CONTACT_TO ?? 'comercial.proyectos@sgsolucionesing.com';
 const CONTACT_FROM =
@@ -203,45 +226,73 @@ export const POST: APIRoute = async ({ request }) => {
   const updatedHistory: ChatMessage[] = [...conversation.messages, { role: 'user', content: cleanMessage }];
 
   // Sin API key configurada: degradamos sin siquiera intentar llamar al LLM.
-  if (!OPENROUTER_API_KEY) {
+  if (!LLM_API_KEY) {
+    console.error('[api/chat] No hay LLM_API_KEY (ni OPENROUTER_API_KEY) configurada.');
     const finalHistory: ChatMessage[] = [...updatedHistory, { role: 'assistant', content: FALLBACK_MESSAGE }];
     await saveConversation(cleanSessionId, finalHistory);
     return textResponse(FALLBACK_MESSAGE);
   }
 
-  let upstream: Response;
-  try {
-    upstream = await fetch(`${OPENROUTER_BASE_URL}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-        'HTTP-Referer': 'https://www.sgsolucionesing.com',
-        'X-Title': 'S&G Chat'
-      },
-      body: JSON.stringify({
-        model: OPENROUTER_MODEL,
-        stream: true,
-        messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...updatedHistory],
-        max_tokens: OPENROUTER_MAX_TOKENS,
-        temperature: 0.5
-      })
-    });
-  } catch (err) {
-    console.error('[api/chat] Error de red llamando a OpenRouter:', err);
-    const finalHistory: ChatMessage[] = [...updatedHistory, { role: 'assistant', content: FALLBACK_MESSAGE }];
-    await saveConversation(cleanSessionId, finalHistory);
-    return textResponse(FALLBACK_MESSAGE);
-  }
+  // Se recorren los modelos configurados hasta que uno responda. Un 401 corta
+  // el recorrido: significa credencial inválida o saldo agotado en la cuenta,
+  // así que ningún otro modelo va a andar y reintentar sólo suma latencia.
+  let upstream: Response | null = null;
+  for (const [index, model] of LLM_MODELS.entries()) {
+    let response: Response;
+    try {
+      response = await fetch(`${LLM_BASE_URL}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${LLM_API_KEY}`,
+          'HTTP-Referer': 'https://www.sgsolucionesing.com',
+          'X-Title': 'S&G Chat'
+        },
+        body: JSON.stringify({
+          model,
+          stream: true,
+          messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...updatedHistory],
+          max_tokens: LLM_MAX_TOKENS,
+          temperature: 0.5
+        })
+      });
+    } catch (err) {
+      console.error(`[api/chat] Error de red con el modelo "${model}":`, err);
+      continue;
+    }
 
-  if (!upstream.ok || !upstream.body) {
+    if (response.ok && response.body) {
+      if (index > 0) console.warn(`[api/chat] Respondió el modelo de respaldo "${model}".`);
+      upstream = response;
+      break;
+    }
+
     let details = '';
     try {
-      details = await upstream.text();
+      details = await response.text();
     } catch {
-      // Ignoramos: solo es para el log.
+      // Sólo alimenta el log; si no se puede leer, seguimos igual.
     }
-    console.error('[api/chat] OpenRouter respondió con error:', upstream.status, details);
+    // El tipo de error decide qué hacer, y se nombra para que el log diga qué
+    // hay que ir a arreglar en lugar de un número suelto.
+    const kind = /CreditsError|[Ii]nsufficient balance/.test(details)
+      ? 'SALDO AGOTADO en la cuenta del proveedor'
+      : /RegionError/.test(details)
+        ? 'modelo restringido por región (requiere opt-in)'
+        : response.status === 401
+          ? 'credencial rechazada'
+          : response.status === 404
+            ? 'modelo inexistente en el proveedor'
+            : `error ${response.status}`;
+    console.error(`[api/chat] Modelo "${model}" rechazado — ${kind}:`, details.slice(0, 300));
+
+    if (response.status === 401) break; // problema de cuenta: no sirve probar otros
+  }
+
+  if (!upstream || !upstream.body) {
+    console.error(
+      `[api/chat] Ningún modelo respondió. Configurados: ${LLM_MODELS.join(', ')} — se deriva a WhatsApp.`
+    );
     const finalHistory: ChatMessage[] = [...updatedHistory, { role: 'assistant', content: FALLBACK_MESSAGE }];
     await saveConversation(cleanSessionId, finalHistory);
     return textResponse(FALLBACK_MESSAGE);
