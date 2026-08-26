@@ -234,10 +234,22 @@ y `Segoe UI`. Cerca del teal de S&G (`#00a79d`), pero no es Nocturne.
 `imgwrap`. Entonces:
 
 1. Se escribe `informe-nocturne.css`: una hoja que mapea esas clases al sistema Nocturne.
-2. Se reemplaza el `<style>` del informe por esa hoja.
+2. Se reemplaza el bloque de estilo embebido del informe por esa hoja.
 3. Cualquier informe futuro con las mismas clases hereda el estilo sin retoque.
 
 Retocarlo a mano significa volver a retocar el siguiente.
+
+**Estado: hecho.** La hoja vive en `src/styles/informe-nocturne.css` y se verifica
+contra `design-system/muestras/informe.html`, que usa datos ficticios. Al portar
+se corrigieron dos cosas que el estilo original violaba del spec: el gradiente
+decorativo del hero (ahora fondo sólido con marca de esquina teal) y las esquinas
+redondeadas (el sistema es recto). El token `--dark-block` resuelve que los
+bloques estructuralmente oscuros —hero, banner de confidencialidad, encabezado de
+tabla— no se fundan con el fondo en modo oscuro: son `ink` sobre papel y `navy`
+sobre fondo oscuro.
+
+El informe portado **no se versiona en el repositorio**: es material de cliente.
+Se regenera con el guion de porte cuando haga falta.
 
 El HTML conserva sus 94 imágenes en base64 y sus 12,6 MB. Carga lento, pero
 funciona y no depende de la red. Cuando exista un segundo informe, conviene

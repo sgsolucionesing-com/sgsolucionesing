@@ -16,6 +16,16 @@ Vive en el repositorio como referencia versionada, no como código desplegado.
 | 1 | [`referencia/DESIGN-SPEC.md`](referencia/DESIGN-SPEC.md) | **Fuente de verdad.** Tokens, tipografía, componentes, modo claro/oscuro, portal y administración. Leer completo antes de escribir estilos. |
 | 2 | [`MAPEO-ASTRO.md`](MAPEO-ASTRO.md) | Qué del spec ya existe en `src/`, qué falta y dónde va cada pieza. |
 | 3 | `referencia/*.html` | Prototipos navegables. Abrir en el navegador para ver el comportamiento real. |
+| 4 | [`muestras/`](muestras/) | Muestras propias de S&G, con datos ficticios. A diferencia de `referencia/`, se mantienen: al tocar un estilo, se verifica acá. |
+
+### Muestras
+
+| Archivo | Qué verifica |
+|---|---|
+| [`muestras/informe.html`](muestras/informe.html) | La plantilla de informes técnicos con `src/styles/informe-nocturne.css`: cabecera, hero, cifras de resumen, índice, jornada, galería, planos, tarjeta de hallazgo y cláusula de confidencialidad, en modo claro y oscuro. |
+
+Al modificar `informe-nocturne.css`, abrir esta muestra y revisar ambos modos —
+**nunca** un informe real de cliente, que además pesa más de 12 MB.
 
 ---
 

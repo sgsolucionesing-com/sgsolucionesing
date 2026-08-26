@@ -1,0 +1,772 @@
+/* ==========================================================================
+   Informes técnicos — sistema Nocturne
+   --------------------------------------------------------------------------
+   Hoja de estilo para los informes técnicos de intervención que S&G entrega a
+   sus clientes a través del portal.
+
+   No es una hoja hecha a medida de un informe: mapea las clases que la
+   plantilla de informes ya usa (.finding-card, .day-head, .gallery, .stat,
+   .plano-block, .toc…) al sistema de diseño Nocturne. Cualquier informe que
+   respete esas clases hereda el estilo sin retoque manual.
+
+   Uso: reemplazar el bloque de estilo embebido del informe por el contenido de
+   este archivo, junto al enlace de fuentes de Barlow indicado abajo.
+
+   No escribir nunca una etiqueta de cierre de estilo dentro de estos
+   comentarios: al embeberse en el HTML cortaría la hoja por la mitad.
+
+   Referencia: design-system/referencia/DESIGN-SPEC.md
+   ========================================================================== */
+
+/* Fuentes requeridas en el <head> del informe:
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet"> */
+
+/* --------------------------------------------------------------------------
+   1. Tokens
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* Acento corporativo — el teal es el único acento del sistema */
+  --teal: #00a79d;
+  --teal-600: #009088;
+  --teal-700: #00706a;
+  --teal-300: #7fd8cf;
+  --teal-050: #e7f6f3;
+
+  /* Bases */
+  --navy: #122a49;
+  --ink: #0d1417;
+  --ink-2: #141d21;
+  --paper: #f4f6f6;
+  --paper-2: #eceff0;
+  --line: #d9dedf;
+  --muted: #5b6567;
+
+  /* Tipografía */
+  --cond: "Barlow Condensed", system-ui, sans-serif;
+  --body: "Barlow", system-ui, sans-serif;
+
+  /* Estados semánticos. Solo para estado: no son colores decorativos y no
+     desplazan al teal como acento. */
+  --ok: #2f8f6b;
+  --warn: #b8863b;
+  --risk: #b23b3b;
+
+  /* Tokens semánticos: son los que consumen los componentes. Se invierten
+     en modo oscuro; los crudos de arriba no cambian. */
+  --surface: #f4f6f6;
+  --surface-2: #eceff0;
+  --card: #ffffff;
+  --tx: #0d1417;
+  --tx-soft: #374042;
+  --tx-mut: #5b6567;
+  --bd: #d9dedf;
+  --accent-tx: #00706a;
+  --ok-bg: #eaf4f0;
+  --warn-bg: #faf4e9;
+
+  /* Bloque estructuralmente oscuro (hero, banner, encabezado de tabla). Sigue
+     siendo oscuro en ambos modos, pero cambia de tono para no fundirse con la
+     superficie: sobre papel es ink; sobre fondo oscuro pasa a navy. */
+  --dark-block: #0d1417;
+
+  --max: 980px;
+  --edge: clamp(20px, 4vw, 40px);
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --surface: #0d1417;
+  --surface-2: #10181c;
+  --card: #141d21;
+  --tx: #eef4f4;
+  --tx-soft: rgba(238, 244, 244, 0.82);
+  --tx-mut: rgba(226, 236, 236, 0.58);
+  --bd: rgba(255, 255, 255, 0.12);
+  --accent-tx: #7fd8cf;
+  --ok: #4fb08a;
+  --warn: #d0a45c;
+  --risk: #d06a6a;
+  --ok-bg: rgba(79, 176, 138, 0.1);
+  --warn-bg: rgba(208, 164, 92, 0.1);
+  --dark-block: #122a49;
+
+  color-scheme: dark;
+}
+
+/* Si el informe no trae el conmutador de tema, sigue la preferencia del
+   sistema operativo. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface: #0d1417;
+    --surface-2: #10181c;
+    --card: #141d21;
+    --tx: #eef4f4;
+    --tx-soft: rgba(238, 244, 244, 0.82);
+    --tx-mut: rgba(226, 236, 236, 0.58);
+    --bd: rgba(255, 255, 255, 0.12);
+    --accent-tx: #7fd8cf;
+    --ok: #4fb08a;
+    --warn: #d0a45c;
+    --risk: #d06a6a;
+    --ok-bg: rgba(79, 176, 138, 0.1);
+    --warn-bg: rgba(208, 164, 92, 0.1);
+    --dark-block: #122a49;
+
+    color-scheme: dark;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. Base
+   -------------------------------------------------------------------------- */
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--tx);
+  background: var(--surface);
+  text-wrap: pretty;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { display: block; max-width: 100%; }
+
+/* Todo título va en Barlow Condensed y en mayúsculas. */
+h1, h2, h3, h4 {
+  font-family: var(--cond);
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+}
+
+a { color: var(--accent-tx); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* El foco de teclado siempre visible y en teal. */
+:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 2px;
+}
+
+.page {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--edge) 64px;
+}
+
+/* --------------------------------------------------------------------------
+   3. Cabecera
+   -------------------------------------------------------------------------- */
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 26px 0 16px;
+  border-bottom: 1px solid var(--bd);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--tx);
+}
+
+/* Isotipo: cuadrado, no círculo — el sistema no usa esquinas redondeadas. */
+.brand .logo {
+  width: 36px;
+  height: 36px;
+  background: var(--dark-block);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.meta {
+  text-align: right;
+  font-size: 13px;
+  color: var(--tx-mut);
+  line-height: 1.5;
+}
+
+.meta strong {
+  display: block;
+  font-family: var(--cond);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--tx);
+}
+
+/* --------------------------------------------------------------------------
+   4. Hero
+   El spec prohíbe los gradientes decorativos: fondo sólido oscuro, que además
+   se mantiene igual en ambos modos por ser una sección estructuralmente
+   oscura. La firma es la marca de esquina teal.
+   -------------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  background: var(--dark-block);
+  color: #fff;
+  padding: clamp(30px, 5vw, 44px) clamp(26px, 4vw, 40px);
+  margin: 28px 0;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  width: 46px;
+  height: 46px;
+  border-right: 3px solid var(--teal);
+  border-top: 3px solid var(--teal);
+}
+
+.hero h1 {
+  margin: 0 0 10px;
+  font-size: clamp(26px, 3.4vw, 40px);
+  line-height: 1.02;
+  color: #fff;
+}
+
+.hero p {
+  margin: 0;
+  max-width: 68ch;
+  font-size: 15px;
+  color: rgba(226, 236, 236, 0.86);
+}
+
+/* Etiqueta sobre el hero: recta, condensada, en mayúsculas. */
+.pill {
+  display: inline-block;
+  margin: 14px 8px 0 0;
+  padding: 5px 13px;
+  font-family: var(--cond);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--teal-300);
+  border: 1px solid rgba(127, 216, 207, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   5. Títulos de sección
+   -------------------------------------------------------------------------- */
+
+h2.section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 44px 0 16px;
+  font-size: clamp(22px, 2.4vw, 30px);
+  color: var(--tx);
+}
+
+/* Numeral cuadrado, no circular. */
+h2.section .num {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  background: var(--teal-700);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 15px;
+}
+
+h3.sub {
+  margin: 28px 0 10px;
+  font-size: clamp(18px, 2vw, 22px);
+  color: var(--tx);
+}
+
+h4.subsub {
+  margin: 20px 0 8px;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  color: var(--tx);
+}
+
+p.body-text,
+p {
+  font-size: 15px;
+  color: var(--tx-soft);
+}
+
+/* --------------------------------------------------------------------------
+   6. Tablas
+   -------------------------------------------------------------------------- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+th {
+  background: var(--dark-block);
+  color: #fff;
+  text-align: left;
+  padding: 10px 12px;
+  font-family: var(--cond);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--bd);
+  color: var(--tx-soft);
+}
+
+tr:nth-child(even) td { background: var(--surface-2); }
+
+/* --------------------------------------------------------------------------
+   7. Cifras de resumen
+   -------------------------------------------------------------------------- */
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.stat {
+  padding: 18px 16px;
+  text-align: center;
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-top: 3px solid var(--teal);
+}
+
+.stat .n {
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 34px;
+  line-height: 1;
+  color: var(--accent-tx);
+}
+
+.stat .l {
+  margin-top: 6px;
+  font-family: var(--cond);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tx-mut);
+}
+
+.stat.accent { border-top-color: var(--ok); }
+.stat.accent .n { color: var(--ok); }
+.stat.pending { border-top-color: var(--warn); }
+.stat.pending .n { color: var(--warn); }
+
+/* --------------------------------------------------------------------------
+   8. Notas
+   -------------------------------------------------------------------------- */
+
+.note {
+  margin: 16px 0;
+  padding: 14px 18px;
+  font-size: 14px;
+  color: var(--tx-soft);
+  background: var(--ok-bg);
+  border-left: 3px solid var(--ok);
+}
+
+.note.warn {
+  background: var(--warn-bg);
+  border-left-color: var(--warn);
+}
+
+/* --------------------------------------------------------------------------
+   9. Galerías
+   -------------------------------------------------------------------------- */
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 16px 0 26px;
+}
+
+.gallery figure {
+  margin: 0;
+  background: var(--card);
+  border: 1px solid var(--bd);
+  overflow: hidden;
+}
+
+.gallery img {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  background: var(--surface-2);
+}
+
+.gallery figcaption {
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--tx-mut);
+}
+
+/* Etiqueta de la foto: condensada, en mayúsculas, en el acento. */
+.gallery figcaption .tag,
+.video-grid figcaption .tag {
+  display: block;
+  margin-bottom: 3px;
+  font-family: var(--cond);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-tx);
+}
+
+/* --------------------------------------------------------------------------
+   10. Tarjeta de hallazgo
+   Es el componente que más se repite en un informe. Conserva la semántica de
+   advertencia, pero con el token de estado del sistema y sin redondeos.
+   -------------------------------------------------------------------------- */
+
+.finding-card {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-left: 4px solid var(--warn);
+  overflow: hidden;
+}
+
+.finding-card .imgwrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 560px;
+  overflow: hidden;
+  background: var(--ink);
+}
+
+.finding-card img {
+  width: 100%;
+  max-height: 560px;
+  object-fit: contain;
+}
+
+.finding-card .txt { padding: 18px 20px 20px; }
+
+/* Ubicación del hallazgo: M2 · Secciones 1-2 · 14-ago-2026 */
+.finding-card .txt .loc {
+  font-family: var(--cond);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--warn);
+}
+
+.finding-card .txt h4 {
+  margin: 6px 0 8px;
+  font-size: 19px;
+  color: var(--tx);
+}
+
+.finding-card .txt p {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: var(--tx-soft);
+}
+
+/* Acción correctiva recomendada. */
+.finding-card .txt .rec {
+  display: block;
+  margin-top: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--tx-soft);
+  background: var(--ok-bg);
+  border-left: 3px solid var(--ok);
+}
+
+/* --------------------------------------------------------------------------
+   11. Jornadas
+   -------------------------------------------------------------------------- */
+
+.day-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--tx);
+}
+
+.day-head h3 {
+  margin: 0;
+  font-size: clamp(19px, 2vw, 24px);
+  color: var(--tx);
+}
+
+.day-status {
+  padding: 4px 12px;
+  font-family: var(--cond);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--teal-700);
+}
+
+/* --------------------------------------------------------------------------
+   12. Video
+   -------------------------------------------------------------------------- */
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 16px 0 26px;
+}
+
+.video-grid figure {
+  margin: 0;
+  background: #000;
+  border: 1px solid var(--bd);
+  overflow: hidden;
+}
+
+.video-grid video {
+  width: 100%;
+  display: block;
+  max-height: 320px;
+  background: #000;
+}
+
+.video-grid figcaption {
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--tx-mut);
+  background: var(--card);
+}
+
+.video-list { list-style: none; margin: 0 0 22px; padding: 0; }
+
+.video-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  font-size: 14px;
+  color: var(--tx-soft);
+  border-bottom: 1px solid var(--bd);
+}
+
+.video-list li .ico { flex-shrink: 0; }
+.video-list a { word-break: break-all; }
+.video-list .dur {
+  margin-left: auto;
+  padding-left: 10px;
+  font-size: 12px;
+  color: var(--tx-mut);
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   13. Planos
+   -------------------------------------------------------------------------- */
+
+.plano-block {
+  background: var(--card);
+  border: 1px solid var(--bd);
+  overflow: hidden;
+}
+
+.plano-block .plano-label {
+  padding: 10px 14px;
+  font-family: var(--cond);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tx);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--bd);
+}
+
+.plano-block img { width: 100%; background: #fff; }
+
+.plano-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin: 14px 0 22px;
+}
+
+.plano-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+
+/* --------------------------------------------------------------------------
+   14. Índice
+   -------------------------------------------------------------------------- */
+
+.toc {
+  margin: 24px 0 30px;
+  padding: 20px 24px;
+  background: var(--surface-2);
+  border: 1px solid var(--bd);
+  border-left: 3px solid var(--teal);
+}
+
+.toc .toc-title {
+  margin-bottom: 12px;
+  font-family: var(--cond);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-tx);
+}
+
+.toc ol { margin: 0; padding-left: 20px; font-size: 14px; }
+.toc ol ol { margin: 5px 0 7px; padding-left: 18px; font-size: 13.5px; }
+.toc li { margin: 6px 0; color: var(--tx-mut); }
+.toc a { color: var(--tx); }
+.toc a:hover { color: var(--accent-tx); }
+
+/* --------------------------------------------------------------------------
+   15. Confidencialidad
+   -------------------------------------------------------------------------- */
+
+.confidential-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin: 20px 0 0;
+  padding: 10px 18px;
+  font-family: var(--cond);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--dark-block);
+}
+
+.confidential-clause {
+  margin-top: 36px;
+  padding: 18px 22px;
+  background: var(--surface-2);
+  border: 1px solid var(--bd);
+}
+
+.confidential-clause h4 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  color: var(--tx);
+}
+
+.confidential-clause p {
+  margin: 0 0 8px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--tx-mut);
+}
+
+.confidential-clause p:last-child { margin-bottom: 0; }
+
+footer {
+  margin-top: 44px;
+  padding-top: 18px;
+  border-top: 1px solid var(--bd);
+  font-size: 13px;
+  color: var(--tx-mut);
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   16. Adaptación a pantallas chicas
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .gallery { grid-template-columns: repeat(2, 1fr); }
+  .plano-grid.two-col,
+  .video-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 540px) {
+  .gallery { grid-template-columns: 1fr; }
+  .topbar { flex-direction: column; }
+  .meta { text-align: left; }
+}
+
+/* --------------------------------------------------------------------------
+   17. Impresión
+   El informe se entrega también en PDF: fondo blanco, sin cortar tarjetas.
+   -------------------------------------------------------------------------- */
+
+@media print {
+  :root {
+    --surface: #fff;
+    --surface-2: #f4f6f6;
+    --card: #fff;
+    --tx: #0d1417;
+    --tx-soft: #374042;
+    --tx-mut: #5b6567;
+    --bd: #d9dedf;
+    --accent-tx: #00706a;
+    --dark-block: #0d1417;
+  }
+
+  body { background: #fff; }
+  .page { max-width: none; padding: 0; }
+  .toc { break-after: page; }
+
+  .finding-card,
+  .plano-block,
+  .gallery figure,
+  .stat { break-inside: avoid; }
+
+  h2.section { break-after: avoid; }
+  .day-head { break-after: avoid; }
+  .video-grid, .video-list { display: none; }
+}
