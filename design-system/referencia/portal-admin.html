@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Administración del portal — S&amp;G Soluciones de Ingeniería</title>
+<meta name="description" content="Área interna de S&G: empresas, usuarios, proyectos, asignación de contactos y configuración de visibilidad del portal." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=Barlow+Semi+Condensed:wght@500&display=swap" rel="stylesheet" />
+<script>
+(function(){try{var t=localStorage.getItem('sg-theme');if(!t)t=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+<style>
+:root{
+  --teal:#00a79d; --teal-600:#009088; --teal-700:#00706a; --teal-300:#7fd8cf; --teal-050:#e7f6f3;
+  --navy:#122a49; --ink:#0d1417; --ink-2:#141d21;
+  --paper:#f4f6f6; --paper-2:#eceff0; --line:#d9dedf; --muted:#5b6567;
+  --cond:"Barlow Condensed",system-ui,sans-serif; --body:"Barlow",system-ui,sans-serif;
+  --mono:"Barlow Semi Condensed",ui-monospace,monospace;
+  --edge:clamp(20px,4vw,56px); --max:1400px;
+  --ok:#2f8f6b; --warn:#b8863b; --risk:#b23b3b;
+  --surface:var(--paper); --surface-2:var(--paper-2); --card:#ffffff;
+  --tx:var(--ink); --tx-soft:#374042; --tx-mut:var(--muted);
+  --bd:var(--line); --accent-tx:var(--teal-700);
+  color-scheme:light;
+}
+[data-theme=dark]{
+  --surface:#0d1417; --surface-2:#10181c; --card:#141d21;
+  --tx:#eef4f4; --tx-soft:rgba(238,244,244,.82); --tx-mut:rgba(226,236,236,.6);
+  --bd:rgba(255,255,255,.13); --accent-tx:var(--teal-300);
+  --ok:#5fbf95; --warn:#d9ab63; --risk:#e0736f;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--body);color:var(--tx);background:var(--surface);-webkit-font-smoothing:antialiased;text-wrap:pretty}
+body.modal-open{overflow:hidden}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+h1,h2,h3,h4{font-family:var(--cond);font-weight:600;margin:0;letter-spacing:-0.005em}
+button{font:inherit}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--edge)}
+.kick{font-family:var(--cond);font-weight:600;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-tx);display:flex;align-items:center;gap:10px}
+.kick::before{content:"";width:28px;height:2px;background:var(--teal)}
+.arrow{width:8px;height:8px;border-right:2px solid currentColor;border-top:2px solid currentColor;transform:rotate(45deg);display:inline-block}
+
+.bp{position:relative;border:1px solid var(--bd);background:transparent}
+.bp>.corner{position:absolute;width:9px;height:9px;padding:0;pointer-events:none;color:var(--teal);opacity:.85}
+.bp>.corner::before,.bp>.corner::after{content:"";position:absolute;background:currentColor}
+.bp>.corner::before{left:50%;top:0;width:1px;height:100%;transform:translateX(-50%)}
+.bp>.corner::after{top:50%;left:0;height:1px;width:100%;transform:translateY(-50%)}
+.bp>.tl{left:-5px;top:-5px}.bp>.tr{right:-5px;top:-5px}
+.bp>.bl{left:-5px;bottom:-5px}.bp>.br{right:-5px;bottom:-5px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:44px;padding:0 20px;font-family:var(--cond);font-weight:600;font-size:15.5px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;border:0;transition:.18s;white-space:nowrap}
+.btn-p{background:var(--teal);color:#fff}
+.btn-p:hover{background:var(--teal-600);transform:translateY(-1px)}
+.btn-o{background:transparent;border:1.5px solid var(--bd);color:var(--tx)}
+.btn-o:hover{border-color:var(--teal);color:var(--accent-tx)}
+.btn-g{background:transparent;color:var(--tx-mut);height:38px;padding:0 12px}
+.btn-g:hover{color:var(--accent-tx)}
+.btn-sm{height:34px;padding:0 13px;font-size:13.5px}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.plus{font-size:17px;line-height:1;margin-top:-2px}
+
+.field{display:grid;gap:7px;margin-bottom:16px}
+.field label{font-family:var(--cond);font-weight:600;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx-mut)}
+.input,select.input{width:100%;height:46px;padding:0 14px;background:var(--card);border:1px solid var(--bd);color:var(--tx);font-family:var(--body);font-size:15.5px;border-radius:0}
+select.input{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--tx-mut) 50%),linear-gradient(135deg,var(--tx-mut) 50%,transparent 50%);background-position:calc(100% - 18px) 21px,calc(100% - 13px) 21px;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:38px}
+.input:focus{outline:2px solid var(--teal);outline-offset:0;border-color:transparent}
+.hint{font-size:12.5px;line-height:1.45;color:var(--tx-mut)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:640px){.frow{grid-template-columns:1fr}}
+
+/* topbar */
+.appbar{position:sticky;top:0;z-index:40;background:rgba(11,17,20,.95);backdrop-filter:blur(10px);color:#fff;border-bottom:1px solid rgba(255,255,255,.09)}
+.appbar .wrap{display:flex;align-items:center;gap:18px;height:62px}
+.appbar .brand{display:flex;align-items:center;gap:10px}
+.appbar .brand img{height:32px}
+.appbar .brand .n{display:block;font-family:var(--cond);font-weight:700;font-size:15.5px;letter-spacing:.03em;text-transform:uppercase;line-height:1}
+.appbar .brand .n span{display:block;font-size:8.5px;letter-spacing:.14em;color:var(--teal-300);margin-top:3px}
+.appbar .tabs{display:flex;gap:2px;margin-left:14px}
+.appbar .tabs button{background:transparent;border:0;height:62px;padding:0 13px;color:rgba(255,255,255,.7);font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;transition:.18s;display:flex;align-items:center;gap:7px}
+.appbar .tabs button:hover{color:#fff}
+.appbar .tabs button[aria-selected=true]{color:#fff;border-bottom-color:var(--teal)}
+.appbar .tabs .stp{width:18px;height:18px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.3);font-size:11px;font-family:var(--mono);color:rgba(255,255,255,.7)}
+.appbar .tabs button[aria-selected=true] .stp{border-color:var(--teal);background:var(--teal);color:#fff}
+.appbar .right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.iconbtn{width:38px;height:38px;display:grid;place-items:center;background:transparent;border:1px solid rgba(255,255,255,.22);color:#fff;cursor:pointer;transition:.18s}
+.iconbtn:hover{border-color:var(--teal);color:var(--teal-300)}
+.iconbtn svg{width:16px;height:16px}
+.i-moon{display:none}[data-theme=dark] .i-sun{display:none}[data-theme=dark] .i-moon{display:block}
+.staff{display:flex;align-items:center;gap:10px;padding-left:12px;border-left:1px solid rgba(255,255,255,.16)}
+.avatar{width:34px;height:34px;background:var(--teal);color:#fff;display:grid;place-items:center;font-family:var(--cond);font-weight:700;font-size:14px}
+.staff .nm{display:block;font-family:var(--cond);font-weight:600;font-size:14px;text-transform:uppercase;line-height:1.1}
+.staff .rl{display:block;font-size:11px;color:rgba(255,255,255,.58)}
+@media(max-width:1280px){.appbar .tabs{display:none}.staff .meta{display:none}}
+.mtabs{display:none;overflow-x:auto;background:var(--ink-2);border-bottom:1px solid rgba(255,255,255,.09)}
+.mtabs .wrap{display:flex;gap:2px}
+.mtabs button{background:transparent;border:0;height:48px;padding:0 14px;color:rgba(255,255,255,.7);font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.mtabs button[aria-selected=true]{color:#fff;border-bottom-color:var(--teal)}
+@media(max-width:1280px){.mtabs{display:block}}
+
+main{padding:clamp(24px,3vw,40px) 0 clamp(48px,6vw,80px)}
+.view{display:none}.view.on{display:block}
+.sechd{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:18px}
+.sechd h2{font-size:clamp(22px,2.3vw,30px);text-transform:uppercase;line-height:1;margin-top:10px}
+.sechd .note{font-size:14px;color:var(--tx-mut);max-width:52ch}
+.gap{margin-top:40px}
+.pad{padding:22px 24px}
+.pad h3{font-size:19px;text-transform:uppercase;margin-bottom:6px}
+.pad .lead{font-size:13.5px;line-height:1.55;color:var(--tx-mut);margin:0 0 18px;max-width:60ch}
+.stepnote{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--surface-2);border-left:2px solid var(--teal);font-size:13px;line-height:1.5;color:var(--tx-mut);margin-bottom:18px}
+.stepnote b{color:var(--accent-tx);font-family:var(--cond);letter-spacing:.04em;text-transform:uppercase}
+
+/* toolbar: buscador + acciones */
+.tbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 16px;border-bottom:1px solid var(--bd);background:var(--surface-2)}
+.srch{position:relative;flex:1;min-width:220px;max-width:420px}
+.srch input{width:100%;height:40px;padding:0 34px 0 38px;background:var(--card);border:1px solid var(--bd);color:var(--tx);font-family:var(--body);font-size:14.5px}
+.srch input:focus{outline:2px solid var(--teal);outline-offset:0;border-color:transparent}
+.srch svg{position:absolute;left:12px;top:11px;width:17px;height:17px;color:var(--tx-mut);pointer-events:none}
+.srch .clr{position:absolute;right:6px;top:8px;width:26px;height:24px;background:transparent;border:0;color:var(--tx-mut);cursor:pointer;font-size:15px;line-height:1;display:none}
+.srch.has .clr{display:block}
+.srch .clr:hover{color:var(--accent-tx)}
+.fsel{min-width:190px}
+.fsel select{height:40px;font-size:14.5px;background-position:calc(100% - 18px) 18px,calc(100% - 13px) 18px}
+.tbar .right{margin-left:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.count{font-family:var(--mono);font-size:12px;color:var(--tx-mut);white-space:nowrap}
+
+/* tablas */
+.tblwrap{overflow-x:auto}
+.tbl{width:100%;border-collapse:collapse;min-width:760px}
+.tbl-wide{min-width:1080px}
+.tbl th{text-align:left;font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--tx-mut);padding:12px 16px;background:var(--surface-2);border-bottom:1px solid var(--bd);white-space:nowrap}
+.tbl td{padding:13px 16px;border-bottom:1px solid var(--bd);font-size:14.5px;vertical-align:middle}
+.tbl tbody tr:hover{background:var(--surface-2)}
+.tbl tbody tr.sel{background:var(--surface-2);box-shadow:inset 3px 0 0 var(--teal)}
+.uname{display:block;font-family:var(--cond);font-weight:600;font-size:15.5px;text-transform:uppercase;line-height:1.15}
+.umail{display:block;font-size:12px;color:var(--tx-mut);margin-top:2px;font-family:var(--mono)}
+.mono{font-family:var(--mono);font-size:13px;color:var(--tx-mut);white-space:nowrap}
+.pill{display:inline-flex;font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;padding:5px 10px;border:1px solid currentColor;white-space:nowrap}
+.p-on{color:var(--ok)}.p-off{color:var(--tx-mut)}.p-warn{color:var(--warn)}
+.tag{display:inline-flex;align-items:center;height:26px;padding:0 10px;font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-tx);border:1px solid var(--bd);margin:2px 4px 2px 0;white-space:nowrap}
+.tag-n{color:var(--tx-mut)}
+.empty{padding:34px 16px;text-align:center;color:var(--tx-mut);font-size:14px}
+.empty b{display:block;font-family:var(--cond);font-weight:600;font-size:17px;text-transform:uppercase;color:var(--tx);margin-bottom:6px}
+
+/* paginación */
+.pager{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 16px;border-top:1px solid var(--bd);background:var(--surface-2)}
+.pager .pinfo{font-family:var(--mono);font-size:12px;color:var(--tx-mut);margin-right:auto}
+.pbtn{min-width:32px;height:32px;padding:0 9px;background:transparent;border:1px solid var(--bd);color:var(--tx-mut);font-family:var(--cond);font-weight:600;font-size:13.5px;cursor:pointer;transition:.16s}
+.pbtn:hover:not([disabled]){border-color:var(--teal);color:var(--accent-tx)}
+.pbtn[aria-current=true]{background:var(--teal);border-color:var(--teal);color:#fff}
+.pbtn[disabled]{opacity:.4;cursor:default}
+.psize{display:flex;align-items:center;gap:7px;font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--tx-mut)}
+.psize select{height:32px;padding:0 26px 0 9px;background:var(--card);border:1px solid var(--bd);color:var(--tx);font-family:var(--body);font-size:13.5px;appearance:none;
+  background-image:linear-gradient(45deg,transparent 50%,var(--tx-mut) 50%),linear-gradient(135deg,var(--tx-mut) 50%,transparent 50%);
+  background-position:calc(100% - 15px) 14px,calc(100% - 10px) 14px;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+
+/* modales */
+.mbd{position:fixed;inset:0;z-index:80;background:rgba(9,15,17,.62);backdrop-filter:blur(3px);display:none;align-items:flex-start;justify-content:center;padding:clamp(16px,5vh,64px) 16px;overflow-y:auto}
+.mbd.on{display:flex}
+.dlg{position:relative;width:100%;max-width:620px;background:var(--card);border:1px solid var(--bd);animation:pop .22s cubic-bezier(.2,.7,.2,1)}
+.dlg.wide{max-width:820px}
+@keyframes pop{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.dlg>.corner{position:absolute;width:9px;height:9px;color:var(--teal);pointer-events:none}
+.dlg>.corner::before,.dlg>.corner::after{content:"";position:absolute;background:currentColor}
+.dlg>.corner::before{left:50%;top:0;width:1px;height:100%;transform:translateX(-50%)}
+.dlg>.corner::after{top:50%;left:0;height:1px;width:100%;transform:translateY(-50%)}
+.dlg>.tl{left:-5px;top:-5px}.dlg>.tr{right:-5px;top:-5px}.dlg>.bl{left:-5px;bottom:-5px}.dlg>.br{right:-5px;bottom:-5px}
+.dhd{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:20px 24px;border-bottom:1px solid var(--bd);background:var(--surface-2)}
+.dhd h3{font-size:21px;text-transform:uppercase;line-height:1.05}
+.dhd .ds{font-size:13px;color:var(--tx-mut);margin-top:6px;max-width:52ch}
+.xbtn{width:34px;height:34px;flex:none;background:transparent;border:1px solid var(--bd);color:var(--tx-mut);font-size:16px;line-height:1;cursor:pointer;transition:.16s}
+.xbtn:hover{border-color:var(--risk);color:var(--risk)}
+.dbd{padding:22px 24px;max-height:min(62vh,560px);overflow-y:auto}
+.dft{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:16px 24px;border-top:1px solid var(--bd);background:var(--surface-2)}
+.dft .sp{margin-left:auto}
+.err{font-size:13px;color:var(--risk);min-height:0}
+.err:not(:empty){min-height:20px;margin-bottom:10px}
+
+/* asignación de contactos */
+.asg{display:grid;gap:0}
+.arow{display:grid;grid-template-columns:26px 1fr 210px 130px;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--bd)}
+.arow:last-child{border-bottom:0}
+.arow .an{font-family:var(--cond);font-weight:600;font-size:15px;text-transform:uppercase;line-height:1.15}
+.arow .ac{font-size:12px;color:var(--tx-mut);margin-top:2px}
+.arow select{height:38px;font-size:14px;background-position:calc(100% - 17px) 17px,calc(100% - 12px) 17px}
+.arow input[type=checkbox]{appearance:none;width:18px;height:18px;border:1px solid var(--bd);background:var(--card);display:grid;place-items:center;cursor:pointer;margin:0}
+.arow input[type=checkbox]:checked{background:var(--teal);border-color:var(--teal)}
+.arow input[type=checkbox]:checked::after{content:"";width:9px;height:4.5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px)}
+@media(max-width:760px){.arow{grid-template-columns:26px 1fr;row-gap:8px}.arow select,.arow .apill{grid-column:2}}
+
+/* config de visibilidad */
+.cfg{display:grid;grid-template-columns:320px 1fr;gap:20px;align-items:start}
+@media(max-width:980px){.cfg{grid-template-columns:1fr}}
+.plist{display:grid;gap:0;max-height:520px;overflow-y:auto}
+.pitem{display:block;width:100%;text-align:left;background:transparent;border:0;border-top:1px solid var(--bd);padding:14px 16px;cursor:pointer;transition:background .18s}
+.pitem:first-child{border-top:0}
+.pitem:hover{background:var(--surface-2)}
+.pitem[aria-current=true]{background:var(--surface-2);box-shadow:inset 3px 0 0 var(--teal)}
+.pitem .pc{display:block;font-family:var(--mono);font-size:11.5px;color:var(--tx-mut)}
+.pitem .pt{display:block;font-family:var(--cond);font-weight:600;font-size:15px;text-transform:uppercase;line-height:1.12;margin-top:3px}
+.pitem .pe{display:block;font-size:11.5px;color:var(--tx-mut);margin-top:5px}
+.cfgpanel{padding:0}
+.cfghd{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:20px 24px;border-bottom:1px solid var(--bd);background:var(--surface-2)}
+.cfghd h3{font-size:21px;text-transform:uppercase;line-height:1.05}
+.cfghd .mono{font-family:var(--mono);font-size:12px;color:var(--tx-mut)}
+.cfgbody{padding:22px 24px}
+.grp{margin-bottom:26px}
+.grp:last-child{margin-bottom:0}
+.grp h4{font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--tx-mut);display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.grp h4::before{content:"";width:20px;height:2px;background:var(--teal)}
+.grp .gd{font-size:12.5px;color:var(--tx-mut);margin:0 0 12px 30px}
+.tgls{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+@media(max-width:760px){.tgls{grid-template-columns:1fr}}
+.tg{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid var(--bd)}
+.tg .tl2{font-size:14.5px;color:var(--tx-soft)}
+.sw{position:relative;width:42px;height:22px;flex:none;background:var(--bd);border:0;cursor:pointer;transition:background .2s;padding:0}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;background:var(--card);transition:transform .2s}
+.sw[aria-checked=true]{background:var(--teal)}
+.sw[aria-checked=true]::after{transform:translateX(20px)}
+.cfgfoot{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:16px 24px;border-top:1px solid var(--bd);background:var(--surface-2)}
+.saved{font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--ok);opacity:0;transition:opacity .25s}
+.saved.on{opacity:1}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,16px);z-index:90;background:var(--ink);color:#fff;border-left:3px solid var(--ok);padding:13px 20px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.appfoot{border-top:1px solid var(--bd);padding:22px 0;font-size:12.5px;color:var(--tx-mut)}
+.appfoot .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+</style>
+</head>
+<body>
+
+<header class="appbar">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img src="assets/logo/icono.png" alt="" />
+      <span class="n">S&amp;G<span>Administración del portal</span></span>
+    </a>
+    <nav class="tabs" role="tablist" id="tabs">
+      <button role="tab" aria-selected="true"  data-v="empresas"><span class="stp">1</span> Empresas</button>
+      <button role="tab" aria-selected="false" data-v="usuarios"><span class="stp">2</span> Usuarios</button>
+      <button role="tab" aria-selected="false" data-v="proyectos"><span class="stp">3</span> Proyectos</button>
+      <button role="tab" aria-selected="false" data-v="contactos"><span class="stp">4</span> Contactos</button>
+      <button role="tab" aria-selected="false" data-v="config"><span class="stp">5</span> Visibilidad</button>
+    </nav>
+    <div class="right">
+      <a class="btn btn-g" href="portal-cliente.html">Ver como cliente <span class="arrow"></span></a>
+      <button class="iconbtn" id="themeBtn" type="button" aria-label="Cambiar tema">
+        <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a6.5 6.5 0 1 0 10.5 10.5z"/></svg>
+      </button>
+      <div class="staff">
+        <span class="avatar">JS</span>
+        <span class="meta"><span class="nm">J. Serrano</span><span class="rl">S&amp;G · Administrador</span></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="mtabs"><div class="wrap" id="mtabs">
+  <button aria-selected="true"  data-v="empresas">1 · Empresas</button>
+  <button aria-selected="false" data-v="usuarios">2 · Usuarios</button>
+  <button aria-selected="false" data-v="proyectos">3 · Proyectos</button>
+  <button aria-selected="false" data-v="contactos">4 · Contactos</button>
+  <button aria-selected="false" data-v="config">5 · Visibilidad</button>
+</div></div>
+
+<main><div class="wrap">
+
+  <!-- ===== 1 · EMPRESAS ===== -->
+  <section class="view on" id="v-empresas">
+    <div class="sechd">
+      <div><span class="kick">Paso 1</span><h2>Empresas</h2></div>
+      <p class="note">Todo empieza aquí: la empresa agrupa a sus usuarios y a sus proyectos. Sin empresa no se pueden crear ni usuarios ni proyectos.</p>
+    </div>
+    <div class="stepnote"><span><b>Siguiente paso:</b> con la empresa creada, pasa a <b>2 · Usuarios</b> para dar de alta sus contactos, y a <b>3 · Proyectos</b> para registrar sus proyectos.</span></div>
+    <div class="bp" style="padding:0"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <div class="tbar">
+        <div class="srch" id="srchEmp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+          <input type="search" id="qEmp" placeholder="Buscar por nombre, NIT, sector o ciudad…" aria-label="Buscar empresa" />
+          <button class="clr" type="button" data-clr="qEmp" aria-label="Limpiar búsqueda">✕</button>
+        </div>
+        <div class="right">
+          <span class="count" id="cEmp"></span>
+          <button class="btn btn-p btn-sm" type="button" id="newEmp"><span class="plus">+</span> Nueva empresa</button>
+        </div>
+      </div>
+      <div class="tblwrap"><table class="tbl tbl-wide">
+        <thead><tr><th>Empresa</th><th>NIT</th><th>Sector</th><th>Ciudad</th><th>Contacto</th><th>Usuarios</th><th>Proyectos</th><th>Estado</th><th></th></tr></thead>
+        <tbody id="tbEmp"></tbody>
+      </table></div>
+      <div class="pager" id="pgEmp"></div>
+    </div>
+  </section>
+
+  <!-- ===== 2 · USUARIOS ===== -->
+  <section class="view" id="v-usuarios">
+    <div class="sechd">
+      <div><span class="kick">Paso 2</span><h2>Usuarios de la empresa</h2></div>
+      <p class="note">Cada usuario pertenece a una sola empresa. No hay registro público: S&amp;G envía una invitación de un solo uso y el usuario define su contraseña.</p>
+    </div>
+    <div class="bp" style="padding:0"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <div class="tbar">
+        <div class="srch" id="srchUsr">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+          <input type="search" id="qUsr" placeholder="Buscar por nombre, correo o cargo…" aria-label="Buscar usuario" />
+          <button class="clr" type="button" data-clr="qUsr" aria-label="Limpiar búsqueda">✕</button>
+        </div>
+        <div class="fsel"><select class="input" id="fUsrEmp" aria-label="Filtrar por empresa"></select></div>
+        <div class="right">
+          <span class="count" id="cUsr"></span>
+          <button class="btn btn-p btn-sm" type="button" id="newUsr"><span class="plus">+</span> Nuevo usuario</button>
+        </div>
+      </div>
+      <div class="tblwrap"><table class="tbl tbl-wide">
+        <thead><tr><th>Usuario</th><th>Cargo</th><th>Empresa</th><th>Rol en el portal</th><th>Proyectos</th><th>2FA</th><th>Estado</th><th></th></tr></thead>
+        <tbody id="tbUsr"></tbody>
+      </table></div>
+      <div class="pager" id="pgUsr"></div>
+    </div>
+  </section>
+
+  <!-- ===== 3 · PROYECTOS ===== -->
+  <section class="view" id="v-proyectos">
+    <div class="sechd">
+      <div><span class="kick">Paso 3</span><h2>Proyectos de la empresa</h2></div>
+      <p class="note">El proyecto se aloja en una empresa. Después se le asignan los contactos que podrán verlo (paso 4) y se define qué muestra el portal (paso 5).</p>
+    </div>
+    <div class="bp" style="padding:0"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <div class="tbar">
+        <div class="srch" id="srchPro">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+          <input type="search" id="qPro" placeholder="Buscar por código, título, servicio o ciudad…" aria-label="Buscar proyecto" />
+          <button class="clr" type="button" data-clr="qPro" aria-label="Limpiar búsqueda">✕</button>
+        </div>
+        <div class="fsel"><select class="input" id="fProEmp" aria-label="Filtrar por empresa"></select></div>
+        <div class="right">
+          <span class="count" id="cPro"></span>
+          <button class="btn btn-p btn-sm" type="button" id="newPro"><span class="plus">+</span> Nuevo proyecto</button>
+        </div>
+      </div>
+      <div class="tblwrap"><table class="tbl tbl-wide">
+        <thead><tr><th>Proyecto</th><th>Empresa</th><th>Servicio</th><th>Fechas</th><th>Avance</th><th>Contactos</th><th>Estado</th><th></th></tr></thead>
+        <tbody id="tbPro"></tbody>
+      </table></div>
+      <div class="pager" id="pgPro"></div>
+    </div>
+  </section>
+
+  <!-- ===== 4 · CONTACTOS DEL PROYECTO ===== -->
+  <section class="view" id="v-contactos">
+    <div class="sechd">
+      <div><span class="kick">Paso 4</span><h2>Contactos por proyecto</h2></div>
+      <p class="note">Asigna qué usuarios de la empresa pueden ver cada proyecto y con qué rol dentro de él. Solo aparecen usuarios de la misma empresa del proyecto.</p>
+    </div>
+    <div class="bp" style="padding:0"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+      <div class="tbar">
+        <div class="srch" id="srchAsg">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+          <input type="search" id="qAsg" placeholder="Buscar proyecto…" aria-label="Buscar proyecto" />
+          <button class="clr" type="button" data-clr="qAsg" aria-label="Limpiar búsqueda">✕</button>
+        </div>
+        <div class="fsel"><select class="input" id="fAsgEmp" aria-label="Filtrar por empresa"></select></div>
+        <div class="right"><span class="count" id="cAsg"></span></div>
+      </div>
+      <div class="tblwrap"><table class="tbl">
+        <thead><tr><th>Proyecto</th><th>Empresa</th><th>Contactos asignados</th><th>Estado</th><th></th></tr></thead>
+        <tbody id="tbAsg"></tbody>
+      </table></div>
+      <div class="pager" id="pgAsg"></div>
+    </div>
+  </section>
+
+  <!-- ===== 5 · VISIBILIDAD ===== -->
+  <section class="view" id="v-config">
+    <div class="sechd">
+      <div><span class="kick">Paso 5</span><h2>Qué ve el cliente en cada proyecto</h2></div>
+      <p class="note">La configuración es <b>por proyecto</b>, no por cliente. Lo que apagues aquí desaparece del portal para todos los contactos de ese proyecto.</p>
+    </div>
+    <div class="cfg">
+      <div class="bp" style="padding:0"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <div class="tbar" style="padding:12px 14px">
+          <div class="srch" id="srchCfg" style="min-width:0">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+            <input type="search" id="qCfg" placeholder="Buscar proyecto…" aria-label="Buscar proyecto" />
+            <button class="clr" type="button" data-clr="qCfg" aria-label="Limpiar búsqueda">✕</button>
+          </div>
+        </div>
+        <div class="plist" id="plist"></div>
+      </div>
+      <div class="bp cfgpanel"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <div class="cfghd">
+          <div><h3 id="cfgTitle">—</h3><div class="mono" id="cfgMeta">—</div></div>
+          <span class="pill p-on" id="cfgState">—</span>
+        </div>
+        <div class="cfgbody" id="cfgBody"></div>
+        <div class="cfgfoot">
+          <button class="btn btn-p btn-sm" type="button" id="cfgSave">Guardar configuración</button>
+          <button class="btn btn-o btn-sm" type="button" id="cfgReset">Restaurar por defecto</button>
+          <span class="saved" id="cfgSaved">Guardado</span>
+          <a class="btn btn-g" style="margin-left:auto" href="portal-cliente.html">Previsualizar <span class="arrow"></span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div></main>
+
+<footer class="appfoot"><div class="wrap">
+  <span>S&amp;G Soluciones de Ingeniería · Administración del portal · Uso interno</span>
+  <span>informacion@sgsolucionesing.com · +57 324 3025107</span>
+</div></footer>
+
+<!-- ============ MODAL: EMPRESA ============ -->
+<div class="mbd" id="mEmp" role="dialog" aria-modal="true" aria-labelledby="mEmpT">
+  <div class="dlg"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <div class="dhd">
+      <div><h3 id="mEmpT">Nueva empresa</h3><p class="ds">Paso 1 del flujo. Queda en estado <b>Pendiente</b> hasta que tenga al menos un usuario y un proyecto.</p></div>
+      <button class="xbtn" type="button" data-close aria-label="Cerrar">✕</button>
+    </div>
+    <form id="fEmp" novalidate>
+      <div class="dbd">
+        <div class="err" id="eEmp" role="alert"></div>
+        <div class="frow">
+          <div class="field"><label for="e-nom">Razón social *</label><input class="input" id="e-nom" type="text" placeholder="Empresa S.A.S." /></div>
+          <div class="field"><label for="e-nit">NIT *</label><input class="input" id="e-nit" type="text" placeholder="900.000.000-0" /></div>
+        </div>
+        <div class="frow">
+          <div class="field"><label for="e-sec">Sector</label><input class="input" id="e-sec" type="text" placeholder="Alimentos, cementero, portuario…" /></div>
+          <div class="field"><label for="e-ciu">Ciudad</label><input class="input" id="e-ciu" type="text" placeholder="Barranquilla" /></div>
+        </div>
+        <div class="frow">
+          <div class="field"><label for="e-con">Contacto principal</label><input class="input" id="e-con" type="text" placeholder="Nombre y cargo" /></div>
+          <div class="field"><label for="e-cor">Correo corporativo</label><input class="input" id="e-cor" type="email" placeholder="contacto@empresa.co" /></div>
+        </div>
+        <div class="field"><label for="e-tel">Teléfono</label><input class="input" id="e-tel" type="tel" placeholder="+57 300 000 0000" /></div>
+      </div>
+      <div class="dft">
+        <button class="btn btn-p btn-sm" type="submit">Crear empresa</button>
+        <button class="btn btn-o btn-sm" type="button" data-close>Cancelar</button>
+        <span class="hint sp">* Campos obligatorios</span>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL: USUARIO ============ -->
+<div class="mbd" id="mUsr" role="dialog" aria-modal="true" aria-labelledby="mUsrT">
+  <div class="dlg"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <div class="dhd">
+      <div><h3 id="mUsrT">Nuevo usuario</h3><p class="ds">Paso 2 del flujo. El usuario define su contraseña al aceptar la invitación; S&amp;G nunca la conoce.</p></div>
+      <button class="xbtn" type="button" data-close aria-label="Cerrar">✕</button>
+    </div>
+    <form id="fUsr" novalidate>
+      <div class="dbd">
+        <div class="err" id="eUsr" role="alert"></div>
+        <div class="field"><label for="u-emp">Empresa *</label><select class="input" id="u-emp"></select></div>
+        <div class="frow">
+          <div class="field"><label for="u-nom">Nombre completo *</label><input class="input" id="u-nom" type="text" placeholder="Nombre y apellido" /></div>
+          <div class="field"><label for="u-car">Cargo</label><input class="input" id="u-car" type="text" placeholder="Jefe de Mantenimiento" /></div>
+        </div>
+        <div class="frow">
+          <div class="field"><label for="u-cor">Correo corporativo *</label><input class="input" id="u-cor" type="email" placeholder="usuario@empresa.co" /></div>
+          <div class="field"><label for="u-rol">Rol en el portal</label><select class="input" id="u-rol"></select></div>
+        </div>
+        <p class="hint">Los proyectos se asignan en el <b>paso 4 · Contactos</b>, una vez creado el usuario.</p>
+      </div>
+      <div class="dft">
+        <button class="btn btn-p btn-sm" type="submit">Enviar invitación</button>
+        <button class="btn btn-o btn-sm" type="button" data-close>Cancelar</button>
+        <span class="hint sp">Invitación de un solo uso · expira en 72 h</span>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL: PROYECTO ============ -->
+<div class="mbd" id="mPro" role="dialog" aria-modal="true" aria-labelledby="mProT">
+  <div class="dlg"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <div class="dhd">
+      <div><h3 id="mProT">Nuevo proyecto</h3><p class="ds">Paso 3 del flujo. Se aloja en la empresa seleccionada y nace sin contactos asignados.</p></div>
+      <button class="xbtn" type="button" data-close aria-label="Cerrar">✕</button>
+    </div>
+    <form id="fPro" novalidate>
+      <div class="dbd">
+        <div class="err" id="ePro" role="alert"></div>
+        <div class="field"><label for="p-emp">Empresa *</label><select class="input" id="p-emp"></select></div>
+        <div class="frow">
+          <div class="field"><label for="p-cod">Código *</label><input class="input" id="p-cod" type="text" placeholder="SG-2026-030" /></div>
+          <div class="field"><label for="p-ser">Servicio</label><select class="input" id="p-ser">
+            <option>Automatización industrial</option><option>Industria 4.0 / IoT</option>
+            <option>Gestión de energía</option><option>Automatización / medición</option><option>Desarrollo de software</option>
+          </select></div>
+        </div>
+        <div class="field"><label for="p-tit">Título del proyecto *</label><input class="input" id="p-tit" type="text" placeholder="Actualización de tablero principal" /></div>
+        <div class="frow">
+          <div class="field"><label for="p-ciu">Ubicación</label><input class="input" id="p-ciu" type="text" placeholder="Barranquilla" /></div>
+          <div class="field"><label for="p-res">Responsable S&amp;G</label><input class="input" id="p-res" type="text" placeholder="Ing. J. Serrano" /></div>
+        </div>
+        <div class="frow">
+          <div class="field"><label for="p-ini">Inicio</label><input class="input" id="p-ini" type="text" placeholder="03 Ago 2026" /></div>
+          <div class="field"><label for="p-fin">Fin estimado</label><input class="input" id="p-fin" type="text" placeholder="18 Dic 2026" /></div>
+        </div>
+        <p class="hint">La WBS, el cronograma y los documentos se cargan luego desde la ficha del proyecto.</p>
+      </div>
+      <div class="dft">
+        <button class="btn btn-p btn-sm" type="submit">Crear proyecto</button>
+        <button class="btn btn-o btn-sm" type="button" data-close>Cancelar</button>
+        <span class="hint sp">* Campos obligatorios</span>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL: CONTACTOS ============ -->
+<div class="mbd" id="mAsg" role="dialog" aria-modal="true" aria-labelledby="mAsgT">
+  <div class="dlg wide"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+    <div class="dhd">
+      <div><h3 id="mAsgT">Contactos del proyecto</h3><p class="ds" id="mAsgS">—</p></div>
+      <button class="xbtn" type="button" data-close aria-label="Cerrar">✕</button>
+    </div>
+    <div class="dbd">
+      <div class="srch" id="srchAsgU" style="max-width:none;margin-bottom:16px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+        <input type="search" id="qAsgU" placeholder="Buscar usuario de la empresa…" aria-label="Buscar usuario" />
+        <button class="clr" type="button" data-clr="qAsgU" aria-label="Limpiar búsqueda">✕</button>
+      </div>
+      <div class="asg" id="asgList"></div>
+    </div>
+    <div class="dft">
+      <button class="btn btn-p btn-sm" type="button" id="asgSave">Guardar contactos</button>
+      <button class="btn btn-o btn-sm" type="button" data-close>Cerrar</button>
+      <span class="hint sp">El acceso se aplica en el siguiente ingreso del usuario.</span>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="portal-config.js"></script>
+<script src="portal-data.js"></script>
+<script src="portal-admin-data.js"></script>
+<script src="portal-admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Portal de cliente — S&amp;G Soluciones de Ingeniería</title>
+<meta name="description" content="Portal privado de seguimiento de proyecto: cartera, avance, WBS, cronograma, curva S, valor ganado, actividades y documentos." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=Barlow+Semi+Condensed:wght@500&display=swap" rel="stylesheet" />
+<script>
+(function(){try{var t=localStorage.getItem('sg-theme');if(!t)t=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+<style>
+:root{
+  --teal:#00a79d; --teal-600:#009088; --teal-700:#00706a; --teal-300:#7fd8cf; --teal-050:#e7f6f3;
+  --navy:#122a49; --ink:#0d1417; --ink-2:#141d21;
+  --paper:#f4f6f6; --paper-2:#eceff0; --line:#d9dedf; --muted:#5b6567;
+  --cond:"Barlow Condensed",system-ui,sans-serif; --body:"Barlow",system-ui,sans-serif;
+  --mono:"Barlow Semi Condensed",ui-monospace,monospace;
+  --edge:clamp(20px,4vw,56px); --max:1400px;
+  --ok:#2f8f6b; --warn:#b8863b; --risk:#b23b3b;
+  --surface:var(--paper); --surface-2:var(--paper-2); --card:#ffffff;
+  --tx:var(--ink); --tx-soft:#374042; --tx-mut:var(--muted);
+  --bd:var(--line); --accent-tx:var(--teal-700); --code-bg:var(--paper-2);
+  color-scheme:light;
+}
+[data-theme=dark]{
+  --surface:#0d1417; --surface-2:#10181c; --card:#141d21;
+  --tx:#eef4f4; --tx-soft:rgba(238,244,244,.82); --tx-mut:rgba(226,236,236,.6);
+  --bd:rgba(255,255,255,.13); --accent-tx:var(--teal-300); --code-bg:rgba(255,255,255,.06);
+  --ok:#5fbf95; --warn:#d9ab63; --risk:#e0736f;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--body);color:var(--tx);background:var(--surface);-webkit-font-smoothing:antialiased;text-wrap:pretty;transition:background .3s,color .3s}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+a.lk{color:var(--accent-tx)}a.lk:hover{color:var(--teal-600)}
+h1,h2,h3,h4{font-family:var(--cond);font-weight:600;margin:0;letter-spacing:-0.005em}
+button{font:inherit}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--edge)}
+.kick{font-family:var(--cond);font-weight:600;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-tx);display:flex;align-items:center;gap:10px}
+.kick::before{content:"";width:28px;height:2px;background:var(--teal)}
+.arrow{width:8px;height:8px;border-right:2px solid currentColor;border-top:2px solid currentColor;transform:rotate(45deg);display:inline-block}
+
+/* ---- blueprint frame ---- */
+.bp{position:relative;border:1px solid var(--bd);background:transparent}
+.bp>.corner{position:absolute;width:9px;height:9px;padding:0;pointer-events:none;color:var(--teal);opacity:.85}
+.bp>.corner::before,.bp>.corner::after{content:"";position:absolute;background:currentColor}
+.bp>.corner::before{left:50%;top:0;width:1px;height:100%;transform:translateX(-50%)}
+.bp>.corner::after{top:50%;left:0;height:1px;width:100%;transform:translateY(-50%)}
+.bp>.tl{left:-5px;top:-5px}.bp>.tr{right:-5px;top:-5px}
+.bp>.bl{left:-5px;bottom:-5px}.bp>.br{right:-5px;bottom:-5px}
+
+/* ---- buttons ---- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:44px;padding:0 20px;font-family:var(--cond);font-weight:600;font-size:15.5px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;border:0;transition:background .18s,color .18s,border-color .18s,transform .18s;position:relative}
+.btn-p{background:var(--teal);color:#fff}
+.btn-p:hover{background:var(--teal-600);transform:translateY(-1px)}
+.btn-o{background:transparent;border:1.5px solid var(--bd);color:var(--tx)}
+.btn-o:hover{border-color:var(--teal);color:var(--accent-tx)}
+.btn-g{background:transparent;color:var(--tx-mut);height:38px;padding:0 12px}
+.btn-g:hover{color:var(--accent-tx)}
+.btn-block{width:100%}
+.btn[disabled]{opacity:.45;pointer-events:none}
+
+/* ---- form fields ---- */
+.field{display:grid;gap:7px;margin-bottom:16px}
+.field label{font-family:var(--cond);font-weight:600;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx-mut)}
+.input{width:100%;height:46px;padding:0 14px;background:var(--card);border:1px solid var(--bd);color:var(--tx);font-family:var(--body);font-size:15.5px;border-radius:0}
+.input:focus{outline:2px solid var(--teal);outline-offset:0;border-color:transparent}
+.hint{font-size:12.5px;line-height:1.45;color:var(--tx-mut)}
+.pwrap{position:relative}
+.pwrap .input{padding-right:76px}
+.peye{position:absolute;right:6px;top:6px;height:34px;padding:0 10px;background:transparent;border:0;color:var(--tx-mut);font-family:var(--cond);font-weight:600;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+.peye:hover{color:var(--accent-tx)}
+.err{font-size:13px;color:var(--risk);min-height:18px}
+
+/* ==================== LOGIN ==================== */
+.auth{min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr}
+.auth .side{position:relative;background:var(--ink);color:#fff;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(28px,4vw,54px)}
+.auth .side::after{content:"";position:absolute;inset:0;background:
+  radial-gradient(110% 90% at 88% 6%,rgba(0,167,157,.26),transparent 55%),
+  linear-gradient(180deg,rgba(9,15,17,.35),rgba(8,26,25,.9));z-index:1}
+.auth .side .grid-bg{position:absolute;inset:0;opacity:.16;background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);background-size:56px 56px}
+.auth .side>*{position:relative;z-index:2}
+.auth .side .brand{display:flex;align-items:center;gap:11px}
+.auth .side .brand img{height:38px}
+.auth .side .brand .n{font-family:var(--cond);font-weight:700;font-size:17px;letter-spacing:.03em;text-transform:uppercase;line-height:1}
+.auth .side .brand .n span{display:block;font-size:9px;letter-spacing:.15em;color:rgba(255,255,255,.6);margin-top:3px}
+.auth .side .pitch h2{font-size:clamp(32px,3.6vw,54px);line-height:.98;text-transform:uppercase;max-width:16ch}
+.auth .side .pitch h2 em{font-style:normal;color:var(--teal-300)}
+.auth .side .pitch p{font-size:16px;line-height:1.6;color:rgba(238,244,244,.82);max-width:42ch;margin:18px 0 0}
+.auth .side .feat{display:grid;gap:11px;margin-top:28px;padding:0;list-style:none}
+.auth .side .feat li{position:relative;padding-left:22px;font-size:14.5px;color:rgba(238,244,244,.86)}
+.auth .side .feat li::before{content:"";position:absolute;left:0;top:.65em;width:12px;height:2px;background:var(--teal)}
+.auth .side .foot{font-size:12.5px;color:rgba(226,236,236,.55);font-family:var(--mono);letter-spacing:.03em}
+.auth .panel{display:flex;align-items:center;justify-content:center;padding:clamp(28px,4vw,54px)}
+.auth .box{width:100%;max-width:400px}
+.auth .box h1{font-size:clamp(30px,3vw,42px);text-transform:uppercase;line-height:1;margin:14px 0 0}
+.auth .box .sub{font-size:15px;line-height:1.55;color:var(--tx-mut);margin:12px 0 26px}
+.authcard{padding:26px}
+.rowsp{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:-4px 0 18px}
+.chk{display:flex;align-items:center;gap:9px;font-size:14px;color:var(--tx-soft);cursor:pointer}
+.chk input{appearance:none;width:16px;height:16px;border:1px solid var(--bd);background:var(--card);display:grid;place-items:center;cursor:pointer;margin:0}
+.chk input:checked{background:var(--teal);border-color:var(--teal)}
+.chk input:checked::after{content:"";width:8px;height:4px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) translateY(-1px)}
+.altsep{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--tx-mut);font-family:var(--cond);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.altsep::before,.altsep::after{content:"";flex:1;height:1px;background:var(--bd)}
+.demo-note{margin-top:20px;padding:12px 14px;background:var(--surface-2);border-left:2px solid var(--teal);font-size:12.5px;line-height:1.5;color:var(--tx-mut)}
+.demo-note b{color:var(--accent-tx);font-family:var(--cond);letter-spacing:.04em}
+@media(max-width:900px){.auth{grid-template-columns:1fr}.auth .side{display:none}}
+
+/* ==================== APP SHELL ==================== */
+.app{display:none;min-height:100vh;flex-direction:column}
+.app.on{display:flex}
+.appbar{position:sticky;top:0;z-index:40;background:rgba(11,17,20,.95);backdrop-filter:blur(10px);color:#fff;border-bottom:1px solid rgba(255,255,255,.09)}
+.appbar .wrap{display:flex;align-items:center;gap:18px;height:62px}
+.appbar .brand{display:flex;align-items:center;gap:10px}
+.appbar .brand img{height:32px}
+.appbar .brand .n{font-family:var(--cond);font-weight:700;font-size:15.5px;letter-spacing:.03em;text-transform:uppercase;line-height:1}
+.appbar .brand .n span{display:block;font-size:8.5px;letter-spacing:.14em;color:rgba(255,255,255,.58);margin-top:3px}
+.appbar .tabs{display:flex;gap:2px;margin-left:14px}
+.appbar .tabs button{background:transparent;border:0;height:62px;padding:0 13px;color:rgba(255,255,255,.7);font-family:var(--cond);font-weight:600;font-size:14.5px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;transition:.18s}
+.appbar .tabs button:hover{color:#fff}
+.appbar .tabs button[aria-selected=true]{color:#fff;border-bottom-color:var(--teal)}
+.appbar .right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.iconbtn{width:38px;height:38px;display:grid;place-items:center;background:transparent;border:1px solid rgba(255,255,255,.22);color:#fff;cursor:pointer;transition:.18s}
+.iconbtn:hover{border-color:var(--teal);color:var(--teal-300)}
+.iconbtn svg{width:16px;height:16px}
+.i-moon{display:none}[data-theme=dark] .i-sun{display:none}[data-theme=dark] .i-moon{display:block}
+.who{display:flex;align-items:center;gap:10px;padding-left:12px;margin-left:4px;border-left:1px solid rgba(255,255,255,.16)}
+.avatar{width:34px;height:34px;background:var(--teal);color:#fff;display:grid;place-items:center;font-family:var(--cond);font-weight:700;font-size:14px;letter-spacing:.02em}
+.who .meta{line-height:1.25}
+.who .nm{display:block;font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.02em;text-transform:uppercase}
+.who .org{display:block;font-size:11px;color:rgba(255,255,255,.58)}
+@media(max-width:1180px){.appbar .tabs{display:none}.who .meta{display:none}}
+
+.mtabs{display:none;overflow-x:auto;background:var(--ink-2);border-bottom:1px solid rgba(255,255,255,.09)}
+.mtabs .wrap{display:flex;gap:2px}
+.mtabs button{background:transparent;border:0;height:48px;padding:0 14px;color:rgba(255,255,255,.7);font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.mtabs button[aria-selected=true]{color:#fff;border-bottom-color:var(--teal)}
+@media(max-width:1180px){.mtabs{display:block}}
+
+/* project header */
+.phead{background:var(--surface-2);border-bottom:1px solid var(--bd);padding:clamp(20px,2.6vw,34px) 0}
+.phead .top{display:flex;align-items:flex-start;justify-content:space-between;gap:22px;flex-wrap:wrap}
+.phead .metaline{font-family:var(--cond);font-weight:600;font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-tx)}
+.phead h1{font-size:clamp(26px,3vw,42px);line-height:1;text-transform:uppercase;margin:10px 0 0;max-width:24ch}
+.phead .facts{display:flex;flex-wrap:wrap;gap:18px 38px;margin-top:20px}
+.fct .fl{font-family:var(--cond);font-weight:600;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--tx-mut)}
+.fct .fv{font-size:15px;margin-top:3px;color:var(--tx)}
+.badge{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 12px;font-family:var(--cond);font-weight:600;font-size:12.5px;letter-spacing:.07em;text-transform:uppercase;border:1px solid currentColor}
+.badge::before{content:"";width:7px;height:7px;background:currentColor}
+.b-ok{color:var(--ok)}.b-warn{color:var(--warn)}.b-risk{color:var(--risk)}
+.backlink{display:inline-flex;align-items:center;gap:9px;font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent-tx);margin-bottom:14px}
+.backlink:hover{color:var(--teal-600)}
+.backlink .bk{width:8px;height:8px;border-left:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg);display:inline-block}
+.prog{min-width:260px}
+.prog .pt{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.prog .pn{font-family:var(--cond);font-weight:700;font-size:46px;line-height:.9;color:var(--accent-tx)}
+.prog .pl{font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--tx-mut)}
+.bar{height:10px;background:var(--bd);margin-top:12px;position:relative;overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0;background:var(--teal);width:0;transition:width 1.1s cubic-bezier(.2,.7,.2,1)}
+.bar .plan{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--tx);opacity:.55}
+.prog .cmp{display:flex;justify-content:space-between;gap:10px;margin-top:8px;font-size:12px;color:var(--tx-mut)}
+
+/* views */
+main{flex:1;padding:clamp(24px,3vw,42px) 0 clamp(48px,6vw,80px)}
+.view{display:none}.view.on{display:block}
+.sechd{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:20px}
+.sechd h2{font-size:clamp(22px,2.3vw,30px);text-transform:uppercase;line-height:1;margin-top:10px}
+.sechd .note{font-size:14px;color:var(--tx-mut);max-width:48ch}
+.gap{margin-top:44px}
+
+/* ---- cartera de proyectos ---- */
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.pcard{padding:22px;cursor:pointer;display:flex;flex-direction:column;transition:border-color .2s,transform .2s}
+.pcard:hover{border-color:var(--teal);transform:translateY(-2px)}
+.pc-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.pc-code{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--tx-mut)}
+.pcard h3{font-size:21px;text-transform:uppercase;line-height:1.02}
+.pc-meta{font-size:13px;color:var(--tx-mut);margin-top:8px}
+.pc-prog{margin-top:20px}
+.pc-pt{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.pc-pn{font-family:var(--cond);font-weight:700;font-size:30px;line-height:1;color:var(--accent-tx)}
+.pc-pl{font-family:var(--cond);font-weight:600;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--tx-mut)}
+.pc-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;padding-top:18px;font-size:12.5px;color:var(--tx-mut)}
+.pc-go{font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-tx);display:inline-flex;align-items:center;gap:7px}
+@media(max-width:1080px){.pgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:620px){.pgrid{grid-template-columns:1fr}}
+
+/* KPI grid — filas alineadas entre tarjetas (subgrid) */
+.kgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;grid-template-rows:auto auto auto 1fr}
+.kcard{padding:20px;grid-row:span 4;display:grid;grid-template-rows:subgrid;row-gap:0;align-content:start}
+@supports not (grid-template-rows:subgrid){.kgrid{grid-template-rows:none}.kcard{grid-row:auto;grid-template-rows:auto auto auto 1fr}}
+.kcard .kl{font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--tx-mut);line-height:1.3}
+.kcard .kn{font-family:var(--cond);font-weight:700;font-size:40px;line-height:1;color:var(--accent-tx);margin-top:10px;align-self:end}
+.kcard .kn small{font-size:20px;color:var(--tx-mut)}
+.kcard .trend{font-family:var(--cond);font-weight:600;font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;margin-top:10px}
+.kcard .kd{font-size:12.5px;line-height:1.45;color:var(--tx-mut);margin-top:8px}
+.t-up{color:var(--ok)}.t-dn{color:var(--risk)}.t-fl{color:var(--tx-mut)}
+@media(max-width:1080px){.kgrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.kgrid{grid-template-columns:1fr}}
+
+.cols{display:grid;grid-template-columns:1.35fr 1fr;gap:20px;align-items:start}
+@media(max-width:1000px){.cols{grid-template-columns:1fr}}
+
+/* ---- GANTT jerárquico (3 niveles) ---- */
+.gantt{padding:0;overflow:hidden}
+.gtoolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--bd);background:var(--surface-2)}
+.gtoolbar .lbl{font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--tx-mut);margin-right:2px}
+.seg{display:flex;border:1px solid var(--bd)}
+.seg button{background:transparent;border:0;height:32px;padding:0 12px;font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--tx-mut);cursor:pointer;border-left:1px solid var(--bd)}
+.seg button:first-child{border-left:0}
+.seg button[aria-pressed=true]{background:var(--teal);color:#fff}
+.seg button:hover:not([aria-pressed=true]){color:var(--accent-tx)}
+.gscroll{overflow-x:auto}
+.gtable{min-width:880px}
+.grow{display:grid;grid-template-columns:330px 1fr;align-items:stretch;border-top:1px solid var(--bd)}
+.grow:first-child{border-top:0}
+.grow.hid{display:none}
+.grow.lv1{background:var(--surface-2)}
+.ghead{background:var(--surface-2);position:sticky;top:0;z-index:2}
+.gname{padding:10px 14px;border-right:1px solid var(--bd);display:flex;align-items:center;gap:9px}
+.gname .wbs{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--tx-mut);min-width:44px;flex:none}
+.gname .txt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.gname .t{font-family:var(--cond);font-weight:600;font-size:14.5px;letter-spacing:.02em;text-transform:uppercase;line-height:1.1}
+.gname .m{font-size:11px;color:var(--tx-mut)}
+.grow.lv1 .gname .t{font-size:15.5px}
+.grow.lv2 .gname{padding-left:30px}
+.grow.lv3 .gname{padding-left:52px}
+.grow.lv3 .gname .t{font-weight:500;text-transform:none;font-family:var(--body);font-size:13.5px;letter-spacing:0}
+.tw{width:18px;height:18px;flex:none;display:grid;place-items:center;background:transparent;border:1px solid var(--bd);color:var(--accent-tx);font-family:var(--cond);font-weight:700;font-size:13px;line-height:1;cursor:pointer;padding:0}
+.tw:hover{border-color:var(--teal)}
+.tw.ph{border-color:transparent;cursor:default;pointer-events:none}
+.ghead .gname{font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--tx-mut)}
+.gmonths{display:grid;grid-template-columns:repeat(8,1fr)}
+.gmonths span{padding:10px 0;text-align:center;font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx-mut);border-left:1px solid var(--bd)}
+.gtrack{position:relative;display:grid;grid-template-columns:repeat(8,1fr);align-items:center;min-height:46px}
+.gtrack .cell{border-left:1px solid var(--bd);height:100%}
+.gbar{position:absolute;height:19px;background:var(--teal-050);border:1px solid var(--teal);top:50%;transform:translateY(-50%);display:flex;align-items:center;overflow:hidden}
+[data-theme=dark] .gbar{background:rgba(0,167,157,.16)}
+.gbar i{position:absolute;inset:0 auto 0 0;background:var(--teal)}
+.gbar b{position:relative;z-index:2;font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.04em;color:var(--tx);padding-left:7px;white-space:nowrap}
+.gbar.done{border-color:var(--ok)}.gbar.done i{background:var(--ok)}
+.gbar.risk{border-color:var(--risk)}.gbar.risk i{background:var(--risk)}
+/* nivel 1 = barra resumen tipo corchete */
+.gbar.b1{height:9px;background:transparent;border:0}
+.gbar.b1 i{background:var(--tx);opacity:.75;height:9px}
+.gbar.b1::before,.gbar.b1::after{content:"";position:absolute;top:0;width:0;height:0;border-top:9px solid var(--tx);opacity:.75}
+.gbar.b1::before{left:0;border-right:7px solid transparent}
+.gbar.b1::after{right:0;border-left:7px solid transparent}
+.gbar.b1 b{display:none}
+.gbar.b3{height:13px}
+.gbar.b3 b{font-size:10.5px}
+.gmile{position:absolute;top:50%;width:14px;height:14px;background:var(--tx);transform:translate(-50%,-50%) rotate(45deg);z-index:3}
+.gnow{position:absolute;top:0;bottom:0;width:2px;background:var(--teal);z-index:4;pointer-events:none}
+.gnow.lbl::after{content:"HOY";position:absolute;top:2px;left:5px;font-family:var(--cond);font-weight:700;font-size:10px;letter-spacing:.1em;color:var(--teal)}
+.glegend{display:flex;flex-wrap:wrap;gap:16px;padding:14px 16px;border-top:1px solid var(--bd);font-size:12.5px;color:var(--tx-mut)}
+.glegend span{display:flex;align-items:center;gap:8px}
+.glegend i{width:16px;height:9px;display:block;border:1px solid var(--teal);background:var(--teal)}
+.glegend i.l-sum{background:var(--tx);border:0;opacity:.75;height:7px}
+.glegend i.l-done{border-color:var(--ok);background:var(--ok)}
+.glegend i.l-risk{border-color:var(--risk);background:var(--risk)}
+.glegend i.l-mile{width:11px;height:11px;background:var(--tx);border:0;transform:rotate(45deg)}
+.glegend i.l-plan{width:2px;height:14px;background:var(--tx);border:0;opacity:.55}
+.glegend i.l-base{height:0;border:0;border-top:2px dashed var(--tx-mut);width:18px}
+.glegend i.l-cut{width:2px;height:14px;background:var(--warn);border:0}
+
+/* línea base + cortes de seguimiento */
+.gbase{position:absolute;height:0;border-top:2px dashed var(--tx-mut);top:calc(50% + 13px);opacity:.85}
+.grow.lv1 .gbase{top:calc(50% + 11px)}
+.gcut{position:absolute;top:0;bottom:0;width:1.5px;background:var(--warn);opacity:.75;z-index:3;pointer-events:none}
+.gcut.lbl::after{content:attr(data-l);position:absolute;top:16px;left:4px;font-family:var(--cond);font-weight:700;font-size:9.5px;letter-spacing:.08em;color:var(--warn);white-space:nowrap}
+
+/* impresión / PDF del cronograma */
+@media print{
+  @page{size:landscape;margin:12mm}
+  .appbar,.mtabs,.gtoolbar,.appfoot,.backlink,.sechd .note{display:none !important}
+  body{background:#fff}
+  .view{display:none !important}
+  .view.printing{display:block !important}
+  .phead{background:#fff;border-bottom:1px solid #999;padding:0 0 10mm}
+  .gscroll{overflow:visible}
+  .gtable{min-width:0}
+  .bp>.corner{display:none}
+  .chart{page-break-inside:avoid}
+  .gantt{page-break-after:always}
+}
+
+/* ---- WBS / EDT ---- */
+.wbs-tree{display:grid;gap:14px}
+.wnode{padding:16px 18px}
+.wnode .wtop{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.wnode .wc{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--accent-tx)}
+.wnode h4{font-family:var(--cond);font-weight:600;font-size:19px;text-transform:uppercase;line-height:1;margin-top:4px}
+.wnode .wmeta{font-family:var(--mono);font-size:11.5px;color:var(--tx-mut);white-space:nowrap}
+.wkids{display:grid;gap:0;margin-top:14px;border-top:1px solid var(--bd)}
+.wk{display:grid;grid-template-columns:56px 1fr 150px 62px;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--bd)}
+.wk:last-child{border-bottom:0}
+.wk .kc{font-family:var(--mono);font-size:11.5px;color:var(--tx-mut)}
+.wk .kt{font-family:var(--cond);font-weight:600;font-size:14.5px;text-transform:uppercase;line-height:1.15}
+.wk.l3{padding-left:24px}
+.wk.l3 .kt{font-family:var(--body);font-weight:400;font-size:13.5px;text-transform:none;color:var(--tx-soft)}
+.wk .kp{font-family:var(--mono);font-size:12px;color:var(--tx-mut);text-align:right}
+.wk .kbar{display:block}
+.wk .kbar .bar{display:block;width:100%}
+@media(max-width:700px){.wk{grid-template-columns:48px 1fr 60px}.wk .kbar{display:none}}
+
+/* ---- charts ---- */
+.chart{padding:20px 22px 16px}
+.chart h3{font-size:19px;text-transform:uppercase}
+.chart .lead{font-size:13.5px;line-height:1.5;color:var(--tx-mut);margin:6px 0 14px;max-width:56ch}
+.chart svg{width:100%;height:auto;display:block;overflow:visible}
+.chart .gl{stroke:var(--bd);stroke-width:1}
+.chart .ax{stroke:var(--bd);stroke-width:1}
+.chart .lbl{font-family:var(--mono);font-size:11px;fill:var(--tx-mut);letter-spacing:.04em}
+.chart .ln{fill:none;stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.chart .ln-pv{stroke:var(--tx-mut);stroke-width:2;stroke-dasharray:6 4}
+.chart .ln-ev{stroke:var(--teal)}
+.chart .ln-ac{stroke:var(--warn);stroke-width:2}
+.chart .fc{stroke-dasharray:5 5;opacity:.6}
+.chart .ar{fill:var(--teal);opacity:.1}
+.chart .dot{fill:var(--teal);stroke:var(--card);stroke-width:2}
+.chart .nowl{stroke:var(--teal);stroke-width:1.5;stroke-dasharray:3 3;opacity:.7}
+.clegend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;padding-top:12px;border-top:1px solid var(--bd);font-size:12.5px;color:var(--tx-mut)}
+.clegend span{display:flex;align-items:center;gap:8px}
+.clegend i{width:18px;height:0;border-top:2.4px solid var(--teal);display:block}
+.clegend i.g-pv{border-top:2px dashed var(--tx-mut)}
+.clegend i.g-ac{border-top:2px solid var(--warn)}
+.clegend i.g-fc{border-top:2px dashed var(--teal)}
+.evm{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.evm .e{padding:13px 14px;border:1px solid var(--bd)}
+.evm .el{font-family:var(--cond);font-weight:600;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--tx-mut)}
+.evm .ev{font-family:var(--cond);font-weight:700;font-size:24px;line-height:1;margin-top:6px}
+.evm .es{font-size:11.5px;color:var(--tx-mut);margin-top:4px}
+@media(max-width:700px){.evm{grid-template-columns:repeat(2,1fr)}}
+
+/* ---- timeline ---- */
+.timeline{padding:22px 24px}
+.timeline ol{list-style:none;margin:0;padding:0}
+.timeline li{position:relative;padding:0 0 22px 26px;border-left:1px solid var(--bd)}
+.timeline li:last-child{padding-bottom:0;border-left-color:transparent}
+.timeline li::before{content:"";position:absolute;left:-5px;top:4px;width:9px;height:9px;background:var(--teal);transform:rotate(45deg)}
+.timeline .d{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--tx-mut)}
+.timeline .h{font-family:var(--cond);font-weight:600;font-size:16.5px;text-transform:uppercase;line-height:1.1;margin-top:3px}
+.timeline .b{font-size:14px;line-height:1.5;color:var(--tx-mut);margin-top:5px;max-width:52ch}
+.timeline .who2{font-size:12px;color:var(--tx-mut);margin-top:6px;font-family:var(--mono);letter-spacing:.03em}
+
+/* ---- documents ---- */
+.dtable{width:100%;border-collapse:collapse}
+.dtable th{text-align:left;font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--tx-mut);padding:12px 16px;background:var(--surface-2);border-bottom:1px solid var(--bd);white-space:nowrap}
+.dtable td{padding:14px 16px;border-bottom:1px solid var(--bd);font-size:14.5px;vertical-align:middle}
+.dtable tr:last-child td{border-bottom:0}
+.dtable tbody tr:hover{background:var(--surface-2)}
+.dname{display:flex;align-items:center;gap:12px}
+.dext{width:38px;height:38px;flex:none;display:grid;place-items:center;border:1px solid var(--bd);font-family:var(--cond);font-weight:700;font-size:11.5px;letter-spacing:.04em;color:var(--accent-tx)}
+.dname .t{display:block;font-family:var(--cond);font-weight:600;font-size:15.5px;text-transform:uppercase;line-height:1.15}
+.dname .s{display:block;font-size:12px;color:var(--tx-mut);margin-top:2px}
+.tag{display:inline-flex;align-items:center;height:26px;padding:0 10px;font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-tx);border:1px solid var(--bd)}
+.dl{font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-tx);display:inline-flex;align-items:center;gap:7px}
+.dl:hover{color:var(--teal-600)}
+.tblwrap{overflow-x:auto}
+.dtable-min{min-width:680px}
+
+/* mosaic */
+.mos{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:150px;gap:12px}
+.mos image-slot{width:100%;height:100%;display:block}
+.mos .m-big{grid-column:span 2;grid-row:span 2}
+@media(max-width:820px){.mos{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.mos{grid-template-columns:1fr}.mos .m-big{grid-column:auto;grid-row:auto}}
+
+/* account */
+.acct{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+@media(max-width:900px){.acct{grid-template-columns:1fr}}
+.pad{padding:24px}
+.pad h3{font-size:20px;text-transform:uppercase;margin-bottom:6px}
+.pad .lead{font-size:14px;line-height:1.55;color:var(--tx-mut);margin:0 0 20px}
+.meter{display:flex;gap:5px;margin-top:9px}
+.meter i{flex:1;height:4px;background:var(--bd);transition:background .25s}
+.meter.s1 i:nth-child(1){background:var(--risk)}
+.meter.s2 i:nth-child(-n+2){background:var(--warn)}
+.meter.s3 i:nth-child(-n+3){background:var(--teal)}
+.meter.s4 i{background:var(--ok)}
+.reqs{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}
+.reqs li{font-size:12.5px;color:var(--tx-mut);display:flex;align-items:center;gap:9px}
+.reqs li::before{content:"○";color:var(--tx-mut);font-size:11px}
+.reqs li.ok{color:var(--ok)}
+.reqs li.ok::before{content:"●";color:var(--ok)}
+.sec-list{list-style:none;margin:0;padding:0}
+.sec-list li{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px 0;border-top:1px solid var(--bd)}
+.sec-list li:first-child{border-top:0;padding-top:0}
+.sec-list .t{font-family:var(--cond);font-weight:600;font-size:15.5px;text-transform:uppercase;line-height:1.1}
+.sec-list .s{font-size:12.5px;color:var(--tx-mut);margin-top:3px;max-width:38ch}
+.pill{font-family:var(--cond);font-weight:600;font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;padding:5px 10px;border:1px solid currentColor;white-space:nowrap}
+.p-on{color:var(--ok)}.p-off{color:var(--tx-mut)}
+.okmsg{display:none;margin-top:14px;padding:11px 14px;border-left:2px solid var(--ok);background:var(--surface-2);font-size:13.5px;color:var(--tx-soft)}
+.okmsg.on{display:block}
+
+.appfoot{border-top:1px solid var(--bd);padding:22px 0;font-size:12.5px;color:var(--tx-mut)}
+.appfoot .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<section class="auth" id="auth">
+  <div class="side">
+    <div class="grid-bg"></div>
+    <a class="brand" href="index.html">
+      <img src="assets/logo/icono.png" alt="" />
+      <span class="n">S&amp;G<span>Soluciones de Ingeniería</span></span>
+    </a>
+    <div class="pitch">
+      <span class="kick" style="color:var(--teal-300)">Portal de cliente</span>
+      <h2 style="margin-top:18px">Tu proyecto, <em>en tiempo real.</em></h2>
+      <p>Acceso privado al avance de ejecución, cronograma, indicadores, actividades y documentos de tus proyectos.</p>
+      <ul class="feat">
+        <li>Cartera de proyectos y avance de cada uno.</li>
+        <li>WBS, Gantt de tres niveles y curva S.</li>
+        <li>Valor ganado: cumplimiento de plazo y costo.</li>
+        <li>Documentos, bitácora y registro fotográfico.</li>
+      </ul>
+    </div>
+    <div class="foot">Acceso restringido · Barranquilla, Colombia</div>
+  </div>
+
+  <div class="panel">
+    <div class="box">
+      <div class="bp authcard">
+        <i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <span class="kick">Ingreso</span>
+        <h1>Iniciar sesión</h1>
+        <p class="sub">Ingresa con el usuario que S&amp;G habilitó para tu empresa.</p>
+        <form id="loginForm" novalidate>
+          <div class="field">
+            <label for="usr">Usuario o correo</label>
+            <input class="input" id="usr" name="usr" type="text" autocomplete="username" placeholder="tu@empresa.com" value="cliente@empresa.com" />
+          </div>
+          <div class="field">
+            <label for="pwd">Contraseña</label>
+            <div class="pwrap">
+              <input class="input" id="pwd" name="pwd" type="password" autocomplete="current-password" placeholder="••••••••" value="demo1234" />
+              <button class="peye" type="button" id="eye" aria-label="Mostrar contraseña">Ver</button>
+            </div>
+          </div>
+          <div class="rowsp">
+            <label class="chk"><input type="checkbox" id="rem" checked /> Mantener sesión</label>
+            <a class="lk" href="#recuperar" style="font-size:13.5px">¿Olvidaste tu contraseña?</a>
+          </div>
+          <div class="err" id="loginErr" role="alert"></div>
+          <button class="btn btn-p btn-block" type="submit">Entrar al portal <span class="arrow"></span></button>
+          <div class="altsep">o</div>
+          <button class="btn btn-o btn-block" type="button" id="magic">Enviarme un enlace de acceso</button>
+          <p class="hint" style="margin-top:12px">El enlace de un solo uso llega a tu correo y expira en 15 minutos — sin contraseña que recordar.</p>
+        </form>
+        <div class="demo-note"><b>Prototipo:</b> credenciales de demostración precargadas. Presiona <b>Entrar</b> para ver el portal.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APP ============ -->
+<div class="app" id="app">
+  <header class="appbar">
+    <div class="wrap">
+      <a class="brand" href="index.html">
+        <img src="assets/logo/icono.png" alt="" />
+        <span class="n">S&amp;G<span>Portal de cliente</span></span>
+      </a>
+      <nav class="tabs" role="tablist" id="tabs">
+        <button role="tab" aria-selected="false" data-v="proyectos">Mis proyectos</button>
+        <button role="tab" aria-selected="true" data-v="avance">Avance</button>
+        <button role="tab" aria-selected="false" data-v="wbs">WBS</button>
+        <button role="tab" aria-selected="false" data-v="cronograma">Cronograma</button>
+        <button role="tab" aria-selected="false" data-v="actividades">Actividades</button>
+        <button role="tab" aria-selected="false" data-v="documentos">Documentos</button>
+        <button role="tab" aria-selected="false" data-v="cuenta">Mi cuenta</button>
+      </nav>
+      <div class="right">
+        <button class="iconbtn" id="themeBtn" type="button" aria-label="Cambiar tema">
+          <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/></svg>
+          <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a6.5 6.5 0 1 0 10.5 10.5z"/></svg>
+        </button>
+        <div class="who">
+          <span class="avatar">MR</span>
+          <span class="meta"><span class="nm">M. Rivera</span><span class="org">Grupo Alimentar S.A.S.</span></span>
+        </div>
+        <button class="iconbtn" id="out" type="button" aria-label="Cerrar sesión" title="Cerrar sesión">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 17l5-5-5-5M20 12H9M12 20H5V4h7"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mtabs"><div class="wrap" id="mtabs">
+    <button aria-selected="false" data-v="proyectos">Proyectos</button>
+    <button aria-selected="true" data-v="avance">Avance</button>
+    <button aria-selected="false" data-v="wbs">WBS</button>
+    <button aria-selected="false" data-v="cronograma">Cronograma</button>
+    <button aria-selected="false" data-v="actividades">Actividades</button>
+    <button aria-selected="false" data-v="documentos">Documentos</button>
+    <button aria-selected="false" data-v="cuenta">Mi cuenta</button>
+  </div></div>
+
+  <section class="phead" id="phead"><div class="wrap">
+        <a class="backlink" href="#proyectos" id="backProj"><span class="bk"></span> Todos mis proyectos</a>
+    <div class="top">
+      <div>
+        <div class="metaline" id="p-meta"></div>
+        <h1 id="p-title"></h1>
+        <div class="facts" id="p-facts"></div>
+      </div>
+      <div class="prog">
+        <div class="pt"><span class="pn" id="pn">0%</span><span class="pl">Avance global</span></div>
+        <div class="bar"><i id="pbar"></i><span class="plan" id="pplan"></span></div>
+        <div class="cmp" id="pcmp"></div>
+      </div>
+    </div>
+  </div></section>
+
+  <main><div class="wrap">
+
+    <!-- ===== CARTERA ===== -->
+    <section class="view" id="v-proyectos">
+      <div class="sechd">
+        <div><span class="kick">Cartera</span><h2>Mis proyectos</h2></div>
+        <p class="note">Proyectos de <b>Grupo Alimentar S.A.S.</b> a los que tienes acceso. Selecciona uno para ver su avance, WBS, cronograma, actividades y documentos.</p>
+      </div>
+      <div class="pgrid" id="pgrid"></div>
+    </section>
+
+    <!-- ===== AVANCE ===== -->
+    <section class="view on" id="v-avance">
+      <div class="sechd" id="kpiHd">
+        <div><span class="kick">Indicadores</span><h2>Cómo va el proyecto</h2></div>
+        <p class="note" id="av-note"></p>
+      </div>
+      <div class="kgrid" id="kgrid"></div>
+
+      <div class="sechd gap" id="resumenHd">
+        <div><span class="kick">Resumen</span><h2>Estado actual</h2></div>
+      </div>
+      <div class="cols" id="resumenCols">
+        <div class="bp pad"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <h3>Estado de ejecución</h3>
+          <p class="lead" style="margin-bottom:16px" id="av-res"></p>
+          <ul class="sec-list" id="av-flags"></ul>
+        </div>
+        <div class="bp pad"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <h3>Avance por fase</h3>
+          <p class="lead">Nivel 1 de la WBS, con su peso sobre el total.</p>
+          <div id="phases"></div>
+        </div>
+      </div>
+
+      <div class="sechd gap" id="fotosHd">
+        <div><span class="kick">Registro fotográfico</span><h2>Obra en sitio</h2></div>
+        <p class="note">S&amp;G carga aquí las fotos de cada avance. Estas mismas imágenes se reutilizan en el caso de éxito al cierre.</p>
+      </div>
+      <div class="mos" id="mos"></div>
+    </section>
+
+    <!-- ===== WBS ===== -->
+    <section class="view" id="v-wbs">
+      <div class="sechd">
+        <div><span class="kick">Estructura de desglose</span><h2>WBS / EDT</h2></div>
+        <p class="note">Desglose del alcance en tres niveles: entregable, paquete de trabajo y actividad. Es la misma estructura que ordena el cronograma.</p>
+      </div>
+      <div class="wbs-tree" id="wbsTree"></div>
+    </section>
+
+    <!-- ===== CRONOGRAMA ===== -->
+    <section class="view" id="v-cronograma">
+      <div class="sechd">
+        <div><span class="kick">Cronograma</span><h2>Gantt de ejecución</h2></div>
+        <p class="note">Jerarquía de tres niveles según la WBS. Barra clara = planeado · relleno = ejecutado · rombo = hito.</p>
+      </div>
+      <div class="bp gantt" id="ganttWrap"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <div class="gtoolbar">
+          <span class="lbl">Ver hasta nivel</span>
+          <div class="seg" id="lvlSeg">
+            <button type="button" data-l="1" aria-pressed="false">1</button>
+            <button type="button" data-l="2" aria-pressed="false">2</button>
+            <button type="button" data-l="3" aria-pressed="true">3</button>
+          </div>
+          <button class="btn btn-g" type="button" id="expAll">Expandir todo</button>
+          <button class="btn btn-g" type="button" id="colAll">Colapsar todo</button>
+          <label class="chk" id="baseWrap" style="margin-left:6px"><input type="checkbox" id="baseTgl" checked /> Línea base</label>
+          <label class="chk" id="cutWrap"><input type="checkbox" id="cutTgl" checked /> Líneas de seguimiento</label>
+          <button class="btn btn-o btn-sm" type="button" id="pdfBtn" style="margin-left:auto">Exportar PDF <span class="arrow"></span></button>
+        </div>
+        <div class="gscroll"><div class="gtable" id="gtable"></div></div>
+        <div class="glegend">
+          <span><i class="l-sum"></i> Resumen (nivel 1)</span>
+          <span><i></i> Ejecutado</span>
+          <span><i class="l-done"></i> Completado</span>
+          <span><i class="l-risk"></i> En riesgo</span>
+          <span><i class="l-base"></i> Línea base</span>
+          <span><i class="l-cut"></i> Corte de seguimiento</span>
+          <span><i class="l-mile"></i> Hito</span>
+        </div>
+      </div>
+
+      <div class="sechd gap" id="ctrlHd">
+        <div><span class="kick">Control de avance</span><h2>Curva S y valor ganado</h2></div>
+        <p class="note">Avance acumulado real contra el planeado, y desempeño de plazo y costo del proyecto.</p>
+      </div>
+      <div class="cols" id="ctrlCols">
+        <div class="bp chart" id="scurveCard"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <h3>Curva S — avance acumulado</h3>
+          <p class="lead">Porcentaje acumulado planeado contra ejecutado. El tramo punteado es la proyección al cierre.</p>
+          <div id="scurve"></div>
+          <div class="clegend">
+            <span><i class="g-pv"></i> Planeado</span>
+            <span><i></i> Real ejecutado</span>
+            <span><i class="g-fc"></i> Proyección</span>
+          </div>
+        </div>
+        <div class="bp chart" id="evmCard"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <h3>Valor ganado (EVM)</h3>
+          <p class="lead">Valor planeado, valor ganado y costo real acumulados, en millones de pesos.</p>
+          <div id="evmchart"></div>
+          <div class="clegend">
+            <span><i class="g-pv"></i> PV planeado</span>
+            <span><i></i> EV ganado</span>
+            <span><i class="g-ac"></i> AC costo real</span>
+          </div>
+          <div class="evm" id="evmkpi"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ACTIVIDADES ===== -->
+    <section class="view" id="v-actividades">
+      <div class="sechd">
+        <div><span class="kick">Bitácora</span><h2>Actividades realizadas</h2></div>
+        <p class="note">Registro cronológico de intervenciones, pruebas y entregas. Es la fuente del informe mensual.</p>
+      </div>
+      <div class="cols">
+        <div class="bp timeline"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <ol id="acts"></ol>
+        </div>
+        <div class="bp pad"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <h3>Próximas actividades</h3>
+          <p class="lead">Programadas para las siguientes semanas.</p>
+          <ul class="sec-list" id="next-acts"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== DOCUMENTOS ===== -->
+    <section class="view" id="v-documentos">
+      <div class="sechd">
+        <div><span class="kick">Documentos</span><h2>Documentos asociados</h2></div>
+        <p class="note">Planos, protocolos, informes y actas. Cada versión queda registrada con su fecha.</p>
+      </div>
+      <div class="bp" style="padding:0"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+        <div class="tblwrap"><table class="dtable dtable-min">
+          <thead><tr><th>Documento</th><th>Tipo</th><th>Versión</th><th>Fecha</th><th>Estado</th><th></th></tr></thead>
+          <tbody id="docs"></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- ===== CUENTA ===== -->
+    <section class="view" id="v-cuenta">
+      <div class="sechd">
+        <div><span class="kick">Mi cuenta</span><h2>Acceso y seguridad</h2></div>
+        <p class="note">Fácil de usar y seguro: contraseña larga con verificación en dos pasos, o acceso por enlace de un solo uso.</p>
+      </div>
+      <div class="acct">
+        <div class="bp pad"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <h3>Cambiar contraseña</h3>
+          <p class="lead">Usa una frase de al menos 12 caracteres — es más fácil de recordar y más difícil de adivinar.</p>
+          <form id="pwForm" novalidate>
+            <div class="field">
+              <label for="p0">Contraseña actual</label>
+              <input class="input" id="p0" type="password" autocomplete="current-password" />
+            </div>
+            <div class="field">
+              <label for="p1">Nueva contraseña</label>
+              <div class="pwrap">
+                <input class="input" id="p1" type="password" autocomplete="new-password" />
+                <button class="peye" type="button" id="eye2" aria-label="Mostrar contraseña">Ver</button>
+              </div>
+              <div class="meter" id="meter"><i></i><i></i><i></i><i></i></div>
+              <ul class="reqs" id="reqs">
+                <li data-r="len">Mínimo 12 caracteres</li>
+                <li data-r="mix">Mayúsculas y minúsculas</li>
+                <li data-r="num">Al menos un número o símbolo</li>
+                <li data-r="nou">No contiene tu usuario</li>
+              </ul>
+            </div>
+            <div class="field">
+              <label for="p2">Confirmar nueva contraseña</label>
+              <input class="input" id="p2" type="password" autocomplete="new-password" />
+            </div>
+            <div class="err" id="pwErr" role="alert"></div>
+            <button class="btn btn-p" type="submit" id="pwBtn" disabled>Actualizar contraseña</button>
+            <div class="okmsg" id="pwOk">Contraseña actualizada. Se cerraron las demás sesiones activas y te enviamos un aviso al correo.</div>
+          </form>
+        </div>
+        <div class="bp pad"><i class="corner tl"></i><i class="corner tr"></i><i class="corner bl"></i><i class="corner br"></i>
+          <h3>Seguridad de la cuenta</h3>
+          <p class="lead">Recomendado: deja activo el enlace de acceso y la verificación en dos pasos.</p>
+          <ul class="sec-list">
+            <li><div><div class="t">Enlace de acceso por correo</div><div class="s">Entra sin contraseña con un enlace de un solo uso que expira en 15 minutos.</div></div><span class="pill p-on">Activo</span></li>
+            <li><div><div class="t">Verificación en dos pasos</div><div class="s">Código de 6 dígitos al iniciar sesión desde un equipo nuevo.</div></div><span class="pill p-on">Activo</span></li>
+            <li><div><div class="t">Sesión activa</div><div class="s">Barranquilla · Chrome · hoy 09:41</div></div><span class="pill p-off">Este equipo</span></li>
+            <li><div><div class="t">Último ingreso</div><div class="s">27 Jul 2026 · 16:08 · Barranquilla</div></div><span class="pill p-off">Correcto</span></li>
+          </ul>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px">
+            <button class="btn btn-o" type="button">Cerrar otras sesiones</button>
+            <button class="btn btn-g" type="button">Descargar mis datos</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div></main>
+
+  <footer class="appfoot"><div class="wrap">
+    <span>S&amp;G Soluciones de Ingeniería · Portal de cliente · Acceso restringido</span>
+    <span>informacion@sgsolucionesing.com · +57 324 3025107</span>
+  </div></footer>
+</div>
+
+<script src="image-slot.js"></script>
+<script src="portal-config.js"></script>
+<script src="portal-data.js"></script>
+<script src="portal-app.js"></script>
+</body>
+</html>

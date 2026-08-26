@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sistema de diseño — S&amp;G Soluciones de Ingeniería</title>
+<meta name="description" content="Guía visual de estilo: tokens, tipografía y componentes del rediseño de S&G Soluciones de Ingeniería." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=Barlow+Semi+Condensed:wght@500&display=swap" rel="stylesheet" />
+<script>
+(function(){try{var t=localStorage.getItem('sg-theme');if(!t)t=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+<style>
+:root{
+  --teal:#00a79d; --teal-600:#009088; --teal-700:#00706a; --teal-300:#7fd8cf; --teal-050:#e7f6f3;
+  --navy:#122a49; --ink:#0d1417; --ink-2:#141d21;
+  --paper:#f4f6f6; --paper-2:#eceff0; --line:#d9dedf; --muted:#5b6567;
+  --cond:"Barlow Condensed",system-ui,sans-serif; --body:"Barlow",system-ui,sans-serif;
+  --mono:"Barlow Semi Condensed",ui-monospace,monospace;
+  --edge:clamp(24px,5vw,84px); --max:1240px;
+  /* --- Tokens SEMÁNTICOS de tema (los que cambian entre claro/oscuro) --- */
+  --surface:var(--paper);       /* fondo de página */
+  --surface-2:var(--paper-2);   /* fondo alterno */
+  --card:#ffffff;               /* superficie de tarjeta */
+  --tx:var(--ink);              /* texto principal */
+  --tx-soft:#374042;            /* texto secundario */
+  --tx-mut:var(--muted);        /* texto tenue */
+  --bd:var(--line);             /* bordes/hairlines */
+  --accent-tx:var(--teal-700);  /* acento en texto sobre superficie */
+  --code-bg:var(--paper-2);
+  color-scheme:light;
+}
+[data-theme=dark]{
+  --surface:#0d1417;
+  --surface-2:#10181c;
+  --card:#141d21;
+  --tx:#eef4f4;
+  --tx-soft:rgba(238,244,244,.82);
+  --tx-mut:rgba(226,236,236,.58);
+  --bd:rgba(255,255,255,.12);
+  --accent-tx:var(--teal-300);
+  --code-bg:rgba(255,255,255,.06);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{margin:0;font-family:var(--body);color:var(--tx);background:var(--surface);text-wrap:pretty;-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+h1,h2,h3,h4{font-family:var(--cond);font-weight:600;margin:0;letter-spacing:-0.005em}
+code{font-family:var(--mono);font-size:.92em;background:var(--code-bg);border:1px solid var(--bd);padding:1px 6px;color:var(--accent-tx)}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--edge)}
+.kick{font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-tx);display:flex;align-items:center;gap:12px}
+.kick::before{content:"";width:40px;height:2px;background:var(--teal)}
+.arrow{width:9px;height:9px;border-right:2px solid currentColor;border-top:2px solid currentColor;transform:rotate(45deg);display:inline-block}
+
+/* ---- topbar ---- */
+.top{position:sticky;top:0;z-index:50;background:rgba(11,17,20,.94);backdrop-filter:blur(10px);color:#fff;border-bottom:1px solid rgba(255,255,255,.08)}
+.top .wrap{display:flex;align-items:center;gap:22px;height:64px}
+.top .brand{display:flex;align-items:center;gap:11px}
+.top .brand img{height:34px;width:auto;display:block}
+.top .brand .n{font-family:var(--cond);font-weight:700;font-size:16px;letter-spacing:.03em;text-transform:uppercase}
+.top .brand .n span{display:block;font-size:9px;letter-spacing:.15em;color:rgba(255,255,255,.6)}
+.top nav{display:flex;gap:22px;margin-left:auto;font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.05em;text-transform:uppercase}
+.top nav a{color:rgba(255,255,255,.82)}.top nav a:hover{color:var(--teal-300)}
+.tgl{margin-left:6px;display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 14px;background:transparent;border:1px solid rgba(255,255,255,.28);color:#fff;font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:.2s}
+.tgl:hover{border-color:var(--teal);color:var(--teal-300)}
+.tgl svg{width:16px;height:16px;display:block}
+.tgl .i-moon{display:none}
+[data-theme=dark] .tgl .i-sun{display:none}
+[data-theme=dark] .tgl .i-moon{display:block}
+@media(max-width:820px){.top nav{gap:0}.top nav a{display:none}}
+
+/* ---- hero ---- */
+.head{background:var(--ink);color:#fff;padding:clamp(56px,7vw,92px) 0 clamp(48px,6vw,72px);position:relative;overflow:hidden}
+.head::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 100% at 92% 0,rgba(0,167,157,.22),transparent 55%);pointer-events:none}
+.head .wrap{position:relative;z-index:1}
+.head .kick{color:var(--teal-300)}
+.head h1{font-size:clamp(40px,6vw,86px);line-height:.94;text-transform:uppercase;margin:18px 0 0;max-width:16ch}
+.head h1 em{font-style:normal;color:var(--teal-300)}
+.head p{font-size:clamp(16px,1.4vw,19px);line-height:1.6;color:rgba(238,244,244,.85);max-width:56ch;margin:22px 0 0}
+.stackrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.chip-s{font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--teal-300);border:1px solid rgba(127,216,207,.4);padding:6px 13px}
+
+/* ---- section ---- */
+section.blk{padding:clamp(56px,6vw,92px) 0;border-top:1px solid var(--bd)}
+.blk .lead{margin:14px 0 0;font-size:16.5px;line-height:1.6;color:var(--tx-mut);max-width:60ch}
+.blk h2{font-size:clamp(28px,3.4vw,46px);text-transform:uppercase;line-height:1;margin-top:14px}
+.blk h2 em{font-style:normal;color:var(--accent-tx)}
+.blk h3.sub{font-size:20px;text-transform:uppercase;letter-spacing:.02em;margin:46px 0 18px;color:var(--tx);display:flex;align-items:center;gap:12px}
+.blk h3.sub::before{content:"";width:26px;height:2px;background:var(--teal)}
+.hd{margin-bottom:38px}
+
+/* ---- color tokens ---- */
+.ramp{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.sw{border:1px solid var(--bd);background:var(--card)}
+.sw .chip{height:92px}
+.sw .info{padding:10px 12px 12px}
+.sw .name{font-family:var(--cond);font-weight:600;font-size:15px;text-transform:uppercase;letter-spacing:.02em}
+.sw .hex{font-family:var(--mono);font-size:12.5px;color:var(--tx-mut);margin-top:2px;text-transform:uppercase}
+.sw .use{font-size:11.5px;line-height:1.35;color:var(--tx-mut);margin-top:7px}
+.bases{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+.base{border:1px solid var(--bd);overflow:hidden;background:var(--card)}
+.base .chip{height:96px;display:flex;align-items:flex-end;padding:10px 12px;font-family:var(--cond);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.04em}
+.base .info{padding:10px 12px 12px}
+.base .name{font-family:var(--cond);font-weight:600;font-size:14.5px;text-transform:uppercase}
+.base .hex{font-family:var(--mono);font-size:12px;color:var(--tx-mut);margin-top:2px;text-transform:uppercase}
+@media(max-width:820px){.ramp{grid-template-columns:repeat(2,1fr)}.bases{grid-template-columns:repeat(2,1fr)}}
+.sem{border:1px solid var(--bd);background:var(--card)}
+.semrow{display:grid;grid-template-columns:1.4fr .5fr .5fr 2fr;gap:16px;align-items:center;padding:12px 18px;border-top:1px solid var(--bd)}
+.semrow:first-child{border-top:0}
+.semhd{font-family:var(--cond);font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--tx-mut)}
+.semrow code{justify-self:start}
+.semrow .sc{width:100%;height:22px;border:1px solid var(--bd)}
+.semrow>span:last-child{font-size:13.5px;color:var(--tx-mut)}
+@media(max-width:640px){.semrow{grid-template-columns:1fr auto auto;gap:10px}.semrow>span:last-child,.semhd>span:last-child{display:none}}
+
+/* ---- type scale ---- */
+.typ{display:grid;gap:2px}
+.typ .row{display:grid;grid-template-columns:150px 1fr;gap:24px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--bd)}
+.typ .tag{font-family:var(--mono);font-size:12px;color:var(--tx-mut);text-transform:uppercase;letter-spacing:.04em;line-height:1.5}
+.typ .tag b{display:block;color:var(--accent-tx);font-weight:600;font-size:13.5px}
+.s-h1{font-family:var(--cond);font-weight:600;font-size:64px;line-height:.94;text-transform:uppercase}
+.s-h2{font-family:var(--cond);font-weight:600;font-size:44px;line-height:1;text-transform:uppercase}
+.s-h3{font-family:var(--cond);font-weight:600;font-size:26px;line-height:1;text-transform:uppercase}
+.s-kick{font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent-tx)}
+.s-body{font-family:var(--body);font-weight:400;font-size:16.5px;line-height:1.6;color:var(--tx-soft)}
+.s-tag{font-family:var(--cond);font-weight:600;font-size:13.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--accent-tx)}
+@media(max-width:640px){.typ .row{grid-template-columns:1fr;gap:8px}.s-h1{font-size:44px}.s-h2{font-size:34px}}
+
+/* ---- component gallery ---- */
+.demos{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.demo{border:1px solid var(--bd);background:var(--card);display:flex;flex-direction:column}
+.demo .stage{padding:32px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;flex:1}
+.demo.dark .stage{background:var(--ink)}
+.demo .cap{border-top:1px solid var(--bd);padding:12px 16px;font-family:var(--mono);font-size:12.5px;color:var(--tx-mut);display:flex;justify-content:space-between;gap:10px}
+.demo.dark .cap{border-top-color:rgba(255,255,255,.12)}
+.demo .cap b{color:var(--accent-tx);font-weight:600}
+@media(max-width:820px){.demos{grid-template-columns:1fr}}
+
+/* component styles (mirror production) */
+.btn-t{display:inline-flex;align-items:center;gap:9px;height:50px;padding:0 26px;background:var(--teal);color:#fff;font-family:var(--cond);font-weight:600;font-size:17px;letter-spacing:.03em;text-transform:uppercase;border:0;cursor:pointer;transition:background .18s,transform .18s}
+.btn-t:hover{background:var(--teal-600);transform:translateY(-2px)}
+.btn-o{display:inline-flex;align-items:center;gap:9px;height:50px;padding:0 24px;font-family:var(--cond);font-weight:600;font-size:17px;letter-spacing:.03em;text-transform:uppercase;cursor:pointer;transition:.18s;border:1.5px solid var(--tx);color:var(--tx);background:transparent}
+.btn-o:hover{border-color:var(--teal);color:var(--accent-tx)}
+.demo.dark .btn-o{border-color:rgba(255,255,255,.5);color:#fff}
+.demo.dark .btn-o:hover{border-color:var(--teal);background:rgba(0,167,157,.18)}
+.tag{font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent-tx);border:1px solid var(--bd);padding:5px 12px}
+.demo.dark .tag{color:var(--teal-300);border-color:rgba(255,255,255,.22)}
+.kpi{min-width:120px}
+.kpi .kn{font-family:var(--cond);font-weight:700;font-size:44px;line-height:1;color:var(--accent-tx)}
+.kpi .kl{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--tx-mut);margin-top:6px;max-width:16ch}
+.demo.dark .kpi .kn{color:var(--teal-300)}.demo.dark .kpi .kl{color:rgba(226,236,236,.7)}
+.demo.dark .s-kick,.demo.dark .kick{color:var(--teal-300)}
+.demo.dark .kick::before{background:var(--teal)}
+.mkbox{position:relative;width:180px;height:120px;background:linear-gradient(135deg,#25333a,#0d1417)}
+.mkbox .mk{position:absolute;left:-10px;bottom:-10px;width:46px;height:46px;border-left:3px solid var(--teal);border-bottom:3px solid var(--teal)}
+.mkbox .mk2{position:absolute;right:-10px;top:-10px;width:46px;height:46px;border-right:3px solid var(--teal);border-top:3px solid var(--teal)}
+.svc-demo{border:1px solid var(--bd);padding:24px;position:relative;width:100%;background:var(--card)}
+.svc-demo::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--teal)}
+.svc-demo .num{font-family:var(--cond);font-weight:700;font-size:20px;color:var(--accent-tx)}
+.svc-demo h4{font-family:var(--cond);font-weight:600;font-size:23px;text-transform:uppercase;margin:4px 0 8px}
+.svc-demo p{margin:0;font-size:14.5px;line-height:1.55;color:var(--tx-mut)}
+.chipwrap{display:flex;gap:10px;flex-wrap:wrap}
+.chipwrap .cc{width:26px;height:26px;border-radius:50%;border:1px solid rgba(0,0,0,.08)}
+
+/* carousel demo */
+.cdemo{position:relative;background:var(--navy);color:#fff;overflow:hidden;padding:44px 44px 22px}
+.cbg{position:absolute;inset:0;background:radial-gradient(90% 120% at 88% 0,rgba(0,167,157,.18),transparent 55%)}
+.cinner{position:relative;z-index:1}
+.cmark{font-family:var(--cond);font-weight:700;font-size:96px;line-height:.5;color:var(--teal);height:44px}
+.ctrack{position:relative;min-height:150px}
+.citem{position:absolute;inset:0;opacity:0;transform:translateY(16px);transition:opacity .6s,transform .6s;pointer-events:none}
+.citem.on{opacity:1;transform:none;pointer-events:auto}
+.citem blockquote{font-family:var(--cond);font-weight:500;font-size:clamp(22px,2.6vw,34px);line-height:1.14;margin:0;max-width:26ch}
+.cmeta{display:flex;align-items:center;gap:16px;margin-top:14px}
+.clogo{height:42px;width:auto;max-width:140px;object-fit:contain;object-position:left center}
+.clogo:not([src]),.clogo[src=""]{display:none}
+.cmeta figcaption{font-size:14px;color:rgba(226,236,236,.75)}
+.cmeta figcaption b{display:block;color:var(--teal-300);font-weight:600;font-size:15px;margin-top:2px}
+.cdots{display:flex;gap:9px;margin-top:26px}
+.cdot{width:30px;height:4px;background:rgba(255,255,255,.22);border:0;padding:0;cursor:pointer;transition:background .3s}
+.cdot.on{background:var(--teal)}.cdot:hover{background:rgba(127,216,207,.7)}
+.cnote{position:relative;z-index:1;margin-top:22px;padding-top:16px;border-top:1px solid rgba(255,255,255,.12);font-family:var(--mono);font-size:12.5px;color:rgba(226,236,236,.62)}
+.cnote b{color:var(--teal-300)}.cnote code{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);color:var(--teal-300)}
+
+/* principles */
+.prin{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.prin .p{border:1px solid var(--bd);background:var(--card);padding:24px}
+.prin .p .n{font-family:var(--cond);font-weight:700;font-size:18px;color:var(--accent-tx)}
+.prin .p h4{font-family:var(--cond);font-weight:600;font-size:20px;text-transform:uppercase;margin:6px 0 8px}
+.prin .p p{margin:0;font-size:14.5px;line-height:1.55;color:var(--tx-mut)}
+@media(max-width:820px){.prin{grid-template-columns:1fr}}
+
+/* motion / do-dont */
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.dd .col{border:1px solid var(--bd);background:var(--card);padding:22px 24px}
+.dd .col h4{font-family:var(--cond);font-weight:600;font-size:18px;text-transform:uppercase;display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.dd .col ul{margin:0;padding:0;list-style:none;display:grid;gap:9px}
+.dd .col li{position:relative;padding-left:24px;font-size:14.5px;line-height:1.5;color:var(--tx-soft)}
+.dd .do  li::before{content:"✓";position:absolute;left:0;color:var(--teal-600);font-weight:700}
+.dd .dont li::before{content:"✕";position:absolute;left:0;color:#b23b3b;font-weight:700}
+@media(max-width:640px){.dd{grid-template-columns:1fr}}
+
+footer{background:#090e10;color:rgba(226,236,236,.6);padding:36px 0;font-size:13.5px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+footer .brand{display:flex;align-items:center;gap:10px;color:#fff}
+footer .brand img{height:30px}
+footer .brand .n{font-family:var(--cond);font-weight:700;text-transform:uppercase;font-size:15px;letter-spacing:.03em}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html">
+      <img src="assets/logo/icono.png" alt="" />
+      <span class="n">S&amp;G<span>Sistema de diseño</span></span>
+    </a>
+    <nav>
+      <a href="#tokens">Tokens</a>
+      <a href="#tipografia">Tipografía</a>
+      <a href="#componentes">Componentes</a>
+      <a href="#patrones">Patrones</a>
+      <a href="DESIGN-SPEC.md">Spec .md</a>
+      <button class="tgl" id="themeBtn" type="button" aria-label="Cambiar tema" aria-pressed="false">
+        <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a6.5 6.5 0 1 0 10.5 10.5z"/></svg>
+        <span class="lbl">Oscuro</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<section class="head">
+  <div class="wrap">
+    <span class="kick">Guía de implementación</span>
+    <h1>Sistema de diseño <em>fresco.</em></h1>
+    <p>Tokens, tipografía y componentes que se reutilizan en toda la página. Toma los valores de aquí — no inventes colores, fuentes ni espaciados nuevos. La versión técnica completa está en <code>DESIGN-SPEC.md</code>.</p>
+    <div class="stackrow">
+      <span class="chip-s">Astro 6.0</span>
+      <span class="chip-s">Tailwind CSS</span>
+      <span class="chip-s">Barlow / Barlow Condensed</span>
+      <span class="chip-s">Vanilla JS</span>
+    </div>
+  </div>
+</section>
+
+<!-- PRINCIPIOS -->
+<section class="blk"><div class="wrap">
+  <div class="hd"><span class="kick">01 · Principios</span><h2>Cómo se ve <em>y por qué.</em></h2></div>
+  <div class="prin">
+    <div class="p"><div class="n">A</div><h4>Dos bases, un acento</h4><p>Secciones que alternan entre oscuro (<code>--ink</code>) y claro (<code>--paper</code>). El teal es el único color de acento en toda la página.</p></div>
+    <div class="p"><div class="n">B</div><h4>Industrial y directo</h4><p>Titulares en Barlow Condensed mayúsculas, alto contraste, foto real de planta. Sin ilustración ni gradientes decorativos.</p></div>
+    <div class="p"><div class="n">C</div><h4>La foto manda</h4><p>Heros y galerías a sangre. La marca de esquina en teal es la firma visual sobre las fotos destacadas.</p></div>
+  </div>
+</div></section>
+
+<!-- TOKENS -->
+<section class="blk" id="tokens"><div class="wrap">
+  <div class="hd"><span class="kick">02 · Color</span><h2>Tokens de <em>color.</em></h2>
+    <p class="lead">Acento corporativo derivado del logo. En texto sobre fondo claro usa <code>--teal-700</code>; sobre fondo oscuro, <code>--teal-300</code>. El teal puro se reserva para rellenos, líneas y marcas.</p></div>
+
+  <h3 class="sub">Acento — teal</h3>
+  <div class="ramp">
+    <div class="sw"><div class="chip" style="background:var(--teal-050)"></div><div class="info"><div class="name">teal-050</div><div class="hex">#e7f6f3</div><div class="use">Fondos tintados sutiles</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--teal-300)"></div><div class="info"><div class="name">teal-300</div><div class="hex">#7fd8cf</div><div class="use">Acento/texto sobre oscuro</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--teal)"></div><div class="info"><div class="name">teal</div><div class="hex">#00a79d</div><div class="use">Base: rellenos, líneas, marcas</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--teal-600)"></div><div class="info"><div class="name">teal-600</div><div class="hex">#009088</div><div class="use">Hover de botón primario</div></div></div>
+    <div class="sw"><div class="chip" style="background:var(--teal-700)"></div><div class="info"><div class="name">teal-700</div><div class="hex">#00706a</div><div class="use">Acento/texto sobre claro</div></div></div>
+  </div>
+
+  <h3 class="sub">Bases y neutros</h3>
+  <div class="bases">
+    <div class="base"><div class="chip" style="background:var(--ink);color:#fff">ink</div><div class="info"><div class="name">ink</div><div class="hex">#0d1417</div></div></div>
+    <div class="base"><div class="chip" style="background:var(--ink-2);color:#fff">ink-2</div><div class="info"><div class="name">ink-2</div><div class="hex">#141d21</div></div></div>
+    <div class="base"><div class="chip" style="background:var(--navy);color:#fff">navy</div><div class="info"><div class="name">navy</div><div class="hex">#122a49</div></div></div>
+    <div class="base"><div class="chip" style="background:#090e10;color:#fff">footer</div><div class="info"><div class="name">footer</div><div class="hex">#090e10</div></div></div>
+    <div class="base"><div class="chip" style="background:var(--paper);color:var(--ink);border-bottom:1px solid var(--line)">paper</div><div class="info"><div class="name">paper</div><div class="hex">#f4f6f6</div></div></div>
+    <div class="base"><div class="chip" style="background:var(--paper-2);color:var(--ink)">paper-2</div><div class="info"><div class="name">paper-2</div><div class="hex">#eceff0</div></div></div>
+    <div class="base"><div class="chip" style="background:var(--line);color:var(--ink)">line</div><div class="info"><div class="name">line</div><div class="hex">#d9dedf</div></div></div>
+    <div class="base"><div class="chip" style="background:var(--muted);color:#fff">muted</div><div class="info"><div class="name">muted</div><div class="hex">#5b6567</div></div></div>
+  </div>
+
+  <h3 class="sub">Modo claro / oscuro</h3>
+  <p class="lead">El sistema tiene <b>los dos modos</b>. No se recolorean colores sueltos: se usa una capa de <b>tokens semánticos</b> que se invierten con <code>[data-theme="dark"]</code> sobre <code>&lt;html&gt;</code>. El teal se mantiene igual; solo cambian superficies, texto y bordes (y el acento en texto pasa de <code>teal-700</code> a <code>teal-300</code>). Las secciones estructuralmente oscuras — hero, footer, testimonio — permanecen oscuras en ambos modos. Usa el botón <b>Oscuro/Claro</b> arriba para probarlo; la preferencia se guarda y respeta <code>prefers-color-scheme</code>.</p>
+  <div class="sem">
+    <div class="semtable">
+      <div class="semrow semhd"><span>Token semántico</span><span>Claro</span><span>Oscuro</span><span>Uso</span></div>
+      <div class="semrow"><code>--surface</code><span class="sc" style="background:#f4f6f6"></span><span class="sc" style="background:#0d1417"></span><span>Fondo de página</span></div>
+      <div class="semrow"><code>--surface-2</code><span class="sc" style="background:#eceff0"></span><span class="sc" style="background:#10181c"></span><span>Fondo alterno</span></div>
+      <div class="semrow"><code>--card</code><span class="sc" style="background:#ffffff"></span><span class="sc" style="background:#141d21"></span><span>Superficie de tarjeta</span></div>
+      <div class="semrow"><code>--tx</code><span class="sc" style="background:#0d1417"></span><span class="sc" style="background:#eef4f4"></span><span>Texto principal</span></div>
+      <div class="semrow"><code>--tx-mut</code><span class="sc" style="background:#5b6567"></span><span class="sc" style="background:#8b9698"></span><span>Texto tenue</span></div>
+      <div class="semrow"><code>--bd</code><span class="sc" style="background:#d9dedf"></span><span class="sc" style="background:#2a3338"></span><span>Bordes / hairlines</span></div>
+      <div class="semrow"><code>--accent-tx</code><span class="sc" style="background:#00706a"></span><span class="sc" style="background:#7fd8cf"></span><span>Acento en texto</span></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- TIPOGRAFIA -->
+<section class="blk" id="tipografia"><div class="wrap">
+  <div class="hd"><span class="kick">03 · Tipografía</span><h2>Escala <em>tipográfica.</em></h2>
+    <p class="lead"><b>Barlow Condensed</b> (600/700) para todo título y etiqueta, en mayúsculas. <b>Barlow</b> (400/500) para el cuerpo. Nada de Inter/Roboto/Arial.</p></div>
+  <div class="typ">
+    <div class="row"><div class="tag"><b>H1 · Hero</b>Barlow Condensed 600<br>UPPERCASE · lh .94<br>clamp(42–112px)</div><div class="s-h1">Ingeniería en tiempo real</div></div>
+    <div class="row"><div class="tag"><b>H2 · Sección</b>Barlow Condensed 600<br>UPPERCASE · lh 1<br>clamp(34–58px)</div><div class="s-h2">Del sensor al dashboard</div></div>
+    <div class="row"><div class="tag"><b>H3 · Tarjeta</b>Barlow Condensed 600<br>UPPERCASE<br>21–26px</div><div class="s-h3">Automatización industrial</div></div>
+    <div class="row"><div class="tag"><b>Kicker</b>Barlow Condensed 600<br>tracking .18em<br>14px</div><div class="s-kick">Qué hacemos</div></div>
+    <div class="row"><div class="tag"><b>Cuerpo</b>Barlow 400<br>lh 1.6<br>15–17px</div><div class="s-body">Automatizamos, instrumentamos y medimos cada proceso — del sensor al dashboard, para anticipar fallas antes de que cuesten producción.</div></div>
+    <div class="row"><div class="tag"><b>Etiqueta / tag</b>Barlow Condensed 600<br>tracking .05em<br>13px</div><div class="s-tag">MQTT · InfluxDB · Grafana</div></div>
+  </div>
+</div></section>
+
+<!-- COMPONENTES -->
+<section class="blk" id="componentes"><div class="wrap">
+  <div class="hd"><span class="kick">04 · Componentes</span><h2>Biblioteca de <em>componentes.</em></h2>
+    <p class="lead">Reutiliza estas piezas tal cual. Cada una funciona sobre fondo claro y oscuro; el pie indica la clase.</p></div>
+  <div class="demos">
+
+    <div class="demo"><div class="stage"><a class="btn-t">Cotiza tu proyecto <span class="arrow"></span></a><a class="btn-o">Ver casos</a></div><div class="cap"><span>Botones — claro</span><b>.btn-t · .btn-o</b></div></div>
+    <div class="demo dark"><div class="stage"><a class="btn-t">Cotiza tu proyecto <span class="arrow"></span></a><a class="btn-o">Ver casos</a></div><div class="cap"><span>Botones — oscuro</span><b>.btn-t · .btn-o</b></div></div>
+
+    <div class="demo"><div class="stage"><span class="kick">Qué hacemos</span></div><div class="cap"><span>Kicker / overline</span><b>.kick</b></div></div>
+    <div class="demo dark"><div class="stage"><span class="kick">Casos de éxito</span></div><div class="cap"><span>Kicker — oscuro</span><b>.kick</b></div></div>
+
+    <div class="demo"><div class="stage"><span class="tag">MQTT</span><span class="tag">SCADA</span><span class="tag">Grafana</span></div><div class="cap"><span>Tags / chips</span><b>.tag</b></div></div>
+    <div class="demo dark"><div class="stage"><div class="kpi"><div class="kn">−30%</div><div class="kl">Reducción de fallas</div></div><div class="kpi"><div class="kn">+12%</div><div class="kl">Disponibilidad</div></div></div><div class="cap"><span>KPI</span><b>.kn · .kl</b></div></div>
+
+    <div class="demo"><div class="stage"><div class="svc-demo"><div class="num">01</div><h4>Automatización industrial</h4><p>PLC, SCADA, tableros de baja tensión y puesta en marcha.</p></div></div><div class="cap"><span>Tarjeta de servicio</span><b>.svc</b></div></div>
+    <div class="demo dark"><div class="stage"><div class="mkbox"><span class="mk2"></span><span class="mk"></span></div></div><div class="cap"><span>Marca de esquina (firma)</span><b>.mk · .mk2</b></div></div>
+
+  </div>
+
+  <h3 class="sub">Carrusel de testimonios</h3>
+  <div class="cdemo">
+    <div class="cbg"></div>
+    <div class="cinner">
+      <div class="cmark">“</div>
+      <div class="ctrack" id="ctrack">
+        <figure class="citem on" data-logo="" data-name="Jefe de Mantenimiento" data-org="Planta de alimentos · Barranquilla"><blockquote>Pasamos de perseguir fallas a operar con datos. Hoy anticipamos las paradas antes de que ocurran.</blockquote></figure>
+        <figure class="citem" data-logo="" data-name="Coordinador de Energía" data-org="Cementera · Barranquilla"><blockquote>El factor de potencia se estabilizó y las penalizaciones desaparecieron.</blockquote></figure>
+        <figure class="citem" data-logo="" data-name="Gerente de Planta" data-org="Industria · Costa Caribe"><blockquote>Por fin tenemos trazabilidad del consumo por área; decidimos con datos.</blockquote></figure>
+      </div>
+      <div class="cmeta"><img class="clogo" id="clogo" alt="" /><figcaption id="ccap"></figcaption></div>
+      <div class="cdots" id="cdots" role="tablist" aria-label="Testimonios"></div>
+    </div>
+    <div class="cnote">Rota automáticamente · logo opcional (<code>data-logo</code>) · <b>.qtrack / .qitem / .qdots</b></div>
+  </div>
+</div></section>
+
+<!-- PATRONES -->
+<section class="blk" id="patrones"><div class="wrap">
+  <div class="hd"><span class="kick">05 · Patrones y reglas</span><h2>Ritmo, movimiento <em>y do / don't.</em></h2>
+    <p class="lead">Encabezado de sección = kicker + H2 a la izquierda, descripción a la derecha. Alternar fondos claro/oscuro para dar ritmo. Entrada con reveal <code>.rv</code> → <code>.in</code> (sube 26px + fade, escalonado <code>.d1/.d2/.d3</code>) vía IntersectionObserver, respetando <code>prefers-reduced-motion</code>.</p></div>
+  <div class="dd">
+    <div class="col do"><h4>Hacer</h4><ul>
+      <li>Usar solo <code>--paper</code> / <code>--ink</code> como bases y el teal como único acento.</li>
+      <li>Títulos en Barlow Condensed mayúsculas; resaltar con <code>&lt;em&gt;</code> en teal.</li>
+      <li>Foco de teclado visible en teal y hover definido en todo interactivo.</li>
+      <li>Marca de esquina en fotos destacadas; galerías con mosaico de <code>image-slot</code> (ids únicos).</li>
+    </ul></div>
+    <div class="col dont"><h4>Evitar</h4><ul>
+      <li>Colores fuera del teal, gradientes decorativos o sombras de color.</li>
+      <li>Esquinas muy redondeadas (todo recto salvo el radio mínimo de controles).</li>
+      <li>Fuentes ajenas al par Barlow / Barlow Condensed; emojis.</li>
+      <li>Acento teal puro en texto de tamaño cuerpo (usa <code>-700</code> / <code>-300</code>).</li>
+    </ul></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <span class="brand"><img src="assets/logo/icono.png" alt="" /><span class="n">S&amp;G Soluciones de Ingeniería</span></span>
+  <span>Sistema de diseño · versión fresco · 2026 · complementa a DESIGN-SPEC.md</span>
+</div></footer>
+<script>
+(function(){
+  const btn=document.getElementById('themeBtn');
+  const lbl=btn&&btn.querySelector('.lbl');
+  function sync(){const d=document.documentElement.getAttribute('data-theme')==='dark';if(lbl)lbl.textContent=d?'Claro':'Oscuro';btn&&btn.setAttribute('aria-pressed',String(d));}
+  sync();
+  btn&&btn.addEventListener('click',()=>{const d=document.documentElement.getAttribute('data-theme')==='dark';const n=d?'light':'dark';document.documentElement.setAttribute('data-theme',n);try{localStorage.setItem('sg-theme',n);}catch(e){}sync();});
+})();
+(function(){
+  const items=[...document.querySelectorAll('#ctrack .citem')];
+  if(!items.length)return;
+  const logo=document.getElementById('clogo'),cap=document.getElementById('ccap'),dots=document.getElementById('cdots');
+  let i=0,timer;
+  items.forEach((_,n)=>{const b=document.createElement('button');b.className='cdot'+(n===0?' on':'');b.setAttribute('role','tab');b.setAttribute('aria-label','Testimonio '+(n+1));b.onclick=()=>{go(n);reset();};dots.appendChild(b);});
+  const dotEls=[...dots.children];
+  function render(){const f=items[i],src=f.dataset.logo;if(src){logo.src=src;logo.style.display='';}else{logo.removeAttribute('src');logo.style.display='none';}cap.innerHTML='— '+f.dataset.name+'<b>'+f.dataset.org+'</b>';}
+  function go(n){items[i].classList.remove('on');dotEls[i].classList.remove('on');i=(n+items.length)%items.length;items[i].classList.add('on');dotEls[i].classList.add('on');render();}
+  function reset(){clearInterval(timer);timer=setInterval(()=>go(i+1),5000);}
+  render();reset();
+  const d=document.querySelector('.cdemo');
+  d.addEventListener('mouseenter',()=>clearInterval(timer));
+  d.addEventListener('mouseleave',reset);
+})();
+</script>
+</body>
+</html>

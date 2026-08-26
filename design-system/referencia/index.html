@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>S&amp;G Soluciones de Ingeniería — Automatización industrial, IoT y software</title>
+<meta name="description" content="Ingeniería en automatización industrial, Industria 4.0 / IoT, gestión de energía y desarrollo de software a la medida para la industria de la costa norte de Colombia." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet" />
+<link rel="preload" as="image" href="assets/img/pruebas-1.jpg" fetchpriority="high" />
+<style>
+:root{
+  --teal:#00a79d; --teal-600:#009088; --teal-700:#00706a; --teal-300:#7fd8cf; --teal-050:#e7f6f3;
+  --navy:#122a49; --ink:#0d1417; --ink-2:#141d21;
+  --paper:#f4f6f6; --paper-2:#eceff0; --line:#d9dedf; --muted:#5b6567;
+  --cond:"Barlow Condensed",system-ui,sans-serif; --body:"Barlow",system-ui,sans-serif;
+  --edge:clamp(24px,5vw,84px); --max:1320px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;font-family:var(--body);color:var(--ink);background:var(--paper);text-wrap:pretty;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+h1,h2,h3,h4{font-family:var(--cond);font-weight:600;margin:0;letter-spacing:-0.005em}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--edge)}
+.kick{font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.18em;text-transform:uppercase;color:var(--teal-700);display:flex;align-items:center;gap:12px}
+.kick::before{content:"";width:40px;height:2px;background:var(--teal)}
+.btn-t{display:inline-flex;align-items:center;gap:9px;height:50px;padding:0 26px;background:var(--teal);color:#fff;font-family:var(--cond);font-weight:600;font-size:17px;letter-spacing:.03em;text-transform:uppercase;border:0;cursor:pointer;transition:background .18s,transform .18s}
+.btn-t:hover{background:var(--teal-600);transform:translateY(-2px)}
+.btn-o{display:inline-flex;align-items:center;gap:9px;height:50px;padding:0 24px;font-family:var(--cond);font-weight:600;font-size:17px;letter-spacing:.03em;text-transform:uppercase;cursor:pointer;transition:.18s;border:1.5px solid var(--ink);color:var(--ink)}
+.btn-o:hover{border-color:var(--teal);color:var(--teal-700)}
+.arrow{width:9px;height:9px;border-right:2px solid currentColor;border-top:2px solid currentColor;transform:rotate(45deg)}
+
+/* reveal */
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+.rv{opacity:0}
+.rv.in{animation:rise .8s cubic-bezier(.2,.7,.2,1) both}
+.rv.d1{animation-delay:.08s}.rv.d2{animation-delay:.16s}.rv.d3{animation-delay:.24s}.rv.d4{animation-delay:.32s}
+
+/* ---------- NAV ---------- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:22px;
+  padding:16px var(--edge);transition:background .3s,padding .3s,box-shadow .3s;color:#fff}
+.nav.solid{background:rgba(11,17,20,.92);backdrop-filter:blur(10px);padding:11px var(--edge);box-shadow:0 1px 0 rgba(255,255,255,.08)}
+.nav .brand{display:flex;align-items:center;gap:11px}
+.nav .mark{height:38px;width:auto;display:block}
+.nav .mono b{color:var(--teal-300)}
+.nav .bt{display:flex;flex-direction:column;line-height:1;gap:2px}
+.nav .bt .n{font-family:var(--cond);font-weight:700;font-size:17px;letter-spacing:.03em;text-transform:uppercase}
+.nav .bt .d{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.62)}
+.nav .links{display:flex;gap:26px;margin-left:auto;font-family:var(--cond);font-weight:600;font-size:15px;letter-spacing:.05em;text-transform:uppercase}
+.nav .links a{color:rgba(255,255,255,.84)} .nav .links a:hover{color:#fff}
+.nav .cta{display:inline-flex;align-items:center;height:40px;padding:0 18px;background:var(--teal);color:#fff;font-family:var(--cond);font-weight:600;font-size:14px;letter-spacing:.05em;text-transform:uppercase}
+.nav .cta:hover{background:var(--teal-600)}
+@media(max-width:900px){.nav .links{display:none}}
+
+/* ---------- HERO ---------- */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;color:#fff;
+  padding:0 var(--edge) clamp(40px,5vw,72px);position:relative;overflow:hidden;background:var(--ink)}
+.hero .bg{position:absolute;inset:0;z-index:0}
+.hero .bg img{width:100%;height:100%;object-fit:cover;transform:scale(1.06);animation:kb 18s ease-out forwards}
+@keyframes kb{to{transform:scale(1)}}
+.hero::after{content:"";position:absolute;inset:0;z-index:1;
+  background:linear-gradient(180deg,rgba(9,15,17,.66) 0%,rgba(9,15,17,.2) 30%,rgba(9,15,17,.55) 62%,rgba(8,26,25,.94) 100%),
+  radial-gradient(120% 90% at 88% 10%,rgba(0,167,157,.30),transparent 55%)}
+.hero .inner{max-width:var(--max);margin:0 auto;width:100%;position:relative;z-index:2}
+.hero .kick{color:var(--teal-300);letter-spacing:.22em;margin-bottom:22px}
+.hero .kick::before{background:var(--teal)}
+.hero h1{font-size:clamp(46px,7.6vw,112px);line-height:.94;text-transform:uppercase;letter-spacing:-0.01em;max-width:16ch}
+.hero h1 em{font-style:normal;color:var(--teal-300)}
+.hero .sub{font-size:clamp(16px,1.5vw,20px);line-height:1.55;max-width:56ch;margin:26px 0 0;color:rgba(238,244,244,.9)}
+.hero .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
+.hero .btn-o{border-color:rgba(255,255,255,.5);color:#fff}
+.hero .btn-o:hover{border-color:var(--teal);background:rgba(0,167,157,.18);color:#fff}
+.hero .stats{display:flex;gap:14px;flex-wrap:wrap;margin-top:52px;border-top:1px solid rgba(255,255,255,.16);padding-top:26px}
+.hero .stat{flex:1;min-width:150px}
+.hero .stat .n{font-family:var(--cond);font-weight:700;font-size:clamp(34px,3.4vw,50px);line-height:1}
+.hero .stat .l{font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;color:rgba(226,236,236,.72);margin-top:8px}
+
+/* ---------- section frame ---------- */
+.sec{padding:clamp(72px,8vw,124px) 0}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;flex-wrap:wrap;margin-bottom:clamp(40px,4vw,60px)}
+.sec-head h2{font-size:clamp(34px,4vw,58px);line-height:.98;text-transform:uppercase;max-width:16ch;margin-top:18px}
+.sec-head h2 em{font-style:normal;color:var(--teal-700)}
+.sec-head .lead{font-size:16.5px;line-height:1.6;color:var(--muted);max-width:40ch}
+
+/* ---------- SERVICIOS ---------- */
+.svc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.svc{position:relative;background:#fff;border:1px solid var(--line);padding:34px 32px 30px;overflow:hidden;transition:transform .22s,box-shadow .22s,border-color .22s}
+.svc::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--teal);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.svc:hover{transform:translateY(-4px);box-shadow:0 22px 44px rgba(13,20,23,.1);border-color:transparent}
+.svc:hover::before{transform:scaleX(1)}
+.svc .num{font-family:var(--cond);font-weight:700;font-size:22px;color:var(--teal-700);letter-spacing:.06em}
+.svc h3{font-size:26px;text-transform:uppercase;margin:6px 0 12px}
+.svc p{font-size:15.5px;line-height:1.6;color:var(--muted);margin:0}
+.svc .tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:20px}
+.svc .tag{font-family:var(--cond);font-weight:600;font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--teal-700);border:1px solid var(--line);padding:4px 10px}
+
+/* ---------- CASOS ---------- */
+.casos{background:var(--ink);color:#fff}
+.casos .kick{color:var(--teal-300)}.casos .kick::before{background:var(--teal)}
+.casos .sec-head h2{color:#fff}.casos .sec-head .lead{color:rgba(226,236,236,.72)}
+.case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.case{position:relative;overflow:hidden;background:var(--ink-2);border:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column}
+.case .fig{position:relative;aspect-ratio:16/11;overflow:hidden}
+.case .fig img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.case:hover .fig img{transform:scale(1.06)}
+.case .fig::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(13,20,23,.75))}
+.case .meta{position:absolute;left:16px;bottom:14px;z-index:2;font-family:var(--cond);font-weight:600;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal-300)}
+.case .body{padding:22px 22px 24px;display:flex;flex-direction:column;flex:1}
+.case .body h3{font-size:21px;text-transform:uppercase;line-height:.98;margin-bottom:10px}
+.case .rz{font-size:14.5px;line-height:1.55;color:rgba(226,236,236,.72);margin:0 0 20px}
+.case .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:auto;padding-top:16px;border-top:1px solid rgba(255,255,255,.12)}
+.case .kn{font-family:var(--cond);font-weight:700;font-size:22px;color:var(--teal-300);line-height:1}
+.case .kl{font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:rgba(226,236,236,.6);margin-top:4px}
+.case .verlink{margin-top:16px;font-family:var(--cond);font-weight:600;font-size:13.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal-300);display:inline-flex;align-items:center;gap:8px}
+.case:hover .verlink{color:#fff}
+.casos .more{display:flex;justify-content:center;margin-top:44px}
+.casos .btn-o{border-color:rgba(255,255,255,.5);color:#fff}
+.casos .btn-o:hover{border-color:var(--teal);color:#fff;background:rgba(0,167,157,.18)}
+
+/* ---------- NOSOTROS (split) ---------- */
+.about{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,80px);align-items:center}
+.about .fig{position:relative}
+.about .fig img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.about .fig .mk{position:absolute;left:-14px;bottom:-14px;width:60px;height:60px;border-left:3px solid var(--teal);border-bottom:3px solid var(--teal)}
+.about .fig .mk2{position:absolute;right:-14px;top:-14px;width:60px;height:60px;border-right:3px solid var(--teal);border-top:3px solid var(--teal)}
+.about h2{font-size:clamp(30px,3.4vw,46px);line-height:1;text-transform:uppercase;margin:16px 0 0;max-width:14ch}
+.about h2 em{font-style:normal;color:var(--teal-700)}
+.about p{font-size:16px;line-height:1.65;color:var(--muted);margin:20px 0 0;max-width:48ch}
+.about .kpis{display:grid;grid-template-columns:repeat(3,auto);gap:30px;margin-top:32px;padding-top:26px;border-top:1px solid var(--line);justify-content:start}
+.about .kn{font-family:var(--cond);font-weight:700;font-size:34px;color:var(--teal-700);line-height:1}
+.about .kl{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-top:6px;max-width:13ch}
+
+/* ---------- TESTIMONIO ---------- */
+.quote{position:relative;background:var(--navy);color:#fff;overflow:hidden}
+.quote .bg{position:absolute;inset:0;z-index:0;opacity:.16}
+.quote .bg img{width:100%;height:100%;object-fit:cover}
+.quote::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--navy) 40%,rgba(18,42,73,.55));z-index:1}
+.quote .wrap{position:relative;z-index:2}
+.quote .mark{font-family:var(--cond);font-weight:700;font-size:120px;line-height:.6;color:var(--teal);height:56px}
+.qtrack{position:relative;min-height:clamp(220px,26vw,300px)}
+.qitem{position:absolute;inset:0;opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease;pointer-events:none}
+.qitem.on{opacity:1;transform:none;pointer-events:auto}
+.qitem blockquote{font-family:var(--cond);font-weight:500;font-size:clamp(26px,3.2vw,44px);line-height:1.12;letter-spacing:-0.01em;max-width:24ch;margin:0}
+.qmeta{display:flex;align-items:center;gap:20px;margin-top:28px}
+.qlogo{height:52px;width:auto;max-width:170px;object-fit:contain;object-position:left center;flex:none}
+.qlogo:not([src]),.qlogo[src=""]{display:none}
+.qmeta figcaption{font-size:15px;letter-spacing:.04em;color:rgba(226,236,236,.75);margin:0}
+.qmeta figcaption b{color:var(--teal-300);font-weight:600;display:block;font-size:16px;margin-top:2px}
+.qdots{display:flex;gap:10px;margin-top:38px}
+.qdot{width:34px;height:4px;background:rgba(255,255,255,.22);border:0;padding:0;cursor:pointer;transition:background .3s}
+.qdot.on{background:var(--teal)}
+.qdot:hover{background:rgba(127,216,207,.7)}
+
+/* ---------- CONTACTO ---------- */
+.contact{background:var(--ink);color:#fff}
+.contact .grid{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(32px,5vw,80px);align-items:start}
+.contact .kick{color:var(--teal-300)}.contact .kick::before{background:var(--teal)}
+.contact h2{font-size:clamp(32px,3.8vw,54px);line-height:.98;text-transform:uppercase;margin:16px 0 0;max-width:14ch}
+.contact .sub{font-size:16px;line-height:1.6;color:rgba(226,236,236,.78);margin:20px 0 0;max-width:42ch}
+.contact .clist{list-style:none;margin:32px 0 0;padding:0;display:grid;gap:14px}
+.contact .clist li{display:flex;gap:14px;align-items:baseline}
+.contact .clist .lb{font-family:var(--cond);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-300);min-width:96px}
+.contact .clist a,.contact .clist span{font-size:16px;color:#eef4f4}
+.contact .clist a:hover{color:var(--teal-300)}
+.form{background:var(--ink-2);border:1px solid rgba(255,255,255,.1);padding:30px}
+.form .fld{margin-bottom:16px}
+.form label{display:block;font-family:var(--cond);font-weight:600;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:rgba(226,236,236,.75);margin-bottom:7px}
+.form input,.form textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.16);color:#fff;font-family:var(--body);font-size:15px;padding:12px 14px}
+.form input:focus,.form textarea:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:transparent}
+.form textarea{resize:vertical;min-height:88px}
+.form .btn-t{width:100%;justify-content:center;margin-top:6px}
+
+/* ---------- FOOTER ---------- */
+footer{background:#090e10;color:rgba(226,236,236,.6);padding:40px 0}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center;font-size:13.5px}
+footer .brand{display:flex;align-items:center;gap:10px;color:#fff}
+footer .mark{height:32px;width:auto;display:block}
+footer .mono b{color:var(--teal-300)}
+footer .brand .n{font-family:var(--cond);font-weight:700;letter-spacing:.03em;text-transform:uppercase;font-size:16px}
+
+@media(max-width:900px){
+  .svc-grid{grid-template-columns:1fr}
+  .case-grid{grid-template-columns:1fr}
+  .about{grid-template-columns:1fr}.about .fig{order:-1}
+  .contact .grid{grid-template-columns:1fr}
+  .qitem blockquote{max-width:none}
+}
+</style>
+</head>
+<body id="top">
+<nav class="nav" id="nav">
+  <a class="brand" href="#top" aria-label="S&amp;G Soluciones de Ingeniería">
+    <img class="mark" src="assets/logo/icono.png" alt="" />
+    <span class="bt"><span class="n">S&amp;G</span><span class="d">Soluciones de Ingeniería</span></span>
+  </a>
+  <div class="links">
+    <a href="#servicios">Servicios</a>
+    <a href="#casos">Casos</a>
+    <a href="#nosotros">Nosotros</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+  <a class="cta" href="#contacto">Cotiza tu proyecto</a>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="bg"><img src="assets/img/pruebas-1.jpg" alt="Ingeniero operando un sistema SCADA en planta" fetchpriority="high" decoding="async" /></div>
+  <div class="inner">
+    <span class="kick rv in">Automatización · Industria 4.0 · Software</span>
+    <h1 class="rv in d1">Ingeniería que <em>ve</em> tu planta en tiempo real.</h1>
+    <p class="sub rv in d2">Automatizamos, instrumentamos y medimos cada proceso — del sensor al dashboard. Anticipamos fallas antes de que cuesten producción, en la industria de la costa norte de Colombia.</p>
+    <div class="cta rv in d3">
+      <a class="btn-t" href="#contacto">Cotiza tu proyecto <span class="arrow"></span></a>
+      <a class="btn-o" href="#casos">Ver casos de éxito</a>
+    </div>
+    <div class="stats rv in d4">
+      <div class="stat"><div class="n">−30%</div><div class="l">Fallas no programadas</div></div>
+      <div class="stat"><div class="n">+12%</div><div class="l">Disponibilidad</div></div>
+      <div class="stat"><div class="n">≥0.98</div><div class="l">Factor de potencia</div></div>
+      <div class="stat"><div class="n">24/7</div><div class="l">Monitoreo en tiempo real</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- SERVICIOS -->
+<section class="sec" id="servicios">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="kick rv">Qué hacemos</span>
+        <h2 class="rv d1">Del sensor <em>al dashboard.</em></h2>
+      </div>
+      <p class="lead rv d2">Un solo equipo para el diseño eléctrico, el control, la instrumentación y el software — sin traspasos entre proveedores.</p>
+    </div>
+    <div class="svc-grid">
+      <article class="svc rv">
+        <div class="num">01</div><h3>Automatización industrial</h3>
+        <p>Diseño e integración de sistemas de control: PLC, SCADA, tableros de baja tensión y puesta en marcha. Automatizamos procesos existentes y llave en mano.</p>
+        <div class="tags"><span class="tag">PLC</span><span class="tag">SCADA</span><span class="tag">Tableros BT</span></div>
+      </article>
+      <article class="svc rv d1">
+        <div class="num">02</div><h3>Industria 4.0 &amp; IoT</h3>
+        <p>Sensórica, telemetría por MQTT y mantenimiento predictivo. Ingesta en tiempo real y tableros de operación para anticipar fallas y priorizar el mantenimiento por condición.</p>
+        <div class="tags"><span class="tag">MQTT</span><span class="tag">InfluxDB</span><span class="tag">Grafana</span><span class="tag">Node-RED</span></div>
+      </article>
+      <article class="svc rv">
+        <div class="num">03</div><h3>Calidad y gestión de energía</h3>
+        <p>Medición trifásica por alimentador, corrección de factor de potencia, bancos de condensadores y análisis de armónicos. Auditoría de consumos por centro de costo.</p>
+        <div class="tags"><span class="tag">Factor de potencia</span><span class="tag">Medición avanzada</span><span class="tag">Armónicos</span></div>
+      </article>
+      <article class="svc rv d1">
+        <div class="num">04</div><h3>Desarrollo de software</h3>
+        <p>Aplicaciones a la medida, integración de datos y dashboards web. Del piloto al despliegue en producción con arquitectura de datos, alertamiento multicanal y contenedores.</p>
+        <div class="tags"><span class="tag">NestJS</span><span class="tag">Python ML</span><span class="tag">Docker</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CASOS -->
+<section class="sec casos" id="casos">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <span class="kick rv">Casos de éxito</span>
+        <h2 class="rv d1">Proyectos entregados en planta.</h2>
+      </div>
+      <p class="lead rv d2">Cada intervención parte de un diagnóstico y termina en cifras: más disponibilidad, energía bajo control y procesos visibles.</p>
+    </div>
+    <div class="case-grid">
+      <article class="case rv">
+        <a class="fig" href="plantilla-proyecto.html"><img src="assets/img/tablero-1.jpg" alt="Actualización de subestación eléctrica" /><span class="meta">Alimentos · Barranquilla · 2025</span></a>
+        <div class="body">
+          <h3>Actualización de subestación eléctrica</h3>
+          <p class="rz">Sensado y analítica en tiempo real para anticipar fallas y reducir paradas no programadas.</p>
+          <div class="kpis"><div><div class="kn">−30%</div><div class="kl">Fallas</div></div><div><div class="kn">+12%</div><div class="kl">Disponib.</div></div><div><div class="kn">−40%</div><div class="kl">Diagnóst.</div></div></div>
+          <a class="verlink" href="plantilla-proyecto.html">Ver caso <span class="arrow"></span></a>
+        </div>
+      </article>
+      <article class="case rv d1">
+        <a class="fig" href="plantilla-proyecto.html"><img src="assets/img/energia-1.jpg" alt="Optimización de bancos de condensadores" /><span class="meta">Cementero · Barranquilla · 2024</span></a>
+        <div class="body">
+          <h3>Optimización de bancos de condensadores</h3>
+          <p class="rz">Bancos automáticos para mejorar el factor de potencia y eliminar penalizaciones.</p>
+          <div class="kpis"><div><div class="kn">≥0.98</div><div class="kl">Factor pot.</div></div><div><div class="kn">100%</div><div class="kl">Multas</div></div><div><div class="kn">−8%</div><div class="kl">Energía</div></div></div>
+          <a class="verlink" href="plantilla-proyecto.html">Ver caso <span class="arrow"></span></a>
+        </div>
+      </article>
+      <article class="case rv d2">
+        <a class="fig" href="plantilla-proyecto.html"><img src="assets/img/hor-1.jpg" alt="Tableros inteligentes con medición integrada" /><span class="meta">Industrial · Costa Caribe · 2023</span></a>
+        <div class="body">
+          <h3>Tableros inteligentes con medición</h3>
+          <p class="rz">Distribución con medición integrada para auditoría de consumos y trazabilidad.</p>
+          <div class="kpis"><div><div class="kn">+100%</div><div class="kl">Visibilid.</div></div><div><div class="kn">−45%</div><div class="kl">Sobrecarga</div></div><div><div class="kn">−35%</div><div class="kl">Inspección</div></div></div>
+          <a class="verlink" href="plantilla-proyecto.html">Ver caso <span class="arrow"></span></a>
+        </div>
+      </article>
+    </div>
+    <div class="more"><a class="btn-o" href="casos-de-exito.html">Ver todos los casos <span class="arrow"></span></a></div>
+  </div>
+</section>
+
+<!-- NOSOTROS -->
+<section class="sec" id="nosotros">
+  <div class="wrap about">
+    <figure class="fig rv">
+      <span class="mk2"></span>
+      <img src="assets/img/about.jpg" alt="Equipo de S&amp;G en planta industrial" />
+      <span class="mk"></span>
+    </figure>
+    <div>
+      <span class="kick rv">Quiénes somos</span>
+      <h2 class="rv d1">Un equipo joven, <em>altamente calificado.</em></h2>
+      <p class="rv d2">Somos una empresa de la costa norte de Colombia especializada en automatización industrial, procesos, Industria 4.0 y desarrollo de software. Trabajamos cerca de la planta: diagnóstico, piloto instrumental, arquitectura de datos y transferencia de conocimiento al personal.</p>
+      <div class="kpis rv d3">
+        <div><div class="kn">3+</div><div class="kl">Sectores atendidos</div></div>
+        <div><div class="kn">24/7</div><div class="kl">Monitoreo remoto</div></div>
+        <div><div class="kn">100%</div><div class="kl">Proyectos medidos en KPIs</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIO (carrusel rotativo; logo del cliente opcional) -->
+<section class="sec quote">
+  <div class="bg"><img src="assets/img/portada-principal.jpg" alt="" aria-hidden="true" /></div>
+  <div class="wrap">
+    <div class="mark rv">“</div>
+    <div class="qtrack rv d1" id="qtrack" aria-live="polite">
+      <!-- Cada .qitem = una frase. data-logo: ruta del logo del cliente (deja vacío para transparente).
+           data-name: cargo/persona · data-org: empresa (resaltada en teal). -->
+      <figure class="qitem on" data-logo="" data-name="Jefe de Mantenimiento" data-org="Planta de alimentos · Barranquilla">
+        <blockquote>Pasamos de perseguir fallas a operar con datos. Hoy vemos cada consumo y anticipamos las paradas antes de que ocurran.</blockquote>
+      </figure>
+      <figure class="qitem" data-logo="" data-name="Coordinador de Energía" data-org="Cementera · Barranquilla">
+        <blockquote>El factor de potencia se estabilizó y las penalizaciones desaparecieron. La inversión se pagó sola en meses.</blockquote>
+      </figure>
+      <figure class="qitem" data-logo="" data-name="Gerente de Planta" data-org="Industria · Costa Caribe">
+        <blockquote>Por fin tenemos trazabilidad del consumo por área. Las decisiones ahora se toman con datos, no con supuestos.</blockquote>
+      </figure>
+    </div>
+    <div class="qmeta rv d2">
+      <img class="qlogo" id="qlogo" alt="" />
+      <figcaption id="qcap"></figcaption>
+    </div>
+    <div class="qdots rv d2" id="qdots" role="tablist" aria-label="Testimonios"></div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section class="sec contact" id="contacto">
+  <div class="wrap grid">
+    <div>
+      <span class="kick rv">Contacto</span>
+      <h2 class="rv d1">Cuéntanos tu proceso.</h2>
+      <p class="sub rv d2">Evaluamos tu planta y proponemos una ruta clara: qué medir, qué automatizar y qué integrar. Respuesta en menos de 24 horas hábiles.</p>
+      <ul class="clist rv d3">
+        <li><span class="lb">Ubicación</span><span>Barranquilla, Atlántico, Colombia</span></li>
+        <li><span class="lb">Teléfono</span><a href="tel:+573243025107">+57 324 3025107</a></li>
+        <li><span class="lb">Correo</span><a href="mailto:informacion@sgsolucionesing.com">informacion@sgsolucionesing.com</a></li>
+      </ul>
+    </div>
+    <form class="form rv d2" action="mailto:informacion@sgsolucionesing.com" method="post" enctype="text/plain">
+      <div class="fld"><label for="f-n">Nombre y empresa</label><input id="f-n" name="nombre" type="text" placeholder="Nombre · Empresa" /></div>
+      <div class="fld"><label for="f-c">Correo</label><input id="f-c" name="correo" type="email" placeholder="tu@empresa.com" /></div>
+      <div class="fld"><label for="f-m">¿Qué necesitas resolver?</label><textarea id="f-m" name="mensaje" placeholder="Cuéntanos brevemente tu proceso o reto"></textarea></div>
+      <button type="submit" class="btn-t">Enviar solicitud <span class="arrow"></span></button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="brand"><img class="mark" src="assets/logo/icono.png" alt="" /><span class="n">S&amp;G Soluciones de Ingeniería</span></span>
+    <span>© 2026 · Barranquilla, Colombia · Automatización · Energía · Software</span>
+  </div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>40),{passive:true});
+const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.15});
+document.querySelectorAll('.rv:not(.in)').forEach(el=>io.observe(el));
+
+/* Carrusel de testimonios */
+(function(){
+  const items=[...document.querySelectorAll('#qtrack .qitem')];
+  if(!items.length)return;
+  const logo=document.getElementById('qlogo'),cap=document.getElementById('qcap'),dots=document.getElementById('qdots');
+  let i=0,timer;
+  items.forEach((_,n)=>{const b=document.createElement('button');b.className='qdot'+(n===0?' on':'');b.setAttribute('role','tab');b.setAttribute('aria-label','Testimonio '+(n+1));b.onclick=()=>{go(n);reset();};dots.appendChild(b);});
+  const dotEls=[...dots.children];
+  function render(){
+    const f=items[i];
+    const src=f.dataset.logo;
+    if(src){logo.src=src;logo.style.display='';}else{logo.removeAttribute('src');logo.style.display='none';}
+    cap.innerHTML='— '+f.dataset.name+'<b>'+f.dataset.org+'</b>';
+  }
+  function go(n){items[i].classList.remove('on');dotEls[i].classList.remove('on');i=(n+items.length)%items.length;items[i].classList.add('on');dotEls[i].classList.add('on');render();}
+  function reset(){clearInterval(timer);timer=setInterval(()=>go(i+1),5500);}
+  render();reset();
+  const sec=document.querySelector('.quote');
+  sec.addEventListener('mouseenter',()=>clearInterval(timer));
+  sec.addEventListener('mouseleave',reset);
+})();
+</script>
+</body>
+</html>
